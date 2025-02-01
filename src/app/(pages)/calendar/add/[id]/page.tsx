@@ -87,6 +87,7 @@ export default function AddEventPage() {
       userId: 1, // <- 로그인 완성후 고칠부분
       title: title || 'No title',
       content: note || '',
+      location: '',
       startDateTime: format(date?.startDateTime || new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
       endDateTime: format(date?.endDateTime || new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
     }

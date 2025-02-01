@@ -1,26 +1,19 @@
-import { client } from '@/utils/api/client'
+import { instance } from '@/shared/api'
 import { Schedule, ScheduleResponse } from '../types'
-// import { instance } from '@/shared/api'
 
-export const getCalendarList = async (userId: number): Promise<ScheduleResponse[]> => {
-  return client(`/schedule/user/${userId}`)
+export const getCalendarList = async (): Promise<ScheduleResponse[]> => {
+  const res = await instance.get(`/schedule/user`)
+  return res.data
 }
 
 export const getScheduleDetail = async (scheduleId: number): Promise<ScheduleResponse> => {
-  return client(`/schedule/${scheduleId}`)
+  const res = await instance.get(`/schedule/${scheduleId}`)
+  return res.data
 }
 
 export const postSchedule = async (scheduleDetail: Schedule): Promise<ScheduleResponse> => {
-  return client(`/schedule`, {
-    method: 'POST',
-    body: JSON.stringify(scheduleDetail),
-  })
+  return await instance.post(`/schedule`, scheduleDetail)
 }
-
-// >> 요렇게 사용하시면 됩니다~
-// export const postSchedule = async (scheduleDetail: Schedule): Promise<ScheduleResponse> => {
-//   return instance.post('/schedule', scheduleDetail)
-// }
 
 export const putSchedule = async ({
   scheduleId,
@@ -29,8 +22,5 @@ export const putSchedule = async ({
   scheduleId: number
   scheduleDetail: Schedule
 }): Promise<ScheduleResponse> => {
-  return client(`/schedule/${scheduleId}`, {
-    method: 'PUT',
-    body: JSON.stringify(scheduleDetail),
-  })
+  return await instance.put(`/schedule/${scheduleId}`, scheduleDetail)
 }

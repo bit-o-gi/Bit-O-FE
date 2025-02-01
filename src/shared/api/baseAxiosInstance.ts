@@ -11,7 +11,6 @@ instance.interceptors.request.use(
   function (config) {
     // 스토리지에서 access토큰 가져오는 로직
     const accessToken = localStorage.getItem('access_token')
-
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`
     }
