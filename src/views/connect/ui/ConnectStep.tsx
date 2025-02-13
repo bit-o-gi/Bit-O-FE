@@ -1,5 +1,6 @@
 'use client'
 
+import { createCoupleCode } from '@/entities/couple/api'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { format } from 'date-fns'
 import Image from 'next/image'
@@ -81,9 +82,14 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
       })
   }
 
-  const requestCoupleCode = () => {
-    // TODO: API 요청
-    setCode('ABC12345')
+  const requestCoupleCode = async () => {
+    try {
+      const code = await createCoupleCode()
+      setCode(code)
+    } catch {
+      // TODO: toast
+      console.error('다시 시도해 주세요.')
+    }
   }
 
   const copyCode = () => {
