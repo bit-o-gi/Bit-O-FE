@@ -1,6 +1,6 @@
 'use client'
 
-import { createCoupleCode } from '@/entities/couple/api'
+import { requestConfirmCoupleCode, requestCreateCoupleCode } from '@/entities/couple/api'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { format } from 'date-fns'
 import Image from 'next/image'
@@ -40,15 +40,22 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
   const [code, setCode] = useState<string>('')
-  const [inputData, setInputData] = useState<Record<ConnectStep, string | undefined>>(
-    {} as Record<ConnectStep, string | undefined>,
+  const [inputData, setInputData] = useState<Record<ConnectStep, string>>(
+    {} as Record<ConnectStep, string>,
   )
 
   const steps = CONNECT_STEP[type]
   const currentStep = steps[currentPage]
 
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (currentPage >= steps.length - 1) return
+    if (inputData[currentStep] === '') return
+
+    if (currentStep === 'insert-code') {
+      const isConfirmed = await confirmCoupleCode(inputData[currentStep])
+      if (!isConfirmed) return
+    }
+
     setIsForward(true)
     setCurrentPage((prev) => prev + 1)
   }
@@ -64,31 +71,32 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const handleDateChange = (date: Date | null) => {
     if (date) setInputData((prev) => ({ ...prev, date: format(date, 'yyyy/MM/dd') }))
-    else
-      setInputData((prev) => {
-        const newData = { ...prev }
-        delete newData.date
-        return newData
-      })
+    else setInputData((prev) => ({ ...prev, date: '' }))
   }
 
   const handleInputChange = (input: string, step: ConnectStep) => {
     if (input) setInputData((prev) => ({ ...prev, [step]: input }))
-    else
-      setInputData((prev) => {
-        const newData = { ...prev }
-        delete newData[step]
-        return newData
-      })
+    else setInputData((prev) => ({ ...prev, [step]: '' }))
   }
 
   const requestCoupleCode = async () => {
     try {
-      const code = await createCoupleCode()
+      const code = await requestCreateCoupleCode()
       setCode(code)
     } catch {
       // TODO: toast
-      console.error('다시 시도해 주세요.')
+      console.error('커플 코드 생성 실패')
+    }
+  }
+
+  const confirmCoupleCode = async (code: string): Promise<boolean> => {
+    try {
+      await requestConfirmCoupleCode(code)
+      return true
+    } catch {
+      // TODO: toast
+      console.error('커플 연결 실패')
+      return false
     }
   }
 
