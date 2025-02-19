@@ -42,7 +42,6 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
   const [code, setCode] = useState<string>('')
-  const [isConnectSuccess, setIsConnectSuccess] = useState<boolean>(false)
   const [inputData, setInputData] = useState<Record<ConnectStep, string>>(
     {} as Record<ConnectStep, string>,
   )
@@ -66,10 +65,9 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const confirmCodeMutation = useMutation({
     mutationFn: (code: string) => confirmCoupleCode(code),
-    onSuccess: () => setIsConnectSuccess(true),
     onError: async (error: AxiosError) => {
       if (error.response?.status === 400) {
-        console.error('잘못된 코드입니다.')
+        console.error('잘못된 커플 코드입니다.')
       } else {
         console.error('커플 연결 실패')
       }
@@ -83,13 +81,16 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
       return
     }
 
-    if (steps[currentPage + 1] === 'create-code') createCodeMutation.mutate()
-    if (steps[currentPage + 1] === 'complete') confirmCodeMutation.mutate(inputData['insert-code'])
+    try {
+      if (steps[currentPage + 1] === 'create-code') await createCodeMutation.mutateAsync()
+      if (steps[currentPage + 1] === 'complete')
+        await confirmCodeMutation.mutateAsync(inputData['insert-code'])
 
-    setIsForward(true)
-    setCurrentPage((prev) => {
-      return prev + 1
-    })
+      setIsForward(true)
+      setCurrentPage((prev) => prev + 1)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const goToPrevStep = () => {
