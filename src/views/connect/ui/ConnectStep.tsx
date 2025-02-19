@@ -3,7 +3,7 @@
 import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { AxiosError, isAxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -81,16 +81,17 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
       return
     }
 
+    const nextStep = steps[currentPage + 1]
     try {
-      if (steps[currentPage + 1] === 'create-code') await createCodeMutation.mutateAsync()
-      if (steps[currentPage + 1] === 'complete')
-        await confirmCodeMutation.mutateAsync(inputData['insert-code'])
-
-      setIsForward(true)
-      setCurrentPage((prev) => prev + 1)
+      if (nextStep === 'create-code') await createCodeMutation.mutateAsync()
+      if (nextStep === 'complete') await confirmCodeMutation.mutateAsync(inputData['insert-code'])
     } catch (error) {
       console.error(error)
+      if (!(isAxiosError(error) && error.response?.status === 409)) return
     }
+
+    setIsForward(true)
+    setCurrentPage((prev) => prev + 1)
   }
 
   const goToPrevStep = () => {
