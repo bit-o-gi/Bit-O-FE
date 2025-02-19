@@ -7,7 +7,7 @@ import { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type ConnectStepType = 'create' | 'code'
 type ConnectStep = 'date' | 'nickname' | 'create-code' | 'insert-code' | 'complete'
@@ -78,13 +78,18 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const goToNextStep = async () => {
     if (currentPage >= steps.length - 1) return
-    if (inputData[currentStep] === '') {
+    if (!inputData[currentStep]) {
       console.error('값을 입력해주세요')
       return
     }
 
+    if (steps[currentPage + 1] === 'create-code') createCodeMutation.mutate()
+    if (steps[currentPage + 1] === 'complete') confirmCodeMutation.mutate(inputData['insert-code'])
+
     setIsForward(true)
-    setCurrentPage((prev) => prev + 1)
+    setCurrentPage((prev) => {
+      return prev + 1
+    })
   }
 
   const goToPrevStep = () => {
@@ -119,15 +124,6 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const steps = CONNECT_STEP[type]
   const currentStep = steps[currentPage]
-
-  useEffect(() => {
-    if (currentStep === 'create-code') createCodeMutation.mutate()
-    if (currentStep === 'complete') confirmCodeMutation.mutate(inputData['insert-code'])
-  }, [currentStep])
-
-  useEffect(() => {
-    console.log(inputData)
-  }, [inputData])
 
   return (
     <div className="flex flex-col p-8 h-full">
