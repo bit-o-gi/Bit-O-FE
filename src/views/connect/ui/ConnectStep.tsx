@@ -97,13 +97,11 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   }
 
   const handleDateChange = (date: Date | null) => {
-    if (date) setInputData((prev) => ({ ...prev, date: format(date, 'yyyy/MM/dd') }))
-    else setInputData((prev) => ({ ...prev, date: '' }))
+    setInputData((prev) => ({ ...prev, date: date ? format(date, 'yyyy/MM/dd') : '' }))
   }
 
   const handleInputChange = (input: string, step: ConnectStep) => {
-    if (input) setInputData((prev) => ({ ...prev, [step]: input }))
-    else setInputData((prev) => ({ ...prev, [step]: '' }))
+    setInputData((prev) => ({ ...prev, [step]: input }))
   }
 
   const copyCode = () => {
