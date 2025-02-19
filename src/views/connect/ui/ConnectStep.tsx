@@ -1,7 +1,9 @@
 'use client'
 
-import { requestConfirmCoupleCode, requestCreateCoupleCode } from '@/entities/couple/api'
+import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -40,20 +42,45 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
   const [code, setCode] = useState<string>('')
+  const [isConnectSuccess, setIsConnectSuccess] = useState<boolean>(false)
   const [inputData, setInputData] = useState<Record<ConnectStep, string>>(
     {} as Record<ConnectStep, string>,
   )
 
-  const steps = CONNECT_STEP[type]
-  const currentStep = steps[currentPage]
+  const createCodeMutation = useMutation({
+    mutationFn: () => createCoupleCode(),
+    onSuccess: (data) => setCode(data),
+    onError: async (error: AxiosError) => {
+      if (error.response?.status === 409) {
+        try {
+          const code = await getCoupleCode()
+          if (code) setCode(code)
+        } catch {
+          console.error('커플 코드 조회 실패')
+        }
+      } else {
+        console.error('커플 코드 생성 실패')
+      }
+    },
+  })
+
+  const confirmCodeMutation = useMutation({
+    mutationFn: (code: string) => confirmCoupleCode(code),
+    onSuccess: () => setIsConnectSuccess(true),
+    onError: async (error: AxiosError) => {
+      if (error.response?.status === 400) {
+        console.error('잘못된 코드입니다.')
+      } else {
+        console.error('커플 연결 실패')
+      }
+    },
+  })
 
   const goToNextStep = async () => {
     if (currentPage >= steps.length - 1) return
-    if (inputData[currentStep] === '') return
-
-    if (currentStep === 'insert-code') {
-      const isConfirmed = await confirmCoupleCode(inputData[currentStep])
-      if (!isConfirmed) return
+    if (inputData[currentStep] === '') {
+      console.error('값을 입력해주세요')
+      return
     }
 
     setIsForward(true)
@@ -79,27 +106,6 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     else setInputData((prev) => ({ ...prev, [step]: '' }))
   }
 
-  const requestCoupleCode = async () => {
-    try {
-      const code = await requestCreateCoupleCode()
-      setCode(code)
-    } catch {
-      // TODO: toast
-      console.error('커플 코드 생성 실패')
-    }
-  }
-
-  const confirmCoupleCode = async (code: string): Promise<boolean> => {
-    try {
-      await requestConfirmCoupleCode(code)
-      return true
-    } catch {
-      // TODO: toast
-      console.error('커플 연결 실패')
-      return false
-    }
-  }
-
   const copyCode = () => {
     // TODO: toast 메시지
     window.navigator.clipboard.writeText(code).then(() => console.log('복사되었습니다.'))
@@ -113,9 +119,17 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     // TODO: 홈으로 돌아가기
   }
 
+  const steps = CONNECT_STEP[type]
+  const currentStep = steps[currentPage]
+
   useEffect(() => {
-    if (currentStep === 'create-code') requestCoupleCode()
+    if (currentStep === 'create-code') createCodeMutation.mutate()
+    if (currentStep === 'complete') confirmCodeMutation.mutate(inputData['insert-code'])
   }, [currentStep])
+
+  useEffect(() => {
+    console.log(inputData)
+  }, [inputData])
 
   return (
     <div className="flex flex-col p-8 h-full">
