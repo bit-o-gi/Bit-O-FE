@@ -1,4 +1,4 @@
-import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { ScheduleResponse } from '@/entities/calendar'
 import { addDays, isWithinInterval } from 'date-fns'
 import { create } from 'zustand'
 
