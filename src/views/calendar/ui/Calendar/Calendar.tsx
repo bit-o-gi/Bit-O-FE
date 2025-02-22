@@ -2,7 +2,9 @@
 
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ScheduleResponse, getCalendarList, useScheduleStore } from '@/entities/calendar'
+import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { getCalendarList } from '@/entities/calendar/api'
+import { useScheduleStore } from '@/entities/calendar'
 import { LoadingSpinner } from '@/shared/ui'
 import CalendarHeader from './CalendarHeader'
 import CalendarBody from './CalendarBody'
