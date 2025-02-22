@@ -4,7 +4,7 @@ import Oauth from '@/features/oauth'
 import Image from 'next/image'
 import { Suspense } from 'react'
 
-export default function Page() {
+export function LoginPage() {
   // console.log('로그인 페이지 렌더링')
 
   return (
