@@ -6,14 +6,15 @@ import AddEventNote from './AddScheduleNote'
 import { useParams, useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
+  useScheduleStore,
+  Schedule,
+  ScheduleResponse,
   deleteSchedule,
   getScheduleDetail,
   postSchedule,
   putSchedule,
-} from '@/entities/calendar/api'
-import { Schedule, ScheduleResponse } from '@/entities/calendar/api/types'
+} from '@/entities/calendar'
 import { useEffect } from 'react'
-import { useScheduleStore } from '@/entities/calendar'
 import { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import { compareDesc } from 'date-fns/fp'
