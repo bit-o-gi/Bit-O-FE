@@ -40,7 +40,7 @@ instance.interceptors.response.use(
       const cookies = document.cookie
       const refreshToken = cookies.split('refresh_token=')[1]
       if (!refreshToken) {
-        // logoutAndHome() // 전체 프로세스 정해지면 추가
+        // redirect('/login') // 전체 프로세스 정해지면 수정
         return
       }
 
@@ -72,3 +72,17 @@ instance.interceptors.response.use(
 )
 
 export { instance }
+
+// redirect 이슈
+// next.js 에서는 location.href = '/' 따위를 쓸수가 없음
+// useRouter 등을 사용해서 리다이렉트해야되는데 React 컴포넌트 내에서만 사용할 수 있으므로
+// 추가로 관리해야됨
+
+// 현업 쿠키 추천 option
+// const cookieOptions = {
+//   httpOnly: true,        // XSS 방지
+//   secure: true,          // HTTPS만 허용
+//   sameSite: 'strict',    // CSRF 방지
+//   path: '/',             // 쿠키 사용 경로
+//   domain: '.example.com' // 쿠키 사용 도메인
+// }

@@ -1,13 +1,12 @@
 'use client'
-import { userApi } from '@/entities/userInfo'
+import { userApi, useUserInfoStore } from '@/entities/userInfo'
 import { BaseButton } from '@/shared/ui'
-import useUserInfoStore from '@/store/userInfoStore'
 
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
 
-export default function Page() {
+export function OnboardingPage() {
   const { userInfo, setUserInfo } = useUserInfoStore()
   const getUserInfo = async () => {
     const result = await userApi()
