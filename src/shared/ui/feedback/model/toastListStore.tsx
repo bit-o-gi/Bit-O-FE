@@ -1,17 +1,21 @@
 import { create } from 'zustand'
-import { IToastListStore, IToastMessage } from './types'
+import { IToastListStore, ToastMessageDuration, ToastMessageType } from './types'
 
-export const useToastListStore = create<IToastListStore>((set) => ({
-  toasts: [
-    {
-      id: 1,
-      message: '에러가 발생하였습니다. 어쩌구저쩌구 저쩌구어쩌구저쩌구 저쩌구',
-      duration: 'short',
-      type: 'success',
-    },
-    { id: 2, message: '커플 생성에 성공하였습니다.', duration: 'short', type: 'success' },
-  ],
-  addToast: (toast: IToastMessage) => set((state) => ({ toasts: [...state.toasts, toast] })),
-  removeToast: (id: number) =>
-    set((state) => ({ toasts: state.toasts.filter((toast) => toast.id !== id) })),
+export const useToastListStore = create<IToastListStore>((set, get) => ({
+  toasts: [],
+  addToast: (type: ToastMessageType, message: string, duration: ToastMessageDuration) => {
+    const toast = { id: get().getNewId(), message, duration, type }
+    set((state) => ({
+      toasts: [...state.toasts, toast],
+    }))
+    get().autoremoveToast(toast.id, duration === 'short' ? 3000 : 5000)
+  },
+  autoremoveToast: (id: number, duration: number) => {
+    setTimeout(() => {
+      set((state) => ({ toasts: state.toasts.filter((toast) => toast.id !== id) }))
+    }, duration)
+  },
+  getNewId: () => {
+    return get().toasts.reduce((acc, cur) => (cur.id > acc ? cur.id : acc), 0) + 1
+  },
 }))
