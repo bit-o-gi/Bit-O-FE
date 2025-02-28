@@ -37,4 +37,7 @@ export const useToastListStore = create<IToastListStore>((set, get) => ({
   getNewId: () => {
     return get().toasts.reduce((acc, cur) => (cur.id > acc ? cur.id : acc), 0) + 1
   },
+  resetToasts: () => {
+    set(() => ({ toasts: [] }))
+  },
 }))

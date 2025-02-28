@@ -3,6 +3,8 @@
 import { useToastListStore } from './model/toastListStore'
 import Image from 'next/image'
 import { ToastMessageState } from './model/types'
+import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 
 const ICON_MAP = {
   success: '/images/icon/success.png',
@@ -12,7 +14,12 @@ const ICON_MAP = {
 }
 
 export const ToastManager = () => {
-  const { toasts } = useToastListStore()
+  const pathname = usePathname()
+  const { toasts, resetToasts } = useToastListStore()
+
+  useEffect(() => {
+    resetToasts()
+  }, [pathname])
 
   return (
     <div className="fixed z-50 top-10 left-0 w-full flex flex-col items-center gap-y-4 pointer-events-none">

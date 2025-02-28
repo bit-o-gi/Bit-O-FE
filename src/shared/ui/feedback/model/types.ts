@@ -30,4 +30,5 @@ export interface IToastListStore {
   autoremoveToast: (id: number, duration: number) => void
   setToastState: (id: number, state: ToastMessageState) => void
   getNewId: () => number
+  resetToasts: () => void
 }

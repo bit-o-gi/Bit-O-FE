@@ -8,7 +8,7 @@ import { AxiosError, isAxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type ConnectStepType = 'create' | 'code'
 type ConnectStep = 'date' | 'nickname' | 'create-code' | 'insert-code' | 'complete'
@@ -128,6 +128,10 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const steps = CONNECT_STEP[type]
   const currentStep = steps[currentPage]
+
+  useEffect(() => {
+    toast.clear()
+  }, [currentStep])
 
   return (
     <div className="flex flex-col p-8 h-full">

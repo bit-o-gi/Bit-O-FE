@@ -2,7 +2,7 @@ import { useToastListStore } from '@/shared/ui/feedback/model/toastListStore'
 import { ToastMessageDuration, ToastMessageType } from '@/shared/ui/feedback/model/types'
 
 export const useToast = () => {
-  const { addToast } = useToastListStore()
+  const { addToast, resetToasts } = useToastListStore()
 
   return {
     longSuccess: (message: string) =>
@@ -21,5 +21,6 @@ export const useToast = () => {
       addToast(ToastMessageType.INFO, message, ToastMessageDuration.SHORT),
     shortWarning: (message: string) =>
       addToast(ToastMessageType.WARNING, message, ToastMessageDuration.SHORT),
+    clear: () => resetToasts(),
   }
 }
