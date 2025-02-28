@@ -1,1 +1,1 @@
-export { useNavigater } from './useNavigater'
+export { useNavigater } from './hooks/useNavigater'
