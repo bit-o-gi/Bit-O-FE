@@ -8,7 +8,7 @@ export const useToastListStore = create<IToastListStore>((set, get) => ({
     set((state) => ({
       toasts: [...state.toasts, toast],
     }))
-    setTimeout(() => get().setToastState(toast.id, ToastMessageState.VISIBLE), 0)
+    setTimeout(() => get().setToastState(toast.id, ToastMessageState.VISIBLE), 50)
 
     get().autoremoveToast(toast.id, duration === 'short' ? 3000 : 5000)
   },

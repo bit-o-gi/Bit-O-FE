@@ -1,6 +1,7 @@
 'use client'
 
 import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
+import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
@@ -39,6 +40,8 @@ const CONNECT_STEP_INSTRUCTION: Record<ConnectStep, string> = {
 
 export function ConnectStepPage({ type }: ConnectStepProps) {
   const router = useRouter()
+  const toast = useToast()
+
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
   const [code, setCode] = useState<string>('')
@@ -55,10 +58,10 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
           const code = await getCoupleCode()
           if (code) setCode(code)
         } catch {
-          console.error('커플 코드 조회 실패')
+          toast.shortError('커플 코드 조회 실패')
         }
       } else {
-        console.error('커플 코드 생성 실패')
+        toast.shortError('커플 코드 생성 실패')
       }
     },
   })
@@ -67,9 +70,9 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     mutationFn: (code: string) => confirmCoupleCode(code),
     onError: async (error: AxiosError) => {
       if (error.response?.status === 400) {
-        console.error('잘못된 커플 코드입니다.')
+        toast.shortError('잘못된 커플 코드입니다.')
       } else {
-        console.error('커플 연결 실패')
+        toast.shortError('값을 입력해주세요')
       }
     },
   })
@@ -77,7 +80,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   const goToNextStep = async () => {
     if (currentPage >= steps.length - 1) return
     if (!inputData[currentStep]) {
-      console.error('값을 입력해주세요')
+      toast.shortWarning('값을 입력해주세요')
       return
     }
 
@@ -112,8 +115,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   }
 
   const copyCode = () => {
-    // TODO: toast 메시지
-    window.navigator.clipboard.writeText(code).then(() => console.log('복사되었습니다.'))
+    window.navigator.clipboard.writeText(code).then(() => toast.shortError('복사되었습니다'))
   }
 
   const onClickShareButton = () => {
