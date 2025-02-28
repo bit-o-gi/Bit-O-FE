@@ -2,7 +2,7 @@
 
 import { useToastListStore } from './model/toastListStore'
 import Image from 'next/image'
-import { ToastMessageDuration, ToastMessageState, ToastMessageType } from './model/types'
+import { ToastMessageState } from './model/types'
 
 const ICON_MAP = {
   success: '/images/icon/success.png',
@@ -12,29 +12,10 @@ const ICON_MAP = {
 }
 
 export const ToastManager = ({ children }: { children: React.ReactNode }) => {
-  const { toasts, addToast, removeToast } = useToastListStore()
+  const { toasts } = useToastListStore()
 
   return (
     <div className="relative h-full">
-      <button
-        onClick={() => {
-          addToast(ToastMessageType.SUCCESS, `Success Toast `, ToastMessageDuration.SHORT)
-        }}
-      >
-        짧은 메세지 클릭!
-      </button>
-
-      <button
-        onClick={() => {
-          addToast(
-            ToastMessageType.ERROR,
-            `Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast Error Toast `,
-            ToastMessageDuration.LONG,
-          )
-        }}
-      >
-        긴 메세지 클릭!
-      </button>
       <div className="absolute top-10 left-0 w-full z-50 flex flex-col items-center gap-y-4 pointer-events-none">
         {toasts.map(({ id, type, message, state }) => (
           <div
