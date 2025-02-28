@@ -20,10 +20,11 @@ export const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="flex w-full h-full bg-gray-100">
-      <div className="mx-auto h-auto w-full min-w-[280px] max-w-[33.75rem]">
+      <div className="mx-auto h-auto w-full min-w-[280px] max-w-[33.75rem] relative">
         {/* <div className="flex min-h-[100vh] w-full flex-col items-stretch justify-start bg-white"> */}
-        <div className="flex min-h-[100vh] h-full w-full flex-col items-stretch justify-start bg-white">
-          <ToastManager>{children}</ToastManager>
+        <ToastManager />
+        <div className="flex min-h-[100vh] h-full w-full flex-col items-stretch justify-start bg-white z-0">
+          {children}
         </div>
         {showNav && <NavigationBar />}
       </div>
