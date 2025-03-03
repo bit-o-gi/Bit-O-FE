@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
 const instance = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: `${baseURL}/api/v1`,
   timeout: 3000,
   // headers: {},
   // withCredentials: false,
@@ -71,7 +73,7 @@ instance.interceptors.response.use(
   },
 )
 
-export { instance }
+export { instance, baseURL }
 
 // redirect 이슈
 // next.js 에서는 location.href = '/' 따위를 쓸수가 없음

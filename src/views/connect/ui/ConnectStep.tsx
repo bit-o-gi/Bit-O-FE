@@ -1,6 +1,10 @@
 'use client'
 
+import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
+import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError, isAxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -36,18 +40,59 @@ const CONNECT_STEP_INSTRUCTION: Record<ConnectStep, string> = {
 
 export function ConnectStepPage({ type }: ConnectStepProps) {
   const router = useRouter()
+  const toast = useToast()
+
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
   const [code, setCode] = useState<string>('')
-  const [inputData, setInputData] = useState<Record<ConnectStep, string | undefined>>(
-    {} as Record<ConnectStep, string | undefined>,
+  const [inputData, setInputData] = useState<Record<ConnectStep, string>>(
+    {} as Record<ConnectStep, string>,
   )
 
-  const steps = CONNECT_STEP[type]
-  const currentStep = steps[currentPage]
+  const createCodeMutation = useMutation({
+    mutationFn: () => createCoupleCode(),
+    onSuccess: (data) => setCode(data),
+    onError: async (error: AxiosError) => {
+      if (error.response?.status === 409) {
+        try {
+          const code = await getCoupleCode()
+          if (code) setCode(code)
+        } catch {
+          toast.shortError('커플 코드 조회 실패')
+        }
+      } else {
+        toast.shortError('커플 코드 생성 실패')
+      }
+    },
+  })
 
-  const goToNextStep = () => {
+  const confirmCodeMutation = useMutation({
+    mutationFn: (code: string) => confirmCoupleCode(code),
+    onError: async (error: AxiosError) => {
+      if (error.response?.status === 400) {
+        toast.shortError('잘못된 커플 코드입니다.')
+      } else {
+        toast.shortError('값을 입력해주세요')
+      }
+    },
+  })
+
+  const goToNextStep = async () => {
     if (currentPage >= steps.length - 1) return
+    if (!inputData[currentStep]) {
+      toast.shortWarning('값을 입력해주세요')
+      return
+    }
+
+    const nextStep = steps[currentPage + 1]
+    try {
+      if (nextStep === 'create-code') await createCodeMutation.mutateAsync()
+      if (nextStep === 'complete') await confirmCodeMutation.mutateAsync(inputData['insert-code'])
+    } catch (error) {
+      console.error(error)
+      if (!(isAxiosError(error) && error.response?.status === 409)) return
+    }
+
     setIsForward(true)
     setCurrentPage((prev) => prev + 1)
   }
@@ -62,33 +107,15 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   }
 
   const handleDateChange = (date: Date | null) => {
-    if (date) setInputData((prev) => ({ ...prev, date: format(date, 'yyyy/MM/dd') }))
-    else
-      setInputData((prev) => {
-        const newData = { ...prev }
-        delete newData.date
-        return newData
-      })
+    setInputData((prev) => ({ ...prev, date: date ? format(date, 'yyyy/MM/dd') : '' }))
   }
 
   const handleInputChange = (input: string, step: ConnectStep) => {
-    if (input) setInputData((prev) => ({ ...prev, [step]: input }))
-    else
-      setInputData((prev) => {
-        const newData = { ...prev }
-        delete newData[step]
-        return newData
-      })
-  }
-
-  const requestCoupleCode = () => {
-    // TODO: API 요청
-    setCode('ABC12345')
+    setInputData((prev) => ({ ...prev, [step]: input }))
   }
 
   const copyCode = () => {
-    // TODO: toast 메시지
-    window.navigator.clipboard.writeText(code).then(() => console.log('복사되었습니다.'))
+    window.navigator.clipboard.writeText(code).then(() => toast.shortError('복사되었습니다'))
   }
 
   const onClickShareButton = () => {
@@ -99,8 +126,11 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     // TODO: 홈으로 돌아가기
   }
 
+  const steps = CONNECT_STEP[type]
+  const currentStep = steps[currentPage]
+
   useEffect(() => {
-    if (currentStep === 'create-code') requestCoupleCode()
+    toast.clear()
   }, [currentStep])
 
   return (
