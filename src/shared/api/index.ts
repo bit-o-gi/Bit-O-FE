@@ -1,1 +1,1 @@
-export { instance } from './baseAxiosInstance'
+export { instance, baseURL } from './baseAxiosInstance'
