@@ -2,14 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/*Roboto Font*/
 @layer base {
   @font-face {
-    font-family: 'Roboto';
+    font-family: 'GangwonEduSaeeum_OTFMediumA';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduSaeeum_OTFMediumA.woff')
+      format('woff');
+    font-weight: normal;
     font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(/fonts/Roboto.woff2) format('woff2');
   }
 }
 
@@ -28,5 +27,6 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Roboto';
+  font-family: 'GangwonEduSaeeum_OTFMediumA', sans-serif;
+  font-size: 20px;
 }
