@@ -72,7 +72,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
       if (error.response?.status === 400) {
         toast.shortError('잘못된 커플 코드입니다.')
       } else {
-        toast.shortError('값을 입력해주세요')
+        toast.shortError('커플 연결에 실패하였습니다.')
       }
     },
   })
