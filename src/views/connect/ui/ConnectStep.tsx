@@ -115,7 +115,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   }
 
   const copyCode = () => {
-    window.navigator.clipboard.writeText(code).then(() => toast.shortError('복사되었습니다'))
+    window.navigator.clipboard.writeText(code).then(() => toast.shortSuccess('복사되었습니다'))
   }
 
   const onClickShareButton = () => {
@@ -133,6 +133,17 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     toast.clear()
   }, [currentStep])
 
+  useEffect(() => {
+    if (type === 'create') {
+      getCoupleCode()
+        .then((code) => {
+          setCurrentPage(steps.length - 1)
+          setCode(code)
+        })
+        .catch((error) => console.error(error))
+    }
+  }, [])
+
   return (
     <div className="flex flex-col p-8 h-full">
       <Image
@@ -141,7 +152,8 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
         src="/images/icon/arrow.png"
         width={36}
         height={36}
-        className="hover:bg-gray-50 rounded-md cursor-pointer rotate-180 self-start"
+        className={`hover:bg-gray-50 rounded-md cursor-pointer rotate-180 self-start 
+          ${(currentStep === 'create-code' || currentStep === 'complete') && 'invisible'}`}
         onClick={() => goToPrevStep()}
       />
       <div className="flex flex-col flex-1 items-center pt-32">
