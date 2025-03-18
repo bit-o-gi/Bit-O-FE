@@ -2,9 +2,11 @@ import { isEqual } from 'date-fns'
 import ScheduleList from './ScheduleList'
 import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
 import { useScheduleStore } from '@/entities/calendar'
+import { useNavigater } from '@/shared/lib'
 
 const CalendarBody = () => {
   const { selectedDate, setSelectedDate, currentDate } = useScheduleStore()
+  const { navigateDetailCalendar } = useNavigater()
 
   const getDateStyle = ({ date, today }: { date: Date | null; today: boolean | undefined }) => {
     if (!date) return
@@ -32,19 +34,33 @@ const CalendarBody = () => {
     return 'text-black' // 기본 상태
   }
 
+  const getFormattedDate = (date: Date) => {
+    const YEAR = date.getFullYear()
+    const MONTH = date.getMonth()
+    const DAY = date.getDate()
+    const formattedDate = `${YEAR}-${MONTH}-${DAY}`
+    return formattedDate
+  }
+
+  const onClickDateController = (date: Date) => {
+    const formattedDate = getFormattedDate(date)
+    navigateDetailCalendar(formattedDate)
+    setSelectedDate(date)
+  }
+
   return (
-    <div className="flex flex-col  w-full text-[0.75rem]">
+    <div className="w-full h-calc4rem flex flex-col py-[0.25rem] px-[0.5rem] rounded-t-3xl text-[0.75rem] bg-white">
       <div className="flex w-full h-[4vh] items-center">
         {DAY_OF_THE_WEEK.map((item, index) => {
           return (
-            <div key={index} className="flex-1 text-center text-gray-400">
-              <span>{item}</span>
+            <div key={index} className="flex-1 text-gray-400">
+              <div className="w-[24px] text-center">{item}</div>
             </div>
           )
         })}
       </div>
       {/** 일자 */}
-      <div className="grid grid-cols-7 ">
+      <div className="h-full grid grid-cols-7 items-stretch">
         {generateDate({
           month: currentDate.getMonth(),
           year: currentDate.getFullYear(),
@@ -52,17 +68,18 @@ const CalendarBody = () => {
           return (
             <div
               key={date.getDate() + '_' + index}
-              className=" h-[10vh] flex justify-center relative"
+              className="h-[65px] cursor-pointer"
+              onClick={() => onClickDateController(date)}
             >
               <div
                 className={`${currentMonth ? getDateStyle({ date, today }) : 'text-gray-100'} 
                 text-center w-[24px] h-[24px] flex items-center justify-center`}
-                onClick={() => setSelectedDate(date)}
+                // onClick={() => setSelectedDate(date)}
               >
-                <span className="cursor-pointer">{date.getDate()}</span>
+                <div>{date.getDate()}</div>
               </div>
-              {/** 스케쥴 리스트 */}
               <ScheduleList date={date} />
+              {/** 스케쥴 리스트 */}
             </div>
           )
         })}

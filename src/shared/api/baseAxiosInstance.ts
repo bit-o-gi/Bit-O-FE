@@ -14,10 +14,12 @@ instance.interceptors.request.use(
     // 스토리지에서 access토큰 가져오는 로직
     const accessToken = localStorage.getItem('access_token')
 
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`
+    if (!accessToken) {
+      window.location.href = '/login'
+      return config
     }
 
+    config.headers['Authorization'] = `Bearer ${accessToken}`
     return config
   },
   function (error) {
@@ -47,7 +49,7 @@ instance.interceptors.response.use(
       }
 
       try {
-        const tokenRefreshResult = await instance.post('/api/v1/auth/token', {
+        const tokenRefreshResult = await instance.post('auth/token', {
           refreshToken,
         })
         if (tokenRefreshResult.status === 200) {
@@ -57,7 +59,8 @@ instance.interceptors.response.use(
           const { accessToken } = tokenRefreshResult.data
           localStorage.setItem('access_token', accessToken)
 
-          // 토큰 갱신 성공. API 재요청
+          // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
+          config.headers.Authorization = `Bearer ${accessToken}`
           return instance(config)
         } else {
           // 백엔드 에러메세지 (	Error: response status is 500 )
