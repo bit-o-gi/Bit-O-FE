@@ -55,8 +55,6 @@ export function CalendarPage() {
             <span className="text-white text-xl">+</span>
           </div>
         </div>
-
-        {/* detail 모달 */}
       </div>
     )
   )

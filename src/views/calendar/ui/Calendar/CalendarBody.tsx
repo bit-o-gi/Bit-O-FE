@@ -1,7 +1,10 @@
+'use client'
+
 import { useScheduleStore } from '@/entities/calendar'
 import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
 import { isEqual } from 'date-fns'
 import ScheduleList from './ScheduleList'
+import { useState } from 'react'
 
 const CalendarBody = () => {
   const { selectedDate, setSelectedDate, currentDate } = useScheduleStore()
@@ -32,12 +35,28 @@ const CalendarBody = () => {
     return 'text-black' // 기본 상태
   }
 
+  // detail Modal
+  // uerf
+  const [isVisable, setIsVisable] = useState(false)
+  const showDetailModal = () => {
+    setIsVisable(true)
+  }
+
+  const closeDetailModal = () => {
+    setIsVisable(false)
+  }
+
+  const handleModalContent = (e) => {
+    e.stopPropagation()
+  }
+
   const onClickDateController = (date: Date) => {
     setSelectedDate(date)
+    showDetailModal()
   }
 
   return (
-    <div className="w-full h-calc4rem flex flex-col py-[0.25rem] px-[0.5rem] rounded-t-3xl text-[0.75rem] bg-white">
+    <div className="relative w-full h-calc4rem flex flex-col py-[0.25rem] px-[0.5rem] rounded-t-3xl text-[0.75rem] bg-white">
       <div className="flex w-full h-[4vh] items-center">
         {DAY_OF_THE_WEEK.map((item, index) => {
           return (
@@ -72,6 +91,21 @@ const CalendarBody = () => {
           )
         })}
       </div>
+
+      {/* detail 모달 */}
+      {isVisable && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-70 p-5 transition-opacity duration-300 ease-in-out opacity-${isVisable ? 1 : 0} flex justify-center items-center`}
+          onClick={closeDetailModal}
+        >
+          <div
+            className={`w-full h-full bg-white p-5 rounded shadow-md transition-opacity duration-300 ease-in-out opacity-1 transform scale-75`}
+            onClick={handleModalContent}
+          >
+            content
+          </div>
+        </div>
+      )}
     </div>
   )
 }
