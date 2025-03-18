@@ -1,12 +1,10 @@
+import { useScheduleStore } from '@/entities/calendar'
+import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
 import { isEqual } from 'date-fns'
 import ScheduleList from './ScheduleList'
-import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
-import { useScheduleStore } from '@/entities/calendar'
-import { useNavigater } from '@/shared/lib'
 
 const CalendarBody = () => {
   const { selectedDate, setSelectedDate, currentDate } = useScheduleStore()
-  const { navigateDetailCalendar } = useNavigater()
 
   const getDateStyle = ({ date, today }: { date: Date | null; today: boolean | undefined }) => {
     if (!date) return
@@ -34,17 +32,7 @@ const CalendarBody = () => {
     return 'text-black' // 기본 상태
   }
 
-  const getFormattedDate = (date: Date) => {
-    const YEAR = date.getFullYear()
-    const MONTH = date.getMonth()
-    const DAY = date.getDate()
-    const formattedDate = `${YEAR}-${MONTH}-${DAY}`
-    return formattedDate
-  }
-
   const onClickDateController = (date: Date) => {
-    const formattedDate = getFormattedDate(date)
-    navigateDetailCalendar(formattedDate)
     setSelectedDate(date)
   }
 

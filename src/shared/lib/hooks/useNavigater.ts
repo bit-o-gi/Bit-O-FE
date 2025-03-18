@@ -4,14 +4,6 @@ import { useRouter } from 'next/navigation'
 export function useNavigater() {
   const router = useRouter()
 
-  /**
-   *
-   * @param day // ex) '2025-03-18'
-   */
-  const navigateDetailCalendar = (day: string) => {
-    router.push(`/calendar/detail/${day}`)
-  }
-
   const navigateAddCalendar = () => {
     router.push(`/calendar/add/new`)
   }
@@ -31,7 +23,6 @@ export function useNavigater() {
   }
 
   return {
-    navigateDetailCalendar,
     navigateAddCalendar,
     navigateLogin,
     navigateOnboarding,

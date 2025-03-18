@@ -56,9 +56,7 @@ export function CalendarPage() {
           </div>
         </div>
 
-        {/* detail 페이지 무조건 route처리  */}
-        {/* detail 페이지 무조건 route처리  */}
-        {/* 링크 만들어서 스케쥴 생성 후 공유 기능(카카오 메세지지) */}
+        {/* detail 모달 */}
       </div>
     )
   )
