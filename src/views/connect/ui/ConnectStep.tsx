@@ -1,6 +1,7 @@
 'use client'
 
 import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
+import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { useMutation } from '@tanstack/react-query'
@@ -119,7 +120,11 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   }
 
   const onClickShareButton = () => {
-    // TODO: 공유로직
+    shareWithKakao(
+      'OO와 커플 연결하고 다양한 서비스를 이용해보세요.',
+      `${process.env.NEXT_PUBLIC_APP_URL}/connect/insert-code`,
+      '연결하러 가기',
+    )
   }
 
   const onClickStartButton = () => {
