@@ -1,6 +1,7 @@
 'use client'
 
 import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
+import { useUserInfoStore } from '@/entities/userInfo'
 import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
@@ -8,7 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 type ConnectStepType = 'create' | 'code'
@@ -40,8 +41,10 @@ const CONNECT_STEP_INSTRUCTION: Record<ConnectStep, string> = {
 }
 
 export function ConnectStepPage({ type }: ConnectStepProps) {
+  const searchParams = useSearchParams()
   const router = useRouter()
   const toast = useToast()
+  const { userInfo } = useUserInfoStore()
 
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
@@ -121,8 +124,8 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const onClickShareButton = () => {
     shareWithKakao(
-      'OO와 커플 연결하고 다양한 서비스를 이용해보세요.',
-      `${process.env.NEXT_PUBLIC_APP_URL}/connect/insert-code`,
+      `${userInfo.nickName} 님과 커플 연결하고 다양한 서비스를 이용해보세요.`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/connect/insert-code?code=${code}`,
       '연결하러 가기',
     )
   }
@@ -146,6 +149,10 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
           setCode(code)
         })
         .catch((error) => console.error(error))
+    }
+    if (type === 'code') {
+      const code = searchParams.get('code') || ''
+      handleInputChange(code, 'insert-code')
     }
   }, [])
 
