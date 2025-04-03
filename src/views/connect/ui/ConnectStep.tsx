@@ -5,7 +5,7 @@ import {
   createCoupleCode,
   getCoupleCode,
   getCoupleInfo,
-} from '@/entities/couple/api'
+} from '@/entities/couple'
 import { useUserInfoStore } from '@/entities/userInfo'
 import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
