@@ -1,6 +1,11 @@
 'use client'
 
-import { confirmCoupleCode, createCoupleCode, getCoupleCode } from '@/entities/couple/api'
+import {
+  confirmCoupleCode,
+  createCoupleCode,
+  getCoupleCode,
+  getCoupleInfo,
+} from '@/entities/couple/api'
 import { useUserInfoStore } from '@/entities/userInfo'
 import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
@@ -130,8 +135,10 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     )
   }
 
-  const onClickStartButton = () => {
-    // TODO: 홈으로 돌아가기
+  const onClickStartButton = async () => {
+    const couple = await getCoupleInfo()
+    if (Boolean(couple)) router.replace('/calendar')
+    else router.replace('/connect')
   }
 
   const steps = CONNECT_STEP[type]
