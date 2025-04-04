@@ -52,7 +52,7 @@ instance.interceptors.response.use(
         const tokenRefreshResult = await instance.post('auth/token', {
           refreshToken,
         })
-        if (tokenRefreshResult.status === 200) {
+        if (tokenRefreshResult.status === 201) {
           console.log('🚀 ~ tokenRefreshResult:', tokenRefreshResult)
 
           // 새로 발급받은 토큰을 스토리지에 저장
