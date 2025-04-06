@@ -1,15 +1,17 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { ScheduleResponse, getCalendarList, useScheduleStore } from '@/entities/calendar'
+import { useNavigater } from '@/shared/lib'
 import { LoadingSpinner } from '@/shared/ui'
-import CalendarHeader from './CalendarHeader'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import CalendarBody from './CalendarBody'
-import CalendarPlans from './CalendarPlans'
+import CalendarHeader from './CalendarHeader'
 
 export function CalendarPage() {
   const { setSelectedDate, setSchedules, setCurrentDate, currentDate } = useScheduleStore()
+  // const { setCurrentDate, currentDate } = useScheduleStore()
+  const { navigateAddCalendar } = useNavigater()
 
   const {
     isLoading,
@@ -32,15 +34,27 @@ export function CalendarPage() {
     setCurrentDate(new Date())
   }, [setCurrentDate])
 
+  const handleAddSchedule = () => {
+    navigateAddCalendar()
+  }
+
   if (isLoading) return <LoadingSpinner />
   if (isError) alert(error)
-
   return (
     currentDate && (
-      <div className="cursor-pointer px-[1.5rem] py-[2.1rem] flex flex-col gap-[1.5rem]">
+      <div className="h-calc64 relative flex flex-col bg-gray-50">
         <CalendarHeader />
         <CalendarBody />
-        <CalendarPlans />
+        {/* <CalendarPlans /> */}
+        {/* 스케쥴 추가 버튼 */}
+        <div
+          className="absolute bottom-[2rem] right-[1.5rem] cursor-pointer"
+          onClick={handleAddSchedule}
+        >
+          <div className="w-[2rem] h-[2rem] rounded-full bg-pink text-center align-middle ">
+            <span className="text-white text-xl">+</span>
+          </div>
+        </div>
       </div>
     )
   )

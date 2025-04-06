@@ -18,12 +18,13 @@ const ScheduleList = ({ date }: ScheduleList) => {
   }, [schedules, date])
 
   return (
-    <ul className="absolute inset-0 top-[1.5rem]">
+    // <ul className="h-calc24">
+    <ul className="">
       {filterSchedule.slice(0, 2).map((plan) => {
         return (
           <li
             key={plan.id}
-            className={`bg-pink text-[0.5rem] text-ellipsis overflow-hidden px-[0.5rem] mt-1`}
+            className={`bg-pink text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] mt-1`}
           >
             {plan.title}
           </li>

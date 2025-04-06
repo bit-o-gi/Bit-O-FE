@@ -1,7 +1,10 @@
+'use client'
+
+import { useScheduleStore } from '@/entities/calendar'
+import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
 import { isEqual } from 'date-fns'
 import ScheduleList from './ScheduleList'
-import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
-import { useScheduleStore } from '@/entities/calendar'
+import { useState } from 'react'
 
 const CalendarBody = () => {
   const { selectedDate, setSelectedDate, currentDate } = useScheduleStore()
@@ -32,19 +35,39 @@ const CalendarBody = () => {
     return 'text-black' // 기본 상태
   }
 
+  // detail Modal
+  // uerf
+  const [isVisable, setIsVisable] = useState(false)
+  const showDetailModal = () => {
+    setIsVisable(true)
+  }
+
+  const closeDetailModal = () => {
+    setIsVisable(false)
+  }
+
+  const handleModalContent = (e) => {
+    e.stopPropagation()
+  }
+
+  const onClickDateController = (date: Date) => {
+    setSelectedDate(date)
+    showDetailModal()
+  }
+
   return (
-    <div className="flex flex-col  w-full text-[0.75rem]">
+    <div className="relative w-full h-calc4rem flex flex-col py-[0.25rem] px-[0.5rem] rounded-t-3xl text-[0.75rem] bg-white">
       <div className="flex w-full h-[4vh] items-center">
         {DAY_OF_THE_WEEK.map((item, index) => {
           return (
-            <div key={index} className="flex-1 text-center text-gray-400">
-              <span>{item}</span>
+            <div key={index} className="flex-1 text-gray-400">
+              <div className="w-[24px] text-center">{item}</div>
             </div>
           )
         })}
       </div>
       {/** 일자 */}
-      <div className="grid grid-cols-7 ">
+      <div className="h-full grid grid-cols-7 items-stretch">
         {generateDate({
           month: currentDate.getMonth(),
           year: currentDate.getFullYear(),
@@ -52,21 +75,37 @@ const CalendarBody = () => {
           return (
             <div
               key={date.getDate() + '_' + index}
-              className=" h-[10vh] flex justify-center relative"
+              className="h-[65px] cursor-pointer"
+              onClick={() => onClickDateController(date)}
             >
               <div
                 className={`${currentMonth ? getDateStyle({ date, today }) : 'text-gray-100'} 
                 text-center w-[24px] h-[24px] flex items-center justify-center`}
-                onClick={() => setSelectedDate(date)}
+                // onClick={() => setSelectedDate(date)}
               >
-                <span className="cursor-pointer">{date.getDate()}</span>
+                <div>{date.getDate()}</div>
               </div>
-              {/** 스케쥴 리스트 */}
               <ScheduleList date={date} />
+              {/** 스케쥴 리스트 */}
             </div>
           )
         })}
       </div>
+
+      {/* detail 모달 */}
+      {isVisable && (
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-70 p-5 transition-opacity duration-300 ease-in-out opacity-${isVisable ? 1 : 0} flex justify-center items-center`}
+          onClick={closeDetailModal}
+        >
+          <div
+            className={`w-full h-full bg-white p-5 rounded shadow-md transition-opacity duration-300 ease-in-out opacity-1 transform scale-75`}
+            onClick={handleModalContent}
+          >
+            content
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -12,6 +12,18 @@
   }
 }
 
+@layer utilities {
+  .h-calc64 {
+    height: calc(100% - 64px);
+  }
+  .h-calc24 {
+    height: calc(100% - 24px);
+  }
+  .h-calc4rem {
+    height: calc(100% - 4rem);
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

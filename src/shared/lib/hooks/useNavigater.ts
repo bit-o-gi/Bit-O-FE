@@ -4,6 +4,10 @@ import { useRouter } from 'next/navigation'
 export function useNavigater() {
   const router = useRouter()
 
+  const navigateAddCalendar = () => {
+    router.push(`/calendar/add/new`)
+  }
+
   const navigateLogin = () => {
     router.push('/login')
   }
@@ -18,5 +22,10 @@ export function useNavigater() {
     window.location.href = `${baseURL}/oauth2/authorization/kakao`
   }
 
-  return { navigateLogin, navigateOnboarding, navigateToKakaoAuth }
+  return {
+    navigateAddCalendar,
+    navigateLogin,
+    navigateOnboarding,
+    navigateToKakaoAuth,
+  }
 }
