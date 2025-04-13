@@ -1,18 +1,18 @@
 'use client'
 
-import { getCoupleInfo } from '@/entities/couple'
-import { userApi } from '@/entities/userInfo'
+import { useCoupleInfoStore } from '@/entities/couple'
+import { useUserInfoStore } from '@/entities/userInfo'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export function MainPage() {
+  const { userInfo } = useUserInfoStore()
+  const { coupleInfo } = useCoupleInfoStore()
   const router = useRouter()
 
   const checkLoggedInUser = async () => {
-    const user = await userApi()
-    if (user) {
-      const couple = await getCoupleInfo()
-      if (couple) {
+    if (userInfo) {
+      if (coupleInfo) {
         router.replace('/calendar')
       } else {
         router.replace('/connect')
@@ -24,6 +24,6 @@ export function MainPage() {
 
   useEffect(() => {
     checkLoggedInUser()
-  }, [])
+  }, [userInfo, coupleInfo])
   return null
 }

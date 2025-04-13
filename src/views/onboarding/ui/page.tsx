@@ -1,4 +1,5 @@
 'use client'
+import { getCoupleInfo, useCoupleInfoStore } from '@/entities/couple'
 import { userApi, useUserInfoStore } from '@/entities/userInfo'
 import { BaseButton } from '@/shared/ui'
 
@@ -8,10 +9,16 @@ import { useEffect } from 'react'
 
 export function OnboardingPage() {
   const { userInfo, setUserInfo } = useUserInfoStore()
+  const { setCoupleInfo } = useCoupleInfoStore()
+
   const getUserInfo = async () => {
-    const result = await userApi()
-    if (result) {
-      setUserInfo(result)
+    const userInfo = await userApi()
+    if (userInfo) {
+      setUserInfo(userInfo)
+      const coupleInfo = await getCoupleInfo()
+      if (coupleInfo) {
+        setCoupleInfo(coupleInfo)
+      }
     }
   }
 
@@ -29,7 +36,7 @@ export function OnboardingPage() {
           {/* <div className="text-[21px]">회원가입 완료</div> */}
           <div className="text-[21px]">로그인 완료</div>
           <div>
-            <div>{userInfo.nickName}님 반갑습니다!</div>
+            <div>{userInfo?.nickName}님 반갑습니다!</div>
             {/* <div>회원이 되신것을 환영합니다.</div> */}
             <div>재방문을 환영합니다</div>
           </div>
