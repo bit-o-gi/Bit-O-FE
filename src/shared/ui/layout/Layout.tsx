@@ -1,15 +1,24 @@
 'use client'
 
+import { useCoupleInfoStore } from '@/entities/couple'
+import { useUserInfoStore } from '@/entities/userInfo'
 import { NavigationBar, ToastManager } from '@/shared/ui'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { ReactNode, useEffect } from 'react'
 
-import { ReactNode } from 'react'
+const LOGGEDOUT_ROUTES = ['/login', '/onboarding']
+const LOGGEDIN_ROUTES = ['/onboarding']
+const COUPLE_ROUTES = ['/calendar', '/dday', '/setting']
+const SINGLE_ROUTES = ['/connect', '/connect/create-couple', '/connect/insert-code']
 
 interface LayoutProps {
   children: ReactNode
 }
 export const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname()
+  const router = useRouter()
+  const { userInfo } = useUserInfoStore()
+  const { coupleInfo } = useCoupleInfoStore()
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
@@ -17,6 +26,14 @@ export const Layout = ({ children }: LayoutProps) => {
   const showNav = pagesWithNav.some((path) => {
     return pathname === path
   })
+
+  useEffect(() => {
+    if (!userInfo && !LOGGEDOUT_ROUTES.includes(pathname)) router.replace('/login')
+    if (userInfo && coupleInfo && ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].includes(pathname))
+      router.replace('/calendar')
+    if (userInfo && !coupleInfo && ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].includes(pathname))
+      router.replace('/connect')
+  }, [router, pathname, userInfo, coupleInfo])
 
   return (
     <div className="flex w-full h-full bg-gray-100">

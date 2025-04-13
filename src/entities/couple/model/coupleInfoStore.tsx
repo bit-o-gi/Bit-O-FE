@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { Couple } from './types'
+import { persist } from 'zustand/middleware'
 
 interface CoupleInfoStore {
   coupleInfo: Couple | null
@@ -7,8 +8,15 @@ interface CoupleInfoStore {
   resetCoupleInfo: () => void
 }
 
-export const useCoupleInfoStore = create<CoupleInfoStore>()((set) => ({
-  coupleInfo: null,
-  setCoupleInfo: (coupleInfo: Couple | null) => set({ coupleInfo }),
-  resetCoupleInfo: () => set({ coupleInfo: null }),
-}))
+export const useCoupleInfoStore = create<CoupleInfoStore>()(
+  persist(
+    (set) => ({
+      coupleInfo: null,
+      setCoupleInfo: (coupleInfo: Couple | null) => set({ coupleInfo }),
+      resetCoupleInfo: () => set({ coupleInfo: null }),
+    }),
+    {
+      name: 'couple-storage',
+    },
+  ),
+)
