@@ -1,8 +1,17 @@
 import { instance } from '@/shared/api'
 import { Couple } from '../model/types'
 
-export const createCoupleCode = async (): Promise<string> => {
-  const res = await instance.post('/couple/code')
+export const createCoupleCode = async ({
+  startDate,
+  coupleTitle,
+}: {
+  startDate: Date
+  coupleTitle: string
+}): Promise<string> => {
+  const res = await instance.post('/couple/code', {
+    startDate,
+    coupleTitle,
+  })
   return res.data.code
 }
 

@@ -26,7 +26,7 @@ interface ConnectStepProps {
 
 const CONNECT_STEP: Record<ConnectStepType, ConnectStep[]> = {
   create: ['date', 'nickname', 'create-code'],
-  code: ['insert-code', 'nickname', 'complete'],
+  code: ['insert-code', 'complete'],
 }
 
 const CONNECT_STEP_IMAGE: Record<ConnectStep, string> = {
@@ -39,7 +39,7 @@ const CONNECT_STEP_IMAGE: Record<ConnectStep, string> = {
 
 const CONNECT_STEP_INSTRUCTION: Record<ConnectStep, string> = {
   date: '처음 사귀기 시작한 날짜를 \n선택해주세요.',
-  nickname: '우리 둘 사이에서\n나의 애칭은 무엇인가요?',
+  nickname: '우리 커플의 별명은\n무엇인가요?',
   'create-code': '커플 코드가 생성되었어요.\n상대방에게 공유해볼까요?',
   'insert-code': '커플 코드를 입력해주세요.',
   complete: '커플 연결이 완료되었어요.\n이제 bitO를 사용해보세요.',
@@ -59,7 +59,8 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   )
 
   const createCodeMutation = useMutation({
-    mutationFn: () => createCoupleCode(),
+    mutationFn: ({ startDate, coupleTitle }: { startDate: Date; coupleTitle: string }) =>
+      createCoupleCode({ startDate, coupleTitle }),
     onSuccess: (data) => setCode(data),
     onError: async (error: AxiosError) => {
       if (error.response?.status === 409) {
@@ -95,7 +96,11 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
     const nextStep = steps[currentPage + 1]
     try {
-      if (nextStep === 'create-code') await createCodeMutation.mutateAsync()
+      if (nextStep === 'create-code')
+        await createCodeMutation.mutateAsync({
+          startDate: new Date(inputData['date']),
+          coupleTitle: inputData['nickname'],
+        })
       if (nextStep === 'complete') await confirmCodeMutation.mutateAsync(inputData['insert-code'])
     } catch (error) {
       console.error(error)
@@ -129,7 +134,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const onClickShareButton = () => {
     shareWithKakao(
-      `${userInfo.nickName} 님과 커플 연결하고 다양한 서비스를 이용해보세요.`,
+      `${userInfo?.nickName} 님과 커플 연결하고 다양한 서비스를 이용해보세요.`,
       `${process.env.NEXT_PUBLIC_APP_URL}/connect/insert-code?code=${code}`,
       '연결하러 가기',
     )
