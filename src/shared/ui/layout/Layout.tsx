@@ -1,7 +1,7 @@
 'use client'
 
-import { useCoupleInfoStore } from '@/entities/couple'
-import { useUserInfoStore } from '@/entities/userInfo'
+import { getCoupleInfo, useCoupleInfoStore } from '@/entities/couple'
+import { userApi, useUserInfoStore } from '@/entities/userInfo'
 import { NavigationBar, ToastManager } from '@/shared/ui'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect } from 'react'
@@ -17,8 +17,8 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { userInfo } = useUserInfoStore()
-  const { coupleInfo } = useCoupleInfoStore()
+  const { userInfo, setUserInfo, resetUserInfo } = useUserInfoStore()
+  const { coupleInfo, setCoupleInfo, resetCoupleInfo } = useCoupleInfoStore()
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
@@ -26,6 +26,22 @@ export const Layout = ({ children }: LayoutProps) => {
   const showNav = pagesWithNav.some((path) => {
     return pathname === path
   })
+
+  useEffect(() => {
+    //앱 최초 진입 시 로그인 정보 확인
+    const fetchUserData = async () => {
+      try {
+        const user = await userApi()
+        setUserInfo(user)
+        const couple = await getCoupleInfo()
+        setCoupleInfo(couple)
+      } catch {
+        resetUserInfo()
+        resetCoupleInfo()
+      }
+    }
+    fetchUserData()
+  }, [])
 
   useEffect(() => {
     if (!userInfo && !LOGGEDOUT_ROUTES.includes(pathname)) router.replace('/login')
