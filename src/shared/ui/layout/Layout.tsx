@@ -4,7 +4,7 @@ import { getCoupleInfo, useCoupleInfoStore } from '@/entities/couple'
 import { userApi, useUserInfoStore } from '@/entities/userInfo'
 import { NavigationBar, ToastManager } from '@/shared/ui'
 import { usePathname, useRouter } from 'next/navigation'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 const LOGGEDOUT_ROUTES = ['/login', '/onboarding']
 const LOGGEDIN_ROUTES = ['/onboarding']
@@ -20,13 +20,14 @@ export const Layout = ({ children }: LayoutProps) => {
   const { userInfo, setUserInfo, resetUserInfo } = useUserInfoStore()
   const { coupleInfo, setCoupleInfo, resetCoupleInfo } = useCoupleInfoStore()
 
+  const [isDataFetched, setIsDataFetched] = useState<boolean>(false)
+
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
-
   const showNav = pagesWithNav.includes(pathname)
 
   useEffect(() => {
-    //앱 최초 진입 시 로그인 정보 확인
+    //앱 최초 진입 또는 새로고침 시 로그인 정보 확인
     const fetchUserData = async () => {
       try {
         const user = await userApi()
@@ -36,18 +37,22 @@ export const Layout = ({ children }: LayoutProps) => {
       } catch {
         resetUserInfo()
         resetCoupleInfo()
+      } finally {
+        setIsDataFetched(true)
       }
     }
     fetchUserData()
   }, [])
 
   useEffect(() => {
+    if (!isDataFetched) return
+
     if (!userInfo && !LOGGEDOUT_ROUTES.includes(pathname)) router.replace('/login')
     if (userInfo && coupleInfo && ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].includes(pathname))
       router.replace('/calendar')
     if (userInfo && !coupleInfo && ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].includes(pathname))
       router.replace('/connect')
-  }, [router, pathname, userInfo, coupleInfo])
+  }, [isDataFetched, router, pathname, userInfo, coupleInfo])
 
   return (
     <div className="flex w-full h-full bg-gray-100">
