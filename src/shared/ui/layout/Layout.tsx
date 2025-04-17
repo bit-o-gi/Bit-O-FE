@@ -23,9 +23,7 @@ export const Layout = ({ children }: LayoutProps) => {
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
 
-  const showNav = pagesWithNav.some((path) => {
-    return pathname === path
-  })
+  const showNav = pagesWithNav.includes(pathname)
 
   useEffect(() => {
     //앱 최초 진입 시 로그인 정보 확인
