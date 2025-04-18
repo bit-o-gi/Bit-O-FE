@@ -5,6 +5,7 @@ import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
 import { isEqual } from 'date-fns'
 import ScheduleList from './ScheduleList'
 import { useState } from 'react'
+import DetailModal from './DetailModal'
 
 const CalendarBody = () => {
   const { selectedDate, setSelectedDate, currentDate } = useScheduleStore()
@@ -36,7 +37,6 @@ const CalendarBody = () => {
   }
 
   // detail Modal
-  // uerf
   const [isVisable, setIsVisable] = useState(false)
   const showDetailModal = () => {
     setIsVisable(true)
@@ -44,10 +44,6 @@ const CalendarBody = () => {
 
   const closeDetailModal = () => {
     setIsVisable(false)
-  }
-
-  const handleModalContent = (e) => {
-    e.stopPropagation()
   }
 
   const onClickDateController = (date: Date) => {
@@ -81,7 +77,6 @@ const CalendarBody = () => {
               <div
                 className={`${currentMonth ? getDateStyle({ date, today }) : 'text-gray-100'} 
                 text-center w-[24px] h-[24px] flex items-center justify-center`}
-                // onClick={() => setSelectedDate(date)}
               >
                 <div>{date.getDate()}</div>
               </div>
@@ -93,18 +88,12 @@ const CalendarBody = () => {
       </div>
 
       {/* detail 모달 */}
-      {isVisable && (
-        <div
-          className={`fixed inset-0 bg-black bg-opacity-70 p-5 transition-opacity duration-300 ease-in-out opacity-${isVisable ? 1 : 0} flex justify-center items-center`}
-          onClick={closeDetailModal}
-        >
-          <div
-            className={`w-full h-full bg-white p-5 rounded shadow-md transition-opacity duration-300 ease-in-out opacity-1 transform scale-75`}
-            onClick={handleModalContent}
-          >
-            content
-          </div>
-        </div>
+      {isVisable && selectedDate && (
+        <DetailModal
+          isVisable={isVisable}
+          closeDetailModal={closeDetailModal}
+          date={selectedDate}
+        />
       )}
     </div>
   )
