@@ -71,11 +71,11 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
 
   return (
     <div
-      className={` fixed inset-0 bg-black bg-opacity-70 p-5 transition-opacity duration-300 ease-in-out opacity-${isVisable ? 1 : 0} flex justify-center items-center`}
+      className={`z-10 fixed inset-0 bg-black bg-opacity-70 p-5 transition-opacity duration-300 ease-in-out opacity-${isVisable ? 1 : 0} flex justify-center items-center`}
       onClick={closeDetailModal}
     >
       <div
-        className={`w-full h-full bg-white p-5 rounded shadow-md transition-opacity duration-300 ease-in-out opacity-1 transform scale-75`}
+        className={`w-full max-w-[33.75rem] h-full bg-white p-5 rounded shadow-md transition-opacity duration-300 ease-in-out opacity-1 transform scale-75`}
         onClick={handleModalContent}
       >
         <div className="text-4xl">
