@@ -1,6 +1,6 @@
 'use client'
-import { getCoupleInfo, useCoupleInfoStore } from '@/entities/couple'
-import { userApi, useUserInfoStore } from '@/entities/userInfo'
+import { useRefetchCoupleInfo } from '@/entities/couple'
+import { useRefetchUserInfo, useUserInfoStore } from '@/entities/userInfo'
 import { BaseButton } from '@/shared/ui'
 
 import Image from 'next/image'
@@ -8,22 +8,16 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 
 export function OnboardingPage() {
-  const { userInfo, setUserInfo } = useUserInfoStore()
-  const { setCoupleInfo } = useCoupleInfoStore()
+  const { refetch: refetchUser } = useRefetchUserInfo()
+  const { refetch: refetchCouple } = useRefetchCoupleInfo()
 
-  const getUserInfo = async () => {
-    const userInfo = await userApi()
-    if (userInfo) {
-      setUserInfo(userInfo)
-      const coupleInfo = await getCoupleInfo()
-      if (coupleInfo) {
-        setCoupleInfo(coupleInfo)
-      }
-    }
-  }
+  const { userInfo } = useUserInfoStore()
 
   useEffect(() => {
-    getUserInfo()
+    const fetchUserData = async () => {
+      await Promise.all([refetchUser(), refetchCouple()])
+    }
+    fetchUserData()
   }, [])
 
   return (

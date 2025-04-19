@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useUserInfoStore } from '../model/userInfoStore'
-import { userApi } from '../api/userApi'
+import { getUserInfo } from '../api/userApi'
 
 export const useRefetchUserInfo = () => {
   const { setUserInfo } = useUserInfoStore()
@@ -8,7 +8,7 @@ export const useRefetchUserInfo = () => {
 
   const refetch = async () => {
     setIsLoading(true)
-    const user = await userApi()
+    const user = await getUserInfo()
     setUserInfo(user)
     setIsLoading(false)
   }
