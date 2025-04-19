@@ -4,7 +4,7 @@ import {
   confirmCoupleCode,
   createCoupleCode,
   getCoupleCode,
-  getCoupleInfo,
+  useRefetchCoupleInfo,
 } from '@/entities/couple'
 import { useUserInfoStore } from '@/entities/userInfo'
 import { shareWithKakao } from '@/features/share'
@@ -50,6 +50,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   const router = useRouter()
   const toast = useToast()
   const { userInfo } = useUserInfoStore()
+  const { refetch: refetchCouple } = useRefetchCoupleInfo()
 
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [isForward, setIsForward] = useState<boolean>(true)
@@ -141,9 +142,8 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   }
 
   const onClickStartButton = async () => {
-    const couple = await getCoupleInfo()
-    if (Boolean(couple)) router.replace('/calendar')
-    else router.replace('/connect')
+    await refetchCouple()
+    router.replace('/')
   }
 
   const steps = CONNECT_STEP[type]

@@ -1,10 +1,10 @@
 'use client'
 
-import { getCoupleInfo, useCoupleInfoStore } from '@/entities/couple'
-import { userApi, useUserInfoStore } from '@/entities/userInfo'
+import { useCoupleInfoStore, useRefetchCoupleInfo } from '@/entities/couple'
+import { useRefetchUserInfo, useUserInfoStore } from '@/entities/userInfo'
 import { NavigationBar, ToastManager } from '@/shared/ui'
 import { usePathname, useRouter } from 'next/navigation'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 const LOGGEDOUT_ROUTES = ['/login', '/onboarding']
 const LOGGEDIN_ROUTES = ['/onboarding']
@@ -17,10 +17,12 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { userInfo, setUserInfo, resetUserInfo } = useUserInfoStore()
-  const { coupleInfo, setCoupleInfo, resetCoupleInfo } = useCoupleInfoStore()
 
-  const [isDataFetched, setIsDataFetched] = useState<boolean>(false)
+  const { refetch: refetchUser } = useRefetchUserInfo()
+  const { refetch: refetchCouple } = useRefetchCoupleInfo()
+
+  const { userInfo } = useUserInfoStore()
+  const { coupleInfo } = useCoupleInfoStore()
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
@@ -29,30 +31,18 @@ export const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     //앱 최초 진입 또는 새로고침 시 로그인 정보 확인
     const fetchUserData = async () => {
-      try {
-        const user = await userApi()
-        setUserInfo(user)
-        const couple = await getCoupleInfo()
-        setCoupleInfo(couple)
-      } catch {
-        resetUserInfo()
-        resetCoupleInfo()
-      } finally {
-        setIsDataFetched(true)
-      }
+      await Promise.all([refetchUser(), refetchCouple()])
     }
     fetchUserData()
   }, [])
 
   useEffect(() => {
-    if (!isDataFetched) return
-
     if (!userInfo && !LOGGEDOUT_ROUTES.includes(pathname)) router.replace('/login')
     if (userInfo && coupleInfo && ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].includes(pathname))
       router.replace('/calendar')
     if (userInfo && !coupleInfo && ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].includes(pathname))
       router.replace('/connect')
-  }, [isDataFetched, router, pathname, userInfo, coupleInfo])
+  }, [router, pathname, userInfo, coupleInfo])
 
   return (
     <div className="flex w-full h-full bg-gray-100">
