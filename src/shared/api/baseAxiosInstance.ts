@@ -44,7 +44,7 @@ instance.interceptors.response.use(
       const cookies = document.cookie
       const refreshToken = cookies.split('refresh_token=')[1]
       if (!refreshToken) {
-        alert(`${data.error}`)
+        console.error(`${data.error}`)
         window.location.href = '/login'
       }
 
