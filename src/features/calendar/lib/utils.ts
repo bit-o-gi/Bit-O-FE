@@ -1,4 +1,14 @@
-import { addDays, endOfMonth, getDay, isToday, startOfMonth } from 'date-fns'
+import {
+  addDays,
+  endOfMonth,
+  getDay,
+  isToday,
+  isWithinInterval,
+  startOfDay,
+  startOfMonth,
+} from 'date-fns'
+import { DAY_OF_THE_WEEK } from '../consts/constants'
+import { ScheduleResponse } from '@/entities/calendar'
 
 interface GenerateDateProps {
   month: number
@@ -39,4 +49,30 @@ export const generateDate = ({ year, month }: GenerateDateProps) => {
     })
   }
   return arrayOfDate
+}
+
+export const getFormattedDate = (date: Date) => {
+  return date.getDate()
+}
+
+export const getFormattedDay = (date: Date) => {
+  const day = date.getDay()
+  return DAY_OF_THE_WEEK[day]
+}
+
+export const getFormattedTime = (date: string) => {
+  const time = date.split('T')[1].split(':')
+
+  const hour = time[0]
+  const minute = time[1]
+  return `${hour}:${minute}`
+}
+
+export const getOneDaySchedule = (schedules: ScheduleResponse[], date: Date) => {
+  return schedules.filter((plan) =>
+    isWithinInterval(date, {
+      start: startOfDay(plan.startDateTime),
+      end: startOfDay(plan.endDateTime),
+    }),
+  )
 }
