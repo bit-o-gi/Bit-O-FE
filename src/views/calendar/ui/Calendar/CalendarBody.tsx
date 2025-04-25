@@ -76,7 +76,7 @@ const CalendarBody = () => {
             >
               <div
                 className={`${currentMonth ? getDateStyle({ date, today }) : 'text-gray-100'} 
-                text-center w-[24px] h-[24px] flex items-center justify-center`}
+                text-center w-[24px] h-[24px] flex items-center justify-center text-xl`}
               >
                 <div>{date.getDate()}</div>
               </div>

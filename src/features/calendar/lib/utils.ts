@@ -1,7 +1,9 @@
 import {
   addDays,
+  differenceInDays,
   endOfMonth,
   getDay,
+  isEqual,
   isToday,
   isWithinInterval,
   startOfDay,
@@ -76,4 +78,22 @@ export const getOneDaySchedule = (schedules: ScheduleResponse[], date: Date) => 
       end: startOfDay(plan.endDateTime),
     }),
   )
+}
+
+// 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다.
+export const isStartDate = (startDate: string, date: Date) => {
+  return isEqual(startDate, date)
+}
+
+// 일정이 긴 plan 순서대로 display
+export const getSortedOneDaySchedule = (oneDaySchedule: ScheduleResponse[]) => {
+  const sortedOneDaySchedule = [...oneDaySchedule]
+  sortedOneDaySchedule.sort((planA, planB) => {
+    return (
+      differenceInDays(planB.endDateTime, planB.startDateTime) -
+      differenceInDays(planA.endDateTime, planA.startDateTime)
+    )
+  })
+
+  return sortedOneDaySchedule
 }

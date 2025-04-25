@@ -4,6 +4,7 @@ import {
   getFormattedDay,
   getFormattedTime,
   getOneDaySchedule,
+  getSortedOneDaySchedule,
 } from '@/features/calendar/lib/utils'
 import { useNavigater } from '@/shared/lib'
 import { useMemo } from 'react'
@@ -30,6 +31,9 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
   const formattedDay = getFormattedDay(date)
   const oneDaySchedule = useMemo(() => getOneDaySchedule(schedules, date), [schedules, date])
 
+  // 일정이 긴 plan 순서대로 display
+  const sortedOneDaySchedule = getSortedOneDaySchedule(oneDaySchedule)
+
   return (
     <div
       className={`z-10 fixed inset-0 bg-black bg-opacity-70 p-5 transition-opacity duration-300 ease-in-out opacity-${isVisable ? 1 : 0} flex justify-center items-center`}
@@ -44,7 +48,7 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
         </div>
         <hr />
         <ul className="pt-3">
-          {oneDaySchedule.map((plan) => (
+          {sortedOneDaySchedule.map((plan) => (
             <li
               key={`schedule-detail-plan-${date}-${plan.id}`}
               className="cursor-pointer"
@@ -65,9 +69,6 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
               </div>
             </li>
           ))}
-          {oneDaySchedule.length > 2 && (
-            <li className="text-[0.5rem] text-gray-500">+ {oneDaySchedule.length - 2} more</li>
-          )}
         </ul>
       </div>
     </div>
