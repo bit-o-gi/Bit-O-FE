@@ -1,5 +1,5 @@
 import { useScheduleStore } from '@/entities/calendar'
-import { isWithinInterval, startOfDay } from 'date-fns'
+import { getOneDaySchedule } from '@/features/calendar/lib/utils'
 import { useMemo } from 'react'
 
 interface ScheduleList {
@@ -8,19 +8,12 @@ interface ScheduleList {
 const ScheduleList = ({ date }: ScheduleList) => {
   const { schedules } = useScheduleStore()
 
-  const filterSchedule = useMemo(() => {
-    return schedules.filter((plan) =>
-      isWithinInterval(date, {
-        start: startOfDay(plan.startDateTime),
-        end: startOfDay(plan.endDateTime),
-      }),
-    )
-  }, [schedules, date])
+  const oneDaySchedule = useMemo(() => getOneDaySchedule(schedules, date), [schedules, date])
 
   return (
     // <ul className="h-calc24">
     <ul className="">
-      {filterSchedule.slice(0, 2).map((plan) => {
+      {oneDaySchedule.slice(0, 2).map((plan) => {
         return (
           <li
             key={plan.id}
@@ -30,8 +23,8 @@ const ScheduleList = ({ date }: ScheduleList) => {
           </li>
         )
       })}
-      {filterSchedule.length > 2 && (
-        <li className="text-[0.5rem] text-gray-500">+ {filterSchedule.length - 2} more</li>
+      {oneDaySchedule.length > 2 && (
+        <li className="text-[0.5rem] text-gray-500">+ {oneDaySchedule.length - 2} more</li>
       )}
     </ul>
   )

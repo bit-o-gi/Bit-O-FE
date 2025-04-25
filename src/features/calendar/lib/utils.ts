@@ -69,6 +69,7 @@ export const getFormattedTime = (date: string) => {
 }
 
 export const getOneDaySchedule = (schedules: ScheduleResponse[], date: Date) => {
+  // console.log('성능 최적화가 되나?')
   return schedules.filter((plan) =>
     isWithinInterval(date, {
       start: startOfDay(plan.startDateTime),
