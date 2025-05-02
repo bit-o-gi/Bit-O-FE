@@ -71,7 +71,7 @@ const CalendarBody = () => {
           return (
             <div
               key={date.getDate() + '_' + index}
-              className="h-[65px] cursor-pointer"
+              className=" cursor-pointer"
               onClick={() => onClickDateController(date)}
             >
               <div
@@ -80,8 +80,8 @@ const CalendarBody = () => {
               >
                 <div>{date.getDate()}</div>
               </div>
+              {/** 일자 별 스케쥴 리스트 */}
               <ScheduleList date={date} />
-              {/** 스케쥴 리스트 */}
             </div>
           )
         })}

@@ -2,7 +2,7 @@ import { useScheduleStore } from '@/entities/calendar'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
-  isStartDate,
+  trancateString,
 } from '@/features/calendar/lib/utils'
 import { useMemo } from 'react'
 
@@ -18,29 +18,31 @@ const ScheduleList = ({ date }: ScheduleList) => {
   // 일정이 긴 plan 순서대로 display
   const sortedOneDaySchedule = getSortedOneDaySchedule(oneDaySchedule)
 
-  // 스케쥴은 3개까지 display, 4개부터는 2개까지 display + more 문구
-  const displaySchedule =
-    sortedOneDaySchedule.length > 3 ? sortedOneDaySchedule.slice(0, 2) : oneDaySchedule.slice(0, 3)
-
   return (
-    // <ul className="h-calc24">
-    <ul className="">
-      {displaySchedule.map((plan) => {
+    <ul className="relative h-calc24">
+      {sortedOneDaySchedule.slice(0, 3).map((plan) => {
         return (
           <li
             key={plan.id}
-            className={`bg-pink text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] mt-1 text-sm`}
+            className={`absolute h-1/4 bg-pink text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] text-sm`}
+            style={{ top: `calc(${25 * plan.index}% + ${2 * plan.index + 2}px)` }}
           >
-            <div className="h-[20px]">
-              <span>{isStartDate(plan.startDateTime, date) ? plan.title : ''}</span>
+            <div>
+              <span>
+                {/* {isStartDate(plan.startDateTime, date) ? trancateString(plan.title, 7) : ''} */}
+                {trancateString(plan.title, 7)}
+              </span>
             </div>
           </li>
         )
       })}
-      {/* 스케쥴이 3개가 넘어가면 넘어가는 number를 (+ number) 처리 */}
+      {/* 스케쥴이 3개가 넘어가면 넘어가는 갯수 (+ more) 처리 */}
       {oneDaySchedule.length > 3 && (
-        <li className="text-[0.5rem] text-gray-500 text-sm">
-          + {oneDaySchedule.slice(2).length} more
+        <li
+          className="absolute text-[0.5rem] text-gray-500 text-sm"
+          style={{ top: `calc(${25 * 3}% + 4px)` }}
+        >
+          + {oneDaySchedule.length - 3} more
         </li>
       )}
     </ul>

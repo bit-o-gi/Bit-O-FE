@@ -1,6 +1,8 @@
 import {
   addDays,
   differenceInDays,
+  differenceInMinutes,
+  endOfDay,
   endOfMonth,
   getDay,
   isEqual,
@@ -70,12 +72,14 @@ export const getFormattedTime = (date: string) => {
   return `${hour}:${minute}`
 }
 
-export const getOneDaySchedule = (schedules: ScheduleResponse[], date: Date) => {
+export const getOneDaySchedule = (schedules: ScheduleResponse[], date: string | Date) => {
   // console.log('성능 최적화가 되나?')
+  if (schedules.length === 0) return []
+
   return schedules.filter((plan) =>
     isWithinInterval(date, {
-      start: startOfDay(plan.startDateTime),
-      end: startOfDay(plan.endDateTime),
+      start: startOfDay(plan?.startDateTime),
+      end: endOfDay(plan?.endDateTime),
     }),
   )
 }
@@ -85,15 +89,23 @@ export const isStartDate = (startDate: string, date: Date) => {
   return isEqual(startDate, date)
 }
 
-// 일정이 긴 plan 순서대로 display
+// 1. 일정 시작일이 빠른 순서로 정렬
 export const getSortedOneDaySchedule = (oneDaySchedule: ScheduleResponse[]) => {
   const sortedOneDaySchedule = [...oneDaySchedule]
   sortedOneDaySchedule.sort((planA, planB) => {
-    return (
-      differenceInDays(planB.endDateTime, planB.startDateTime) -
-      differenceInDays(planA.endDateTime, planA.startDateTime)
-    )
+    if (differenceInMinutes(planA.startDateTime, planB.startDateTime) < 0) {
+      return -1
+    } else {
+      return 1
+    }
   })
 
   return sortedOneDaySchedule
+}
+
+export const trancateString = (str: string, maxLength: number) => {
+  if (str.length > maxLength) {
+    return str.slice(0, maxLength) + '..'
+  }
+  return str
 }
