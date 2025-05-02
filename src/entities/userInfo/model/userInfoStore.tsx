@@ -1,22 +1,22 @@
 import { create } from 'zustand'
 import { UserInfo } from '../api/types'
+import { persist } from 'zustand/middleware'
 
 interface UserInfoStore {
-  userInfo: UserInfo
-  setUserInfo: (userInfo: UserInfo) => void
+  userInfo: UserInfo | null
+  setUserInfo: (userInfo: UserInfo | null) => void
   resetUserInfo: () => void
 }
 
-const initState = {
-  id: 0,
-  nickName: '',
-  email: '',
-  oauthPlatformType: '',
-  oauthProviderId: 0,
-}
-
-export const useUserInfoStore = create<UserInfoStore>()((set) => ({
-  userInfo: initState,
-  setUserInfo: (userInfo: UserInfo) => set({ userInfo }),
-  resetUserInfo: () => set({ userInfo: initState }),
-}))
+export const useUserInfoStore = create<UserInfoStore>()(
+  persist(
+    (set) => ({
+      userInfo: null,
+      setUserInfo: (userInfo: UserInfo | null) => set({ userInfo }),
+      resetUserInfo: () => set({ userInfo: null }),
+    }),
+    {
+      name: 'user-storage',
+    },
+  ),
+)

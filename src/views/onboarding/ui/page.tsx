@@ -1,5 +1,6 @@
 'use client'
-import { userApi, useUserInfoStore } from '@/entities/userInfo'
+import { useRefetchCoupleInfo } from '@/entities/couple'
+import { useRefetchUserInfo, useUserInfoStore } from '@/entities/userInfo'
 import { BaseButton } from '@/shared/ui'
 
 import Image from 'next/image'
@@ -7,16 +8,16 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 
 export function OnboardingPage() {
-  const { userInfo, setUserInfo } = useUserInfoStore()
-  const getUserInfo = async () => {
-    const result = await userApi()
-    if (result) {
-      setUserInfo(result)
-    }
-  }
+  const { refetch: refetchUser } = useRefetchUserInfo()
+  const { refetch: refetchCouple } = useRefetchCoupleInfo()
+
+  const { userInfo } = useUserInfoStore()
 
   useEffect(() => {
-    getUserInfo()
+    const fetchUserData = async () => {
+      await Promise.all([refetchUser(), refetchCouple()])
+    }
+    fetchUserData()
   }, [])
 
   return (
@@ -29,7 +30,7 @@ export function OnboardingPage() {
           {/* <div className="text-[21px]">회원가입 완료</div> */}
           <div className="text-[21px]">로그인 완료</div>
           <div>
-            <div>{userInfo.nickName}님 반갑습니다!</div>
+            <div>{userInfo?.nickName}님 반갑습니다!</div>
             {/* <div>회원이 되신것을 환영합니다.</div> */}
             <div>재방문을 환영합니다</div>
           </div>
