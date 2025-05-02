@@ -1,17 +1,16 @@
 'use client'
 
 import { ScheduleResponse, getCalendarList, useScheduleStore } from '@/entities/calendar'
-import { getOneDaySchedule, getSortedOneDaySchedule } from '@/features/calendar/lib/utils'
+import { useInjectIndex } from '@/entities/calendar/model/useInjectIndex'
 import { useNavigater } from '@/shared/lib'
 import { LoadingSpinner } from '@/shared/ui'
 import { useQuery } from '@tanstack/react-query'
-import { differenceInMinutes } from 'date-fns'
 import { useEffect } from 'react'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
 
 export function CalendarPage() {
-  const { setSelectedDate, setSchedules, setCurrentDate, currentDate } = useScheduleStore()
+  const { setCurrentDate, currentDate } = useScheduleStore()
   const { navigateAddCalendar } = useNavigater()
 
   const {
@@ -24,32 +23,8 @@ export function CalendarPage() {
     queryFn: () => getCalendarList(),
   })
 
-  useEffect(() => {
-    if (plandata && Array.isArray(plandata)) {
-      // console.log()
-      const planDataWithIndex = plandata.map((plan) => {
-        const oneDaySchedule = getOneDaySchedule(plandata, plan.startDateTime)
-        if (oneDaySchedule.length > 1) {
-          const sortedOneDaySchedule = getSortedOneDaySchedule(oneDaySchedule)
-          const targetIndex = sortedOneDaySchedule.findIndex((_plan) => _plan.id === plan.id)
-          return { ...plan, index: targetIndex }
-        } else {
-          return { ...plan, index: 0 }
-        }
-      })
-
-      // index가 겹치는 plan index 조정
-      const newPlanData = planDataWithIndex.map((schedule) => {
-        const oneDaySchedule = getOneDaySchedule(planDataWithIndex, schedule.startDateTime)
-        if (oneDaySchedule.length < 1) return schedule
-
-        const newOneDaySchedule = getPlanFiexedIndex(oneDaySchedule, schedule)
-        return newOneDaySchedule
-      })
-
-      setSchedules(newPlanData)
-    }
-  }, [plandata, setSchedules, setSelectedDate])
+  // index 주입 커스텀훅
+  useInjectIndex(plandata)
 
   useEffect(() => {
     //달&월을 위한 일자 - 오늘 날짜
@@ -80,19 +55,6 @@ export function CalendarPage() {
       </div>
     )
   )
-}
-
-function getPlanFiexedIndex(oneDaySchedule: ScheduleResponse[], plan: ScheduleResponse) {
-  const overlapedPlan = oneDaySchedule.find(
-    (_plan) => _plan.id !== plan.id && _plan.index === plan.index,
-  )
-  if (overlapedPlan && differenceInMinutes(overlapedPlan.startDateTime, plan.startDateTime) < 0) {
-    // 둘중에 시작날짜가 느린쪽을 index를 -1 (재귀적으로 실행)
-    const newPlan = { ...plan, index: plan.index - 1 }
-    return getPlanFiexedIndex(oneDaySchedule, newPlan)
-  } else {
-    return plan
-  }
 }
 
 /**
