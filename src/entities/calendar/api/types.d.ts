@@ -1,6 +1,7 @@
 export interface ScheduleResponse extends Schedule {
   id: number
   nickName: string
+  index: number
 }
 
 export interface Schedule {

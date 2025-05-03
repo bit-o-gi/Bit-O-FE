@@ -22,10 +22,15 @@ export function useNavigater() {
     window.location.href = `${baseURL}/oauth2/authorization/kakao`
   }
 
+  const navigateToUpdateCalendar = (planId: number) => {
+    router.push(`/calendar/add/${planId}`)
+  }
+
   return {
     navigateAddCalendar,
     navigateLogin,
     navigateOnboarding,
     navigateToKakaoAuth,
+    navigateToUpdateCalendar,
   }
 }
