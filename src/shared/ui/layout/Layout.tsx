@@ -2,8 +2,9 @@
 
 import { useCoupleInfoStore, useRefetchCoupleInfo } from '@/entities/couple'
 import { useRefetchUserInfo, useUserInfoStore } from '@/entities/userInfo'
+import { useNavigater } from '@/shared/lib'
 import { NavigationBar, ToastManager } from '@/shared/ui'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { ReactNode, useEffect } from 'react'
 
 const LOGGEDOUT_ROUTES = ['/login', '/onboarding']
@@ -16,7 +17,7 @@ interface LayoutProps {
 }
 export const Layout = ({ children }: LayoutProps) => {
   const currentPathname = usePathname()
-  const { replace } = useRouter()
+  const { navigateLogin, navigateCalendar, navigateConnect } = useNavigater()
 
   const { refetch: refetchUser } = useRefetchUserInfo()
   const { refetch: refetchCouple } = useRefetchCoupleInfo()
@@ -37,21 +38,24 @@ export const Layout = ({ children }: LayoutProps) => {
   }, [])
 
   useEffect(() => {
-    if (!userInfo && !LOGGEDOUT_ROUTES.some((route) => currentPathname.startsWith(route)))
-      replace('/login')
+    if (!userInfo && !LOGGEDOUT_ROUTES.some((route) => currentPathname.startsWith(route))) {
+      navigateLogin({ replace: true })
+    }
     if (
       userInfo &&
       coupleInfo &&
       ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].some((route) => currentPathname.startsWith(route))
-    )
-      replace('/calendar')
+    ) {
+      navigateCalendar({ replace: true })
+    }
     if (
       userInfo &&
       !coupleInfo &&
       ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].some((route) => currentPathname.startsWith(route))
-    )
-      replace('/connect')
-  }, [replace, currentPathname, userInfo, coupleInfo])
+    ) {
+      navigateConnect({ replace: true })
+    }
+  }, [currentPathname, userInfo, coupleInfo, navigateLogin, navigateCalendar, navigateConnect])
 
   return (
     <div className="flex w-full h-full bg-gray-100">
