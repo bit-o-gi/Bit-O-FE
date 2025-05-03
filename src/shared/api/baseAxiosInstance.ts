@@ -45,8 +45,8 @@ instance.interceptors.response.use(
       const cookies = document.cookie
       const refreshToken = cookies.split('refresh_token=')[1]
       if (!refreshToken) {
-        // redirect('/login') // 전체 프로세스 정해지면 수정
-        return
+        console.error(`${data.error}`)
+        window.location.href = '/login'
       }
 
       try {
