@@ -15,8 +15,8 @@ interface LayoutProps {
   children: ReactNode
 }
 export const Layout = ({ children }: LayoutProps) => {
-  const pathname = usePathname()
-  const router = useRouter()
+  const currentPathname = usePathname()
+  const { replace } = useRouter()
 
   const { refetch: refetchUser } = useRefetchUserInfo()
   const { refetch: refetchCouple } = useRefetchCoupleInfo()
@@ -26,7 +26,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
-  const showNav = pagesWithNav.includes(pathname)
+  const showNav = pagesWithNav.includes(currentPathname)
 
   useEffect(() => {
     //앱 최초 진입 또는 새로고침 시 로그인 정보 확인
@@ -37,12 +37,21 @@ export const Layout = ({ children }: LayoutProps) => {
   }, [])
 
   useEffect(() => {
-    if (!userInfo && !LOGGEDOUT_ROUTES.includes(pathname)) router.replace('/login')
-    if (userInfo && coupleInfo && ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].includes(pathname))
-      router.replace('/calendar')
-    if (userInfo && !coupleInfo && ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].includes(pathname))
-      router.replace('/connect')
-  }, [router, pathname, userInfo, coupleInfo])
+    if (!userInfo && !LOGGEDOUT_ROUTES.some((route) => currentPathname.startsWith(route)))
+      replace('/login')
+    if (
+      userInfo &&
+      coupleInfo &&
+      ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].some((route) => currentPathname.startsWith(route))
+    )
+      replace('/calendar')
+    if (
+      userInfo &&
+      !coupleInfo &&
+      ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].some((route) => currentPathname.startsWith(route))
+    )
+      replace('/connect')
+  }, [replace, currentPathname, userInfo, coupleInfo])
 
   return (
     <div className="flex w-full h-full bg-gray-100">
