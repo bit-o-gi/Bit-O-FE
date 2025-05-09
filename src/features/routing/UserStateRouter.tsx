@@ -44,7 +44,8 @@ export function UserStateRouter() {
   useEffect(() => {
     //앱 최초 진입 또는 새로고침 시 로그인 정보 확인
     const fetchUserData = async () => {
-      await Promise.all([refetchUser(), refetchCouple()])
+      await refetchUser()
+      await refetchCouple()
     }
     fetchUserData()
   }, [])

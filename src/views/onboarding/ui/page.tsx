@@ -15,7 +15,8 @@ export function OnboardingPage() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      await Promise.all([refetchUser(), refetchCouple()])
+      await refetchUser()
+      await refetchCouple()
     }
     fetchUserData()
   }, [])
