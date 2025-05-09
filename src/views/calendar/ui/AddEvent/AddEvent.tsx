@@ -185,7 +185,7 @@ export function AddEventPage() {
       />
       <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] ">
         <div className="flex flex-col flex-grow overflow-y-auto gap-[3rem] ">
-          <div className='relative flex justify-between item-center'>
+          <div className='relative flex justify-between items-center'>
           <AddEventTitle placeholder={'Title'} />
           <div className='w-[1em] h-[1em] rounded-full cursor-pointer' 
           style={{ backgroundColor: color }} 
