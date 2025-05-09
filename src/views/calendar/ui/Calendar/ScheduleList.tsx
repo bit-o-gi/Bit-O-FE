@@ -1,4 +1,5 @@
 import { useScheduleStore } from '@/entities/calendar'
+import { COLORS } from '@/entities/calendar/consts/constants'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
@@ -58,8 +59,11 @@ const ScheduleList = ({ date }: ScheduleList) => {
         return (
           <li
             key={plan.id}
-            className={`absolute h-1/4 bg-pink text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] text-sm`}
-            style={{ top: `calc(${25 * checkIndex(plan.index)}% + ${2 * checkIndex(plan.index) + 2}px)` }}
+            className="absolute h-1/4 text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] text-sm"
+            style={{ 
+              top: `calc(${25 * checkIndex(plan.index)}% + ${2 * checkIndex(plan.index) + 2}px)`,
+              backgroundColor: COLORS[plan.color as keyof typeof COLORS] || '#FFA4AA'
+            }}
           >
             <div>
               <span>

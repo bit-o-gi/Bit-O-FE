@@ -14,13 +14,14 @@ import {
   postSchedule,
   putSchedule,
 } from '@/entities/calendar'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import { compareDesc } from 'date-fns/fp'
 import Image from 'next/image'
 import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
 import AddEventLocation from './AddScheduleLocation'
+import { COLORS } from '@/entities/calendar/consts/constants'
 
 /**
  * id 있다면 : 스케쥴 수정
@@ -118,6 +119,7 @@ export function AddEventPage() {
       location: '',
       startDateTime: format(date?.startDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
       endDateTime: format(date?.endDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
+      color: findKeyByValue(color),
     }
 
     //시작시간이 끝나는 시간보다 클 경우
@@ -135,6 +137,30 @@ export function AddEventPage() {
   const handleDeleteButton = () => {
     deleteMutation.mutate()
   }
+
+  // 임시 color 부여 로직
+  const [color, setColor] = useState(COLORS.LIGHT_PURPLE)
+
+  const onClickColor = (color: string) => {
+    handleColorChange(color)
+    setIsColorPickerOpen(false)
+  }
+
+  const handleColorChange = (color: string) => {
+    setColor(color)
+  }
+
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
+
+  const handleColorPickerToggle = () => {
+    setIsColorPickerOpen(!isColorPickerOpen)
+  }
+
+  // color 의 key 찾기
+  const findKeyByValue = (value: string) => {
+    return Object.keys(COLORS).find((key) => COLORS[key] === value)
+  }
+
 
   if (isLoading) return <LoadingSpinner />
   if (isError) alert(error)
@@ -159,7 +185,27 @@ export function AddEventPage() {
       />
       <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] ">
         <div className="flex flex-col flex-grow overflow-y-auto gap-[3rem] ">
+          <div className='relative flex justify-between item-center'>
           <AddEventTitle placeholder={'Title'} />
+          <div className='w-[1em] h-[1em] rounded-full cursor-pointer' 
+          style={{ backgroundColor: color }} 
+          onClick={handleColorPickerToggle}
+          />
+          {
+            isColorPickerOpen && (
+              <div className='absolute top-[30px] right-[5px] grid grid-cols-5 p-[10px] gap-[0.5em] rounded-[20px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.1)]'>
+                {Object.values(COLORS).map((color) => (
+                  <div
+                    key={`plan-color-${color}`}
+                    className='w-[1em] h-[1em] rounded-full cursor-pointer'
+                    style={{ backgroundColor: color }}
+                    onClick={() => onClickColor(color)}
+                  />
+                ))}
+              </div>
+            )
+          }
+          </div>
           <AddEventTime />
           <AddEventLocation />
           <AddEventNote />
