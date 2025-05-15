@@ -36,7 +36,7 @@ export const BaseHeader = ({ title, hasBack, actions }: HeaderProps) => {
           onClick={handleBackClick}
         />
       )}
-      <p className="text-[1rem] font-semibold text-center flex-grow">{title}</p>
+      <p className="text-[1rem] text-xl font-semibold text-center flex-grow">{title}</p>
 
       {actions &&
         actions.length > 0 &&
