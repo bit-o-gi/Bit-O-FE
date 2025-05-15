@@ -143,18 +143,17 @@ export function AddEventPage() {
     <>
       <BaseHeader
         title={'이벤트 추가'}
-        backIcon
-        nextIcon={
-          scheduleId ? (
-            <Image
-              className="cursor-pointer absolute right-[1rem]"
-              alt="couble_right"
-              src="/images/icon/delete.png"
-              width={20}
-              height={20}
-              onClick={handleDeleteButton}
-            />
-          ) : null
+        hasBack
+        actions={
+          scheduleId
+            ? [
+                {
+                  src: '/images/icon/delete.png',
+                  alt: 'delete button',
+                  action: () => handleDeleteButton(),
+                },
+              ]
+            : []
         }
       />
       <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] ">
