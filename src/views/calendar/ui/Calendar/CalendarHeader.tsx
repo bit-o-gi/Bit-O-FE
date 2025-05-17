@@ -11,7 +11,7 @@ const CalendarHeader = () => {
         src="/images/icon/doubleArrow.png"
         width={24}
         height={24}
-        className="rotate-180"
+        className="rotate-180 cursor-pointer"
         onClick={() => {
           setCurrentDate(addYears(currentDate, -1))
         }}
@@ -21,7 +21,7 @@ const CalendarHeader = () => {
         src="/images/icon/arrow.png"
         width={24}
         height={24}
-        className="rotate-180"
+        className="rotate-180 cursor-pointer"
         onClick={() => {
           setCurrentDate(addMonths(currentDate, -1))
         }}
@@ -34,6 +34,7 @@ const CalendarHeader = () => {
         src="/images/icon/arrow.png"
         width={24}
         height={24}
+        className="cursor-pointer"
         onClick={() => {
           setCurrentDate(addMonths(currentDate, +1))
         }}
@@ -43,6 +44,7 @@ const CalendarHeader = () => {
         src="/images/icon/doubleArrow.png"
         width={24}
         height={24}
+        className="cursor-pointer"
         onClick={() => {
           setCurrentDate(addYears(currentDate, +1))
         }}

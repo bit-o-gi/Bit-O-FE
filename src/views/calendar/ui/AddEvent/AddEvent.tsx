@@ -3,6 +3,7 @@
 import AddEventTitle from './AddScheduleTitle'
 import AddEventTime from './AddScheduleTime'
 import AddEventNote from './AddScheduleNote'
+import AddScheduleColor from './AddScheduleColor'
 import { useParams, useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
@@ -14,13 +15,15 @@ import {
   postSchedule,
   putSchedule,
 } from '@/entities/calendar'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import { compareDesc } from 'date-fns/fp'
 import Image from 'next/image'
 import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
 import AddEventLocation from './AddScheduleLocation'
+import { COLORS } from '@/entities/calendar/consts/constants'
+
 
 /**
  * id 있다면 : 스케쥴 수정
@@ -31,6 +34,8 @@ export function AddEventPage() {
     title,
     note,
     date,
+    color,
+    setColor,
     setTitle,
     setNote,
     setDate,
@@ -98,13 +103,15 @@ export function AddEventPage() {
         startDateTime: new Date(scheduleDetailData.startDateTime),
         endDateTime: new Date(scheduleDetailData.endDateTime),
       })
+      setColor(scheduleDetailData.color)
     }
     return () => {
       setTitle(null)
       setNote(null)
       setDate(null)
+      setColor(COLORS.LIGHT_PURPLE)
     }
-  }, [scheduleDetailData, setTitle, setNote, setDate, scheduleId])
+  }, [scheduleDetailData, setColor, setTitle, setNote, setDate, scheduleId])
 
   /**
    * Schedule 저장
@@ -118,6 +125,7 @@ export function AddEventPage() {
       location: '',
       startDateTime: format(date?.startDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
       endDateTime: format(date?.endDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
+      color: findKeyByValue(color) || 'LIGHT_PURPLE',
     }
 
     //시작시간이 끝나는 시간보다 클 경우
@@ -134,6 +142,13 @@ export function AddEventPage() {
    * */
   const handleDeleteButton = () => {
     deleteMutation.mutate()
+  }
+
+
+
+  // color 의 key 찾기
+  const findKeyByValue = (color: string) => {
+    return Object.keys(COLORS).find((key) => COLORS[key as keyof typeof COLORS] === color)
   }
 
   if (isLoading) return <LoadingSpinner />
@@ -159,7 +174,10 @@ export function AddEventPage() {
       />
       <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] ">
         <div className="flex flex-col flex-grow overflow-y-auto gap-[3rem] ">
-          <AddEventTitle placeholder={'Title'} />
+          <div className='relative flex justify-between items-center'>
+            <AddEventTitle placeholder={'Title'} />
+            <AddScheduleColor />
+          </div>
           <AddEventTime />
           <AddEventLocation />
           <AddEventNote />

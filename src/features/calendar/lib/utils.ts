@@ -11,7 +11,7 @@ import {
   startOfDay,
   startOfMonth,
 } from 'date-fns'
-import { DAY_OF_THE_WEEK } from '../consts/constants'
+import { DAY_OF_THE_WEEK } from '../../../entities/calendar/consts/constants'
 import { ScheduleResponse } from '@/entities/calendar'
 
 interface GenerateDateProps {

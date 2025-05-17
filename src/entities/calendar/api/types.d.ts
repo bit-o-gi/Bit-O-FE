@@ -10,4 +10,5 @@ export interface Schedule {
   content: string
   startDateTime: string
   endDateTime: string
+  color: string
 }

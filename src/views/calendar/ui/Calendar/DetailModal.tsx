@@ -1,4 +1,5 @@
 import { useScheduleStore } from '@/entities/calendar'
+import { COLORS } from '@/entities/calendar/consts/constants'
 import {
   getFormattedDate,
   getFormattedDay,
@@ -63,7 +64,7 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
             >
               <div className="flex gap-2">
                 <div className="h-6 flex justify-center items-center">
-                  <div className="w-2 h-2 rounded-full bg-red-500" />
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE'] }} />
                 </div>
                 <div>
                   <div className="text-2xl h-6 align-middle">{plan.title}</div>
