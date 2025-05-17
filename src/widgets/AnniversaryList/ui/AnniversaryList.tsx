@@ -1,11 +1,15 @@
-import { AnniversaryItem } from '@/entities/anniversary'
+import { Anniversary, AnniversaryItem } from '@/entities/anniversary'
 
-export function AnniversaryList() {
+interface IAnniversaryListProps {
+  list: Anniversary[]
+}
+
+export function AnniversaryList({ list }: IAnniversaryListProps) {
   return (
-    <>
-      {Array(10).map((idx) => (
-        <AnniversaryItem key={idx} />
+    <div className="grid divide-y divide-slate-200">
+      {list.map((anniv, idx) => (
+        <AnniversaryItem key={idx} anniversary={anniv} />
       ))}
-    </>
+    </div>
   )
 }
