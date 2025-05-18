@@ -5,13 +5,13 @@ import { useScheduleStore } from '@/entities/calendar'
 const CalendarHeader = () => {
   const { currentDate, setCurrentDate } = useScheduleStore()
   return (
-    <div className="flex justify-center items-center py-[0.75rem] sm:gap-[1.25rem] gap-[1.1rem]">
+    <div className="h-[4rem] flex justify-center items-center py-[0.1rem] sm:gap-[1.25rem] gap-[1.1rem]">
       <Image
         alt="couble_left"
         src="/images/icon/doubleArrow.png"
         width={24}
         height={24}
-        className="rotate-180"
+        className="rotate-180 cursor-pointer"
         onClick={() => {
           setCurrentDate(addYears(currentDate, -1))
         }}
@@ -21,7 +21,7 @@ const CalendarHeader = () => {
         src="/images/icon/arrow.png"
         width={24}
         height={24}
-        className="rotate-180"
+        className="rotate-180 cursor-pointer"
         onClick={() => {
           setCurrentDate(addMonths(currentDate, -1))
         }}
@@ -34,6 +34,7 @@ const CalendarHeader = () => {
         src="/images/icon/arrow.png"
         width={24}
         height={24}
+        className="cursor-pointer"
         onClick={() => {
           setCurrentDate(addMonths(currentDate, +1))
         }}
@@ -43,6 +44,7 @@ const CalendarHeader = () => {
         src="/images/icon/doubleArrow.png"
         width={24}
         height={24}
+        className="cursor-pointer"
         onClick={() => {
           setCurrentDate(addYears(currentDate, +1))
         }}

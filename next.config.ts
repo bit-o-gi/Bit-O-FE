@@ -6,14 +6,12 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV !== 'development',
   },
+  appDir: true,
 }
-export default withPWA({
+
+const pwaConfig = withPWA({
   dest: 'public',
   // disable: process.env.NODE_ENV === 'development',
-})(nextConfig)
+})
 
-module.exports = {
-  experimental: {
-    appDir: true, // App Router 사용
-  },
-}
+export default pwaConfig(nextConfig)
