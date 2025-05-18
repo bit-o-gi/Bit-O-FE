@@ -1,4 +1,2 @@
 export { getUserInfo } from './api/userApi'
 export { type UserInfo } from './api/types'
-export { useUserInfoStore } from './model/userInfoStore'
-export { useRefetchUserInfo } from './hooks/useRefetchUserInfo'
