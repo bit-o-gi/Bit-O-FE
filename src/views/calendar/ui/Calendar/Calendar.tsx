@@ -1,13 +1,15 @@
 'use client'
 
-import { ScheduleResponse, getCalendarList, useScheduleStore } from '@/entities/calendar'
-import { useInjectIndex } from '@/entities/calendar/model/useInjectIndex'
-import { useNavigater } from '@/shared/lib'
-import { LoadingSpinner } from '@/shared/ui'
-import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { getCalendarList } from '@/entities/calendar/api'
+import { useScheduleStore } from '@/entities/calendar'
+import { LoadingSpinner } from '@/shared/ui'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
+import { useNavigater } from '@/shared/lib'
+import { useInjectIndex } from '@/entities/calendar/model/useInjectIndex'
 
 export function CalendarPage() {
   const { setCurrentDate, currentDate } = useScheduleStore()

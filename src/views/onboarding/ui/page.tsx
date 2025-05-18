@@ -1,6 +1,7 @@
 'use client'
 import { useRefetchCoupleInfo } from '@/entities/couple'
-import { useRefetchUserInfo, useUserInfoStore } from '@/entities/userInfo'
+import { useUserInfoStore } from '@/entities/userInfo'
+import { useRefetchUserInfo } from '@/entities/userInfo/hooks/useRefetchUserInfo'
 import { BaseButton } from '@/shared/ui'
 
 import Image from 'next/image'

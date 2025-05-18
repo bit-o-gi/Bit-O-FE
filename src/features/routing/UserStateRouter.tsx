@@ -1,8 +1,9 @@
 'use client'
 
-import { useRefetchCoupleInfo, useCoupleInfoStore } from '@/entities/couple'
-import { useRefetchUserInfo, useUserInfoStore } from '@/entities/userInfo'
+import { useCoupleInfoStore, useRefetchCoupleInfo } from '@/entities/couple'
+import { useRefetchUserInfo } from '@/entities/userInfo/hooks/useRefetchUserInfo'
 import { useNavigater } from '@/shared/lib'
+import useUserInfoStore from '@/store/userInfoStore'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

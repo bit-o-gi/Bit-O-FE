@@ -1,4 +1,4 @@
-import { ScheduleResponse } from '@/entities/calendar'
+import { ScheduleResponse } from '@/entities/calendar/api/types'
 import { addDays, isWithinInterval } from 'date-fns'
 import { create } from 'zustand'
 import { COLORS } from '../consts/constants'
