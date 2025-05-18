@@ -1,5 +1,10 @@
 import { ConnectStepPage } from '@/views/connect'
+import { Suspense } from 'react'
 
 export default function Page() {
-  return <ConnectStepPage type="create" />
+  return (
+    <Suspense>
+      <ConnectStepPage type="create" />
+    </Suspense>
+  )
 }

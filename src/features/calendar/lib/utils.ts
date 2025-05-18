@@ -1,4 +1,18 @@
-import { addDays, endOfMonth, getDay, isToday, startOfMonth } from 'date-fns'
+import {
+  addDays,
+  differenceInDays,
+  differenceInMinutes,
+  endOfDay,
+  endOfMonth,
+  getDay,
+  isEqual,
+  isToday,
+  isWithinInterval,
+  startOfDay,
+  startOfMonth,
+} from 'date-fns'
+import { DAY_OF_THE_WEEK } from '../../../entities/calendar/consts/constants'
+import { ScheduleResponse } from '@/entities/calendar'
 
 interface GenerateDateProps {
   month: number
@@ -39,4 +53,59 @@ export const generateDate = ({ year, month }: GenerateDateProps) => {
     })
   }
   return arrayOfDate
+}
+
+export const getFormattedDate = (date: Date) => {
+  return date.getDate()
+}
+
+export const getFormattedDay = (date: Date) => {
+  const day = date.getDay()
+  return DAY_OF_THE_WEEK[day]
+}
+
+export const getFormattedTime = (date: string) => {
+  const time = date.split('T')[1].split(':')
+
+  const hour = time[0]
+  const minute = time[1]
+  return `${hour}:${minute}`
+}
+
+export const getOneDaySchedule = (schedules: ScheduleResponse[], date: string | Date) => {
+  // console.log('성능 최적화가 되나?')
+  if (schedules.length === 0) return []
+
+  return schedules.filter((plan) =>
+    isWithinInterval(date, {
+      start: startOfDay(plan?.startDateTime),
+      end: endOfDay(plan?.endDateTime),
+    }),
+  )
+}
+
+// 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다.
+export const isStartDate = (startDate: string, date: Date) => {
+  return isEqual(startDate, date)
+}
+
+// 1. 일정 시작일이 빠른 순서로 정렬
+export const getSortedOneDaySchedule = (oneDaySchedule: ScheduleResponse[]) => {
+  const sortedOneDaySchedule = [...oneDaySchedule]
+  sortedOneDaySchedule.sort((planA, planB) => {
+    if (differenceInMinutes(planA.startDateTime, planB.startDateTime) < 0) {
+      return -1
+    } else {
+      return 1
+    }
+  })
+
+  return sortedOneDaySchedule
+}
+
+export const trancateString = (str: string, maxLength: number) => {
+  if (str.length > maxLength) {
+    return str.slice(0, maxLength) + '..'
+  }
+  return str
 }

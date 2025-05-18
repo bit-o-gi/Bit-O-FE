@@ -13,11 +13,14 @@ instance.interceptors.request.use(
   function (config) {
     // 스토리지에서 access토큰 가져오는 로직
     const accessToken = localStorage.getItem('access_token')
+    const isLoginPage = window.location.pathname === '/login'
 
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`
+    if (!accessToken && !isLoginPage) {
+      window.location.href = '/login'
+      return config
     }
 
+    config.headers['Authorization'] = `Bearer ${accessToken}`
     return config
   },
   function (error) {
@@ -42,22 +45,23 @@ instance.interceptors.response.use(
       const cookies = document.cookie
       const refreshToken = cookies.split('refresh_token=')[1]
       if (!refreshToken) {
-        // redirect('/login') // 전체 프로세스 정해지면 수정
-        return
+        console.error(`${data.error}`)
+        window.location.href = '/login'
       }
 
       try {
-        const tokenRefreshResult = await instance.post('/api/v1/auth/token', {
+        const tokenRefreshResult = await instance.post('auth/token', {
           refreshToken,
         })
-        if (tokenRefreshResult.status === 200) {
+        if (tokenRefreshResult.status === 201) {
           console.log('🚀 ~ tokenRefreshResult:', tokenRefreshResult)
 
           // 새로 발급받은 토큰을 스토리지에 저장
           const { accessToken } = tokenRefreshResult.data
           localStorage.setItem('access_token', accessToken)
 
-          // 토큰 갱신 성공. API 재요청
+          // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
+          config.headers.Authorization = `Bearer ${accessToken}`
           return instance(config)
         } else {
           // 백엔드 에러메세지 (	Error: response status is 500 )

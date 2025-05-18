@@ -2,21 +2,17 @@
 
 import { NavigationBar, ToastManager } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
-
 import { ReactNode } from 'react'
 
 interface LayoutProps {
   children: ReactNode
 }
 export const Layout = ({ children }: LayoutProps) => {
-  const pathname = usePathname()
+  const currentPathname = usePathname()
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
   const pagesWithNav = ['/calendar', '/dday', '/setting']
-
-  const showNav = pagesWithNav.some((path) => {
-    return pathname === path
-  })
+  const showNav = pagesWithNav.includes(currentPathname)
 
   return (
     <div className="flex w-full h-full bg-gray-100">

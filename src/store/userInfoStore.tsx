@@ -9,8 +9,8 @@ interface UserInfo {
 }
 
 interface UserInfoStore {
-  userInfo: UserInfo
-  setUserInfo: (userInfo: UserInfo) => void
+  userInfo: UserInfo | null
+  setUserInfo: (userInfo: UserInfo | null) => void
   resetUserInfo: () => void
 }
 
@@ -24,7 +24,7 @@ const initState = {
 
 const useUserInfoStore = create<UserInfoStore>()((set) => ({
   userInfo: initState,
-  setUserInfo: (userInfo: UserInfo) => set({ userInfo }),
+  setUserInfo: (userInfo: UserInfo | null) => set({ userInfo }),
   resetUserInfo: () => set({ userInfo: initState }),
 }))
 
