@@ -15,14 +15,17 @@ export function CalendarPage() {
   const { setCurrentDate, currentDate } = useScheduleStore()
   const { navigateAddCalendar } = useNavigater()
 
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth() + 1
+
   const {
     isLoading,
     isError,
     data: plandata,
     error,
   } = useQuery<ScheduleResponse[]>({
-    queryKey: ['calendarlist'],
-    queryFn: () => getCalendarList(),
+    queryKey: ['calendarlist', currentYear, currentMonth],
+    queryFn: () => getCalendarList(currentYear, currentMonth),
   })
 
   // index 주입 커스텀훅
