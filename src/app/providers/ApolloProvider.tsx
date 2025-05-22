@@ -1,3 +1,5 @@
+'use client'
+
 import { apolloClient } from '@/shared/api'
 import { ApolloProvider as ApolloClientProvider } from '@apollo/client'
 
