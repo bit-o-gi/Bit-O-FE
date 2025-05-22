@@ -1,4 +1,4 @@
-import { baseURL } from '@/shared/api'
+import { baseURL } from '@/shared/config'
 import { useRouter } from 'next/navigation'
 
 export function useNavigater() {
