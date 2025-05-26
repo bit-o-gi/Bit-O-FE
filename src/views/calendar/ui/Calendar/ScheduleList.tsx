@@ -3,6 +3,7 @@ import { COLORS } from '@/entities/calendar/consts/constants'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
+  isStartDate,
   trancateString,
 } from '@/features/calendar/lib/utils'
 import { useMemo } from 'react'
@@ -61,13 +62,20 @@ const ScheduleList = ({ date }: ScheduleList) => {
             key={plan.id}
             className="absolute h-1/4 text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] text-sm"
             style={{
-              top: `calc(${25 * checkIndex(plan.index)}% + ${2 * checkIndex(plan.index) + 2}px)`,
+              top: (() => {
+                const idx = checkIndex(plan.index)
+                return `calc(${25 * idx}% + ${2 * idx + 2}px)`
+              })(),
               backgroundColor: COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE']
             }}
           >
             <div>
               <span>
-                {trancateString(plan.title, 7)}
+                {/* 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다. */}
+                {isStartDate(plan.startDateTime, date) && trancateString(plan.title, 7)}
+
+                {/* index가 재조정 되는 경우 재조정된 일자에만 title을 보여준다다 */}
+                {plan.index !== checkIndex(plan.index) && trancateString(plan.title, 7)}
               </span>
             </div>
           </li>
