@@ -1,6 +1,7 @@
 import { ScheduleResponse } from '@/entities/calendar/api/types'
 import {
   addDays,
+  differenceInDays,
   differenceInMinutes,
   endOfDay,
   endOfMonth,
@@ -107,4 +108,9 @@ export const trancateString = (str: string, maxLength: number) => {
     return str.slice(0, maxLength) + '..'
   }
   return str
+}
+
+// 하루짜리 일정인지 확인
+export const isShortPlan = (startDate: string, endDate: string) => {
+  return isSameDay(startDate, endDate)
 }

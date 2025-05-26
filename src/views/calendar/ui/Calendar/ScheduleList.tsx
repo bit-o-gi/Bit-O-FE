@@ -3,6 +3,7 @@ import { COLORS } from '@/entities/calendar/consts/constants'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
+  isShortPlan,
   isStartDate,
   trancateString,
 } from '@/features/calendar/lib/utils'
@@ -65,11 +66,18 @@ const ScheduleList = ({ date }: ScheduleList) => {
               top: (() => {
                 const idx = checkIndex(plan.index)
                 return `calc(${25 * idx}% + ${2 * idx + 2}px)`
-              })(),
-              backgroundColor: COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE']
+              })()
             }}
           >
-            <div>
+            {/* 배경색을 위한 div - 하루짜리 일정이면 10%, 아니면 100% 너비 */}
+            <div
+              className="absolute h-full top-0 left-0"
+              style={{
+                width: isShortPlan(plan.startDateTime, plan.endDateTime) ? '5%' : '100%',
+                backgroundColor: COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE']
+              }}
+            />
+            <div className="relative z-10">
               <span>
                 {/* 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다. */}
                 {isStartDate(plan.startDateTime, date) && trancateString(plan.title, 7)}
