@@ -39,14 +39,11 @@
 
 ## ⚙ 기술 스택
 ### Front-end
-
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
 ### Infra
-
-
-<br />
-
-## 🤔 기술적 이슈와 해결 과정
+<img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white">
 
 <br />
 
