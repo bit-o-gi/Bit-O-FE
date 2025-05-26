@@ -6,6 +6,8 @@
 
 ## 📝 Bit-O 소개
 커플들을 위한 일정 관리 웹 애플리케이션
+<br />
+배포 주소 : [https://bit-o.world/](https://bit-o.world/)
 
 <br />
 
