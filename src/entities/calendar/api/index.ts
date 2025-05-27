@@ -2,7 +2,7 @@ import { instance } from '@/shared/api'
 import { Schedule, ScheduleResponse } from './types'
 
 export const getCalendarList = async (currentYear: number, currentMonth: number): Promise<ScheduleResponse[]> => {
-  const res = await instance.get(`/schedule/user`, {
+  const res = await instance.get(`/schedule/couple`, {
     params: {
       year: currentYear,
       month: currentMonth,
