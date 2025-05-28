@@ -1,11 +1,12 @@
 import { ScheduleResponse } from '@/entities/calendar/api/types'
 import {
   addDays,
+  differenceInDays,
   differenceInMinutes,
   endOfDay,
   endOfMonth,
   getDay,
-  isEqual,
+  isSameDay,
   isToday,
   isWithinInterval,
   startOfDay,
@@ -83,9 +84,9 @@ export const getOneDaySchedule = (schedules: ScheduleResponse[], date: string | 
   )
 }
 
-// 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다.
-export const isStartDate = (startDate: string, date: Date) => {
-  return isEqual(startDate, date)
+// 오늘이 일정 시작일인지 체크
+export const isStartDate = (startDate: string, today: Date) => {
+  return isSameDay(startDate, today)
 }
 
 // 1. 일정 시작일이 빠른 순서로 정렬
@@ -107,4 +108,9 @@ export const trancateString = (str: string, maxLength: number) => {
     return str.slice(0, maxLength) + '..'
   }
   return str
+}
+
+// 하루짜리 일정인지 확인
+export const isShortPlan = (startDate: string, endDate: string) => {
+  return isSameDay(startDate, endDate)
 }

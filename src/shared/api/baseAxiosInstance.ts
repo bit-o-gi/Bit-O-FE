@@ -20,7 +20,10 @@ instance.interceptors.request.use(
       return config
     }
 
-    config.headers['Authorization'] = `Bearer ${accessToken}`
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`
+    }
+
     return config
   },
   function (error) {
@@ -35,18 +38,27 @@ instance.interceptors.response.use(
   },
   async function (error) {
     // 2xx 외의 범위에 있는 상태 코드인 경우
-    // console.log(error)
     const {
       config,
-      response: { status, data },
+      response: { status, data } = {},
     } = error
 
-    if (status === 401 && data?.message === 'Access Token is Expired') {
+
+    // if (status === 401 && data?.message === 'Access Token is Expired') {
+    if (status === 401) {
       const cookies = document.cookie
-      const refreshToken = cookies.split('refresh_token=')[1]
-      if (!refreshToken) {
+      const refreshToken = cookies.split('refresh_token=')[1]?.split(';')[0]
+      const isLoginPage = window.location.pathname === '/login'
+
+      if (!refreshToken && !isLoginPage) {
         console.error(`${data.error}`)
         window.location.href = '/login'
+        return Promise.reject(error)
+      }
+
+      if (!refreshToken) {
+        console.error(`${data.error}`)
+        return Promise.reject(error)
       }
 
       try {
@@ -64,12 +76,11 @@ instance.interceptors.response.use(
           config.headers.Authorization = `Bearer ${accessToken}`
           return instance(config)
         } else {
-          // 백엔드 에러메세지 (	Error: response status is 500 )
-          // logoutAndHome() // 전체 프로세스 정해지면 추가
+          throw new Error('Token refresh failed')
         }
       } catch (err) {
         console.error(err)
-        // logoutAndHome() // 전체 프로세스 정해지면 추가
+        return Promise.reject(error)
       }
     }
 
