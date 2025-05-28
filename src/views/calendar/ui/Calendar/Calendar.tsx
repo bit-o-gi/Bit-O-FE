@@ -15,14 +15,17 @@ export function CalendarPage() {
   const { setCurrentDate, currentDate } = useScheduleStore()
   const { navigateAddCalendar } = useNavigater()
 
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth() + 1
+
   const {
     isLoading,
     isError,
     data: plandata,
     error,
   } = useQuery<ScheduleResponse[]>({
-    queryKey: ['calendarlist'],
-    queryFn: () => getCalendarList(),
+    queryKey: ['calendarlist', currentYear, currentMonth],
+    queryFn: () => getCalendarList(currentYear, currentMonth),
   })
 
   // index 주입 커스텀훅
@@ -37,14 +40,15 @@ export function CalendarPage() {
     navigateAddCalendar()
   }
 
-  if (isLoading) return <LoadingSpinner />
   if (isError) alert(error)
   return (
     currentDate && (
       <div className="h-calc64 relative flex flex-col bg-gray-50">
         <CalendarHeader />
-        <CalendarBody />
-        {/* <CalendarPlans /> */}
+        {/* LoadingSpinner -> 스켈레톤 UI 처리 예정 */}
+        {isLoading && <LoadingSpinner />}
+        {!isLoading && <CalendarBody />}
+
         {/* 스케쥴 추가 버튼 */}
         <div
           className="absolute bottom-[2rem] right-[1.5rem] cursor-pointer"

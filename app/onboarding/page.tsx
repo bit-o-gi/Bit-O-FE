@@ -1,23 +1,23 @@
 'use client'
-import { userApi } from '@/entities/userInfo'
 import { BaseButton } from '@/shared/ui'
 import useUserInfoStore from '@/store/userInfoStore'
 
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { getUserInfo } from '@/entities/userInfo/api/userApi'
 
 export default function Page() {
   const { userInfo, setUserInfo } = useUserInfoStore()
-  const getUserInfo = async () => {
-    const result = await userApi()
-    if (result) {
-      setUserInfo(result)
-    }
-  }
 
   useEffect(() => {
-    getUserInfo()
+    const init = async () => {
+      const result = await getUserInfo()
+      if (result) {
+        setUserInfo(result)
+      }
+    }
+    init()
   }, [])
 
   return (
@@ -30,7 +30,7 @@ export default function Page() {
           {/* <div className="text-[21px]">회원가입 완료</div> */}
           <div className="text-[21px]">로그인 완료</div>
           <div>
-            <div>{userInfo.nickName}님 반갑습니다!</div>
+            <div>{userInfo?.nickName}님 반갑습니다!</div>
             {/* <div>회원이 되신것을 환영합니다.</div> */}
             <div>재방문을 환영합니다</div>
           </div>

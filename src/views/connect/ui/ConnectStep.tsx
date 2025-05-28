@@ -6,10 +6,10 @@ import {
   getCoupleCode,
   useRefetchCoupleInfo,
 } from '@/entities/couple'
-import { useUserInfoStore } from '@/entities/userInfo'
 import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
+import useUserInfoStore from '@/store/userInfoStore'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { format } from 'date-fns'
