@@ -7,7 +7,8 @@ import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
 } from '@/features/calendar/lib/utils'
-import { useNavigater } from '@/shared/lib'
+import { ROUTES } from '@/shared/config'
+import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 
 type Props = {
@@ -17,15 +18,15 @@ type Props = {
 }
 
 const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
+  const router = useRouter()
   const { schedules } = useScheduleStore()
-  const { navigateToUpdateCalendar } = useNavigater()
 
   const handleModalContent = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
   }
 
   const handleEventClick = (planId: number) => {
-    navigateToUpdateCalendar(planId)
+    router.push(ROUTES.UPDATE_CALENDAR(planId))
   }
 
   const formattedDate = getFormattedDate(date)
@@ -64,7 +65,13 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
             >
               <div className="flex gap-2">
                 <div className="h-6 flex justify-center items-center">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE'] }} />
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{
+                      backgroundColor:
+                        COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE'],
+                    }}
+                  />
                 </div>
                 <div>
                   <div className="text-2xl h-6 align-middle">{plan.title}</div>
