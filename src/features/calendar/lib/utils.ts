@@ -1,7 +1,6 @@
 import { ScheduleResponse } from '@/entities/calendar/api/types'
 import {
   addDays,
-  differenceInDays,
   differenceInMinutes,
   endOfDay,
   endOfMonth,
