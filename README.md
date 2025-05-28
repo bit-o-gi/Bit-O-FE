@@ -28,9 +28,8 @@
 
 |공유 캘린더|
 |:---:|
-|<img src="https://github.com/user-attachments/assets/92443bba-b783-4160-87c9-583d6bdc4e7b" width="200"/>|
+|<img src="https://github.com/user-attachments/assets/8b789ef2-9838-4463-adb1-75ff64577a10" width="200"/>|
 |커플끼리 공유 되는 캘린더|
-
 
 |일정 등록|
 |:---:|
