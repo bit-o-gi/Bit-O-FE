@@ -1,5 +1,6 @@
 'use client'
 
+import { ROUTES } from '@/shared/config'
 import { NavigationBar, ToastManager } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
@@ -11,7 +12,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const currentPathname = usePathname()
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
-  const pagesWithNav = ['/calendar', '/dday', '/setting']
+  const pagesWithNav = [ROUTES.CALENDAR, ROUTES.DDAY, ROUTES.SETTING]
   const showNav = pagesWithNav.includes(currentPathname)
 
   return (

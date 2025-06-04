@@ -8,12 +8,13 @@ import { useScheduleStore } from '@/entities/calendar'
 import { LoadingSpinner } from '@/shared/ui'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
-import { useNavigater } from '@/shared/lib'
 import { useInjectIndex } from '@/entities/calendar/model/useInjectIndex'
+import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/shared/config'
 
 export function CalendarPage() {
+  const router = useRouter()
   const { setCurrentDate, currentDate } = useScheduleStore()
-  const { navigateAddCalendar } = useNavigater()
 
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth() + 1
@@ -37,7 +38,7 @@ export function CalendarPage() {
   }, [setCurrentDate])
 
   const handleAddSchedule = () => {
-    navigateAddCalendar()
+    router.push(ROUTES.ADD_CALENDAR)
   }
 
   if (isError) alert(error)
