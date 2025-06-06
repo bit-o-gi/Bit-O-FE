@@ -26,7 +26,7 @@ export const NavigationBar = () => {
           {BOTTOM_NAV_MENU.map((menu) => {
             return (
               <li key={menu.id} className="flex flex-1 justify-center items-center">
-                <Link href={menu.path} onClick={() => handleClickButton(menu.id)}>
+                <Link href={menu.path} onClick={() => handleClickButton(menu.id)} replace>
                   <Image
                     alt={menu.name}
                     src={
