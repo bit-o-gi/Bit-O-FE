@@ -16,7 +16,7 @@ instance.interceptors.request.use(
     const isLoginPage = window.location.pathname === '/login'
 
     if (!accessToken && !isLoginPage) {
-      window.location.href = '/login'
+      // window.location.href = '/login'
       return config
     }
 
@@ -52,7 +52,7 @@ instance.interceptors.response.use(
 
       if (!refreshToken && !isLoginPage) {
         console.error(`${data.error}`)
-        window.location.href = '/login'
+        // window.location.href = '/login'
         return Promise.reject(error)
       }
 
