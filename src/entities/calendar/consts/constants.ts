@@ -13,28 +13,33 @@ export const COLORS = {
   LIGHT_GRAY: '#e1e1e1',
 }
 
-export const EXAMPLE_GUIDE_SCHEDULES = [
-  {
-    id: 1,
-    nickName: 'Example',
-    index: 0,
-    userId: Number('example'),
-    title: '제주도 여행',
-    content: '제주도 여행',
-    startDateTime: '2025/06/02',
-    endDateTime: '2025/06/04',
-    color: 'RED'
-  },
-  {
-    id: 2,
-    nickName: 'Example',
-    index: 1,
-    userId: Number('example'),
-    title: '당일치기 여행',
-    content: '제주도 여행',
-    startDateTime: '2025/06/02',
-    endDateTime: '2025/06/02',
-    color: 'ORANGE'
-  }
+const rawExampleSchedules = [
+  { title: '제주도 여행', startDay: 2, endDay: 5, color: 'ORANGE' },
+  { title: '지연이랑 성수동', startDay: 15, endDay: 15, color: 'TEAL' },
+  { title: '가족 식사', startDay: 20, endDay: 20, color: 'LIGHT_PURPLE' },
+  { title: '자격증 시험', startDay: 27, endDay: 27, color: 'BLUE' },
 ]
+
+function generateEcampleGuideSchedules() {
+  const now = new Date()
+
+  return rawExampleSchedules.map(({ title, startDay, endDay, color }, idx) => {
+    const startDate = new Date(now.getFullYear(), now.getMonth(), startDay)
+    const endDate = new Date(now.getFullYear(), now.getMonth(), endDay)
+
+    return {
+      id: idx + 1,
+      nickName: 'Example',
+      index: 0,
+      userId: Number('Example'),
+      title,
+      content: title,
+      startDateTime: startDate.toISOString(),
+      endDateTime: endDate.toISOString(),
+      color
+    }
+  })
+}
+
+export const EXAMPLE_GUIDE_SCHEDULES = generateEcampleGuideSchedules()
 
