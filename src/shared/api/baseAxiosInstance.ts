@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, ROUTES } from '@/shared/config'
-import { getCookie, getLocalStorage, setLocalStorage } from '@/shared/lib'
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/shared/config'
+import { getCookie, getLocalStorage, setLocalStorage, removeLocalStorage } from '@/shared/lib'
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -15,12 +15,6 @@ instance.interceptors.request.use(
   function (config) {
     // 스토리지에서 access토큰 가져오는 로직
     const accessToken = getLocalStorage(ACCESS_TOKEN_KEY)
-    const isLoginPage = window.location.pathname === ROUTES.LOGIN
-
-    if (!accessToken && !isLoginPage) {
-      // window.location.href = '/login'
-      return config
-    }
 
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`
@@ -40,25 +34,15 @@ instance.interceptors.response.use(
   },
   async function (error) {
     // 2xx 외의 범위에 있는 상태 코드인 경우
-    const {
-      config,
-      response: { status, data } = {},
-    } = error
-
+    const { config, response: { status, data } = {} } = error
 
     // if (status === 401 && data?.message === 'Access Token is Expired') {
     if (status === 401) {
       const refreshToken = getCookie(REFRESH_TOKEN_KEY)
-      const isLoginPage = window.location.pathname === ROUTES.LOGIN
-
-      if (!refreshToken && !isLoginPage) {
-        console.error(`${data.error}`)
-        // window.location.href = '/login'
-        return Promise.reject(error)
-      }
 
       if (!refreshToken) {
         console.error(`${data.error}`)
+        removeLocalStorage(ACCESS_TOKEN_KEY)
         return Promise.reject(error)
       }
 
@@ -71,20 +55,23 @@ instance.interceptors.response.use(
 
           // 새로 발급받은 토큰을 스토리지에 저장
           const { accessToken } = tokenRefreshResult.data
+          console.log('새로 발급', accessToken)
           setLocalStorage(ACCESS_TOKEN_KEY, accessToken)
 
           // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
           config.headers.Authorization = `Bearer ${accessToken}`
           return instance(config)
         } else {
+          removeLocalStorage(ACCESS_TOKEN_KEY)
           throw new Error('Token refresh failed')
         }
       } catch (err) {
         console.error(err)
+        removeLocalStorage(ACCESS_TOKEN_KEY)
         return Promise.reject(error)
       }
     }
-
+    removeLocalStorage(ACCESS_TOKEN_KEY)
     return Promise.reject(error)
   },
 )
