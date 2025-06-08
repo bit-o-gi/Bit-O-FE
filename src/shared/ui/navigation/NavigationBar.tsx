@@ -4,16 +4,18 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { BOTTOM_NAV_MENU } from './constants'
+import { getLocalStorage, setLocalStorage } from '@/shared/lib'
+import { MENU_ID } from '@/shared/config'
 
 export const NavigationBar = () => {
   const [menuId, setMenuId] = useState<number>()
 
   const handleClickButton = (id: number) => {
     setMenuId(id)
-    localStorage.setItem('menuId', id.toString())
+    setLocalStorage('menuId', id.toString())
   }
   useEffect(() => {
-    const savedId = localStorage.getItem('menuId')
+    const savedId = getLocalStorage(MENU_ID)
     if (savedId) {
       setMenuId(parseInt(savedId))
     }
