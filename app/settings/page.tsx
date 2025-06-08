@@ -1,5 +1,7 @@
 'use client'
 
-export default function SettingsPage() {
-  return <div>settings</div>
+import { SettingsPage } from '@/views/settings'
+
+export default function Page() {
+  return <SettingsPage />
 }

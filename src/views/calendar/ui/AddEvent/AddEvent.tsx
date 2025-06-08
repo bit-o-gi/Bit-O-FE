@@ -23,7 +23,6 @@ import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
 import AddEventLocation from './AddScheduleLocation'
 import { COLORS } from '@/entities/calendar/consts/constants'
 
-
 /**
  * id 있다면 : 스케쥴 수정
  * id 없다면 : 스케쥴 생성
@@ -143,8 +142,6 @@ export function AddEventPage() {
     deleteMutation.mutate()
   }
 
-
-
   // color 의 key 찾기
   const findKeyByValue = (color: string) => {
     return Object.keys(COLORS).find((key) => COLORS[key as keyof typeof COLORS] === color)
@@ -171,9 +168,9 @@ export function AddEventPage() {
           ) : null
         }
       />
-      <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] ">
+      <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] border-4">
         <div className="flex flex-col flex-grow overflow-y-auto gap-[3rem] ">
-          <div className='relative flex justify-between items-center'>
+          <div className="relative flex justify-between items-center">
             <AddEventTitle placeholder={'Title'} />
             <AddScheduleColor />
           </div>
