@@ -11,7 +11,7 @@ const UseLoginOauth = () => {
   const loginController = () => {
     const refreshToken = getCookie(REFRESH_TOKEN_KEY)
     if (refreshToken) {
-      router.push(ROUTES.ONBOARDING)
+      router.replace(ROUTES.ONBOARDING)
     } else {
       navigateToKakaoAuth()
     }

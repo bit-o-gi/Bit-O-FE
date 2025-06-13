@@ -3,11 +3,12 @@ import { BaseButton } from '@/shared/ui'
 import useUserInfoStore from '@/store/userInfoStore'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect } from 'react'
 import { getUserInfo } from '@/entities/userInfo/api/userApi'
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
+  const router = useRouter()
   const { userInfo, setUserInfo } = useUserInfoStore()
 
   useEffect(() => {
@@ -36,15 +37,14 @@ export default function Page() {
           </div>
         </div>
         <div>
-          <Link href={'/'}>
-            <BaseButton
-              title="시작하기"
-              className="bg-brown text-white"
-              style={{
-                width: '200px',
-              }}
-            />
-          </Link>
+          <BaseButton
+            onClick={() => router.back()}
+            title="시작하기"
+            className="bg-brown text-white"
+            style={{
+              width: '200px',
+            }}
+          />
         </div>
       </div>
     </div>

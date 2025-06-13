@@ -15,7 +15,7 @@ const Oauth = () => {
     const accessToken = searchParams.get('token')
     if (accessToken) {
       setLocalStorage(ACCESS_TOKEN_KEY, accessToken)
-      router.push(ROUTES.ONBOARDING)
+      router.replace(ROUTES.ONBOARDING)
     }
   }, [])
 

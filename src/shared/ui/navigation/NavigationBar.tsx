@@ -12,7 +12,7 @@ export const NavigationBar = () => {
 
   const handleClickButton = (id: number) => {
     setMenuId(id)
-    setLocalStorage('menuId', id.toString())
+    setLocalStorage(MENU_ID, id.toString())
   }
   useEffect(() => {
     const savedId = getLocalStorage(MENU_ID)
