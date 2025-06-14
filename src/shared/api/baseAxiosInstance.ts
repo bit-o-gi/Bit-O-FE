@@ -36,17 +36,14 @@ instance.interceptors.response.use(
     // 2xx 외의 범위에 있는 상태 코드인 경우
     const { config, response: { status, data } = {} } = error
 
-    // if (status === 401 && data?.message === 'Access Token is Expired') {
+    console.error(data.error)
     if (status === 401) {
-      const refreshToken = getCookie(REFRESH_TOKEN_KEY)
-
-      if (!refreshToken) {
-        console.error(`${data.error}`)
-        removeLocalStorage(ACCESS_TOKEN_KEY)
-        return Promise.reject(error)
-      }
-
       try {
+        const refreshToken = getCookie(REFRESH_TOKEN_KEY)
+        if (!refreshToken) {
+          throw new Error('Refresh token not found')
+        }
+
         const tokenRefreshResult = await instance.post('auth/token', {
           refreshToken,
         })
@@ -55,23 +52,21 @@ instance.interceptors.response.use(
 
           // 새로 발급받은 토큰을 스토리지에 저장
           const { accessToken } = tokenRefreshResult.data
-          console.log('새로 발급', accessToken)
           setLocalStorage(ACCESS_TOKEN_KEY, accessToken)
 
           // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
           config.headers.Authorization = `Bearer ${accessToken}`
           return instance(config)
         } else {
-          removeLocalStorage(ACCESS_TOKEN_KEY)
           throw new Error('Token refresh failed')
         }
       } catch (err) {
-        console.error(err)
+        // 리프레시 토큰으로도 재발급받지 못한다면 액세스 토큰 제거
         removeLocalStorage(ACCESS_TOKEN_KEY)
+        console.error(err)
         return Promise.reject(error)
       }
     }
-    removeLocalStorage(ACCESS_TOKEN_KEY)
     return Promise.reject(error)
   },
 )
