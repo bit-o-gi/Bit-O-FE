@@ -1,7 +1,7 @@
 'use client'
 
 import { LOGIN_SUCCESS, ROUTES } from '@/shared/config'
-import { getSessionStorage, removeSessionStorage } from '@/shared/lib/utils/sessionStorage'
+import { getSessionStorage, removeSessionStorage } from '@/shared/lib'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
