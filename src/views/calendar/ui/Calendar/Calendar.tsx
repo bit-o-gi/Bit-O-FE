@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ScheduleResponse } from '@/entities/calendar/api/types'
 import { getCalendarList } from '@/entities/calendar/api'
 import { useScheduleStore } from '@/entities/calendar'
 import { LoadingSpinner } from '@/shared/ui'
@@ -13,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { ACCESS_TOKEN_KEY, ROUTES } from '@/shared/config'
 import { EXAMPLE_GUIDE_SCHEDULES } from '@/entities/calendar/consts/constants'
 import { isAxiosError } from 'axios'
-import { getLocalStorage } from '@/shared/lib'
+import { localStorageUtil } from '@/shared/lib'
 
 export function CalendarPage() {
   const router = useRouter()
@@ -22,7 +21,7 @@ export function CalendarPage() {
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth() + 1
 
-  const accessToken = getLocalStorage(ACCESS_TOKEN_KEY)
+  const accessToken = localStorageUtil.get(ACCESS_TOKEN_KEY)
 
   const {
     isLoading,

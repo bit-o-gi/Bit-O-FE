@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/shared/config'
-import { getCookie, getLocalStorage, setLocalStorage, removeLocalStorage } from '@/shared/lib'
+import { cookiesUtil, localStorageUtil } from '@/shared/lib'
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -14,7 +14,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 스토리지에서 access토큰 가져오는 로직
-    const accessToken = getLocalStorage(ACCESS_TOKEN_KEY)
+    const accessToken = localStorageUtil.get(ACCESS_TOKEN_KEY)
 
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`
@@ -39,7 +39,7 @@ instance.interceptors.response.use(
     console.error(data.error)
     if (status === 401) {
       try {
-        const refreshToken = getCookie(REFRESH_TOKEN_KEY)
+        const refreshToken = cookiesUtil.get(REFRESH_TOKEN_KEY)
         if (!refreshToken) {
           throw new Error('Refresh token not found')
         }
@@ -52,7 +52,7 @@ instance.interceptors.response.use(
 
           // 새로 발급받은 토큰을 스토리지에 저장
           const { accessToken } = tokenRefreshResult.data
-          setLocalStorage(ACCESS_TOKEN_KEY, accessToken)
+          localStorageUtil.set(ACCESS_TOKEN_KEY, accessToken)
 
           // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
           config.headers.Authorization = `Bearer ${accessToken}`
@@ -62,7 +62,7 @@ instance.interceptors.response.use(
         }
       } catch (err) {
         // 리프레시 토큰으로도 재발급받지 못한다면 액세스 토큰 제거
-        removeLocalStorage(ACCESS_TOKEN_KEY)
+        localStorageUtil.remove(ACCESS_TOKEN_KEY)
         console.error(err)
         return Promise.reject(error)
       }

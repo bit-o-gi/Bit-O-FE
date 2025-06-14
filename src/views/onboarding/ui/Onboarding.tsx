@@ -4,7 +4,7 @@ import useUserInfoStore from '@/store/userInfoStore'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { setSessionStorage } from '@/shared/lib'
+import { sessionStorageUtil } from '@/shared/lib'
 import { LOGIN_SUCCESS } from '@/shared/config'
 import { useRefetchCoupleInfo } from '@/entities/couple'
 import { useRefetchUserInfo } from '@/entities/userInfo'
@@ -41,7 +41,7 @@ export function OnboardingPage() {
       <div>
         <BaseButton
           onClick={() => {
-            setSessionStorage(LOGIN_SUCCESS, 'true')
+            sessionStorageUtil.set(LOGIN_SUCCESS, 'true')
             router.back()
           }}
           title="시작하기"

@@ -4,7 +4,7 @@ import UseLoginOauth from './lib/useLoginOauth'
 import LoginKakaoBtn from './ui/loginKakaoBtn'
 import { useRouter } from 'next/navigation'
 import { ACCESS_TOKEN_KEY, ROUTES } from '@/shared/config'
-import { setLocalStorage } from '@/shared/lib'
+import { localStorageUtil } from '@/shared/lib'
 
 const Oauth = () => {
   const router = useRouter()
@@ -14,7 +14,7 @@ const Oauth = () => {
   useEffect(() => {
     const accessToken = searchParams.get('token')
     if (accessToken) {
-      setLocalStorage(ACCESS_TOKEN_KEY, accessToken)
+      localStorageUtil.set(ACCESS_TOKEN_KEY, accessToken)
       router.replace(ROUTES.ONBOARDING)
     }
   }, [])

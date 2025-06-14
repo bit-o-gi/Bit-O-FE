@@ -1,5 +1,5 @@
 export { useNavigater } from './hooks/useNavigater'
 export { useToast } from './hooks/useToast'
-export { getCookie } from './utils/cookies'
-export { getLocalStorage, setLocalStorage, removeLocalStorage } from './utils/localStorage'
-export { getSessionStorage, setSessionStorage, removeSessionStorage } from './utils/sessionStorage'
+export { cookiesUtil } from './utils/cookies'
+export { localStorageUtil } from './utils/localStorage'
+export { sessionStorageUtil } from './utils/sessionStorage'
