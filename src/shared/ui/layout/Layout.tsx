@@ -12,7 +12,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const currentPathname = usePathname()
 
   /** Navigation Bar가 보일 주요 메인 페이지 */
-  const pagesWithNav = [ROUTES.CALENDAR, ROUTES.DDAY, ROUTES.SETTING]
+  const pagesWithNav = [ROUTES.CALENDAR, ROUTES.DDAY, ROUTES.SETTINGS]
   const showNav = pagesWithNav.includes(currentPathname)
 
   return (

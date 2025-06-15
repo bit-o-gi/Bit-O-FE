@@ -8,5 +8,5 @@ export const ROUTES = {
   ADD_CALENDAR: '/calendar/add/new',
   UPDATE_CALENDAR: (planId: number) => `/calendar/add/${planId}`,
   DDAY: '/dday',
-  SETTING: '/setting',
+  SETTINGS: '/settings',
 }

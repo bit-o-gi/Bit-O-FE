@@ -22,13 +22,17 @@ import Image from 'next/image'
 import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
 import AddEventLocation from './AddScheduleLocation'
 import { COLORS } from '@/entities/calendar/consts/constants'
-
+import { useRequireAuth } from '@/shared/lib'
 
 /**
  * id 있다면 : 스케쥴 수정
  * id 없다면 : 스케쥴 생성
  */
 export function AddEventPage() {
+  const params = useParams() as { id: string }
+  const router = useRouter()
+  const requireAuth = useRequireAuth()
+
   const {
     title,
     note,
@@ -43,8 +47,6 @@ export function AddEventPage() {
     deleteScheduleList,
     selectedDate,
   } = useScheduleStore()
-  const params = useParams() as { id: string }
-  const router = useRouter()
 
   const scheduleId = parseInt(params.id)
 
@@ -143,8 +145,6 @@ export function AddEventPage() {
     deleteMutation.mutate()
   }
 
-
-
   // color 의 key 찾기
   const findKeyByValue = (color: string) => {
     return Object.keys(COLORS).find((key) => COLORS[key as keyof typeof COLORS] === color)
@@ -171,9 +171,9 @@ export function AddEventPage() {
           ) : null
         }
       />
-      <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh] ">
+      <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh]">
         <div className="flex flex-col flex-grow overflow-y-auto gap-[3rem] ">
-          <div className='relative flex justify-between items-center'>
+          <div className="relative flex justify-between items-center">
             <AddEventTitle placeholder={'Title'} />
             <AddScheduleColor />
           </div>
@@ -183,7 +183,11 @@ export function AddEventPage() {
         </div>
       </div>
       <div className="sticky left-0 right-0 pb-[3rem] pt-[1.5rem] px-[1.5rem] ">
-        <BaseButton title="저장하기" className="bg-brown text-white" onClick={handleSaveButton} />
+        <BaseButton
+          title="저장하기"
+          className="bg-brown text-white"
+          onClick={requireAuth(handleSaveButton)}
+        />
       </div>
     </>
   )

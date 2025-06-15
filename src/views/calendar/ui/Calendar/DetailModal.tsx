@@ -8,6 +8,7 @@ import {
   getSortedOneDaySchedule,
 } from '@/features/calendar/lib/utils'
 import { ROUTES } from '@/shared/config'
+import { useRequireAuth } from '@/shared/lib'
 import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 
@@ -19,6 +20,7 @@ type Props = {
 
 const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
   const router = useRouter()
+  const requireAuth = useRequireAuth()
   const { schedules } = useScheduleStore()
 
   const handleModalContent = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -61,7 +63,7 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
             <li
               key={`schedule-detail-plan-${date}-${plan.id}`}
               className="cursor-pointer"
-              onClick={() => handleEventClick(plan.id)}
+              onClick={requireAuth(() => handleEventClick(plan.id))}
             >
               <div className="flex gap-2">
                 <div className="h-6 flex justify-center items-center">
