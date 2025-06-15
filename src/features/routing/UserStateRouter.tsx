@@ -3,7 +3,7 @@
 import { useCoupleInfoStore, useRefetchCoupleInfo } from '@/entities/couple'
 import { useRefetchUserInfo } from '@/entities/userInfo/hooks/useRefetchUserInfo'
 import { ROUTES } from '@/shared/config'
-import useUserInfoStore from '@/store/userInfoStore'
+import useUserInfoStore from '@/entities/userInfo/model/userInfoStore'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
