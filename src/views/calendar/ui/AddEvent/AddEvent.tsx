@@ -22,12 +22,17 @@ import Image from 'next/image'
 import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
 import AddEventLocation from './AddScheduleLocation'
 import { COLORS } from '@/entities/calendar/consts/constants'
+import { useRequireAuth } from '@/shared/lib'
 
 /**
  * id 있다면 : 스케쥴 수정
  * id 없다면 : 스케쥴 생성
  */
 export function AddEventPage() {
+  const params = useParams() as { id: string }
+  const router = useRouter()
+  const requireAuth = useRequireAuth()
+
   const {
     title,
     note,
@@ -42,8 +47,6 @@ export function AddEventPage() {
     deleteScheduleList,
     selectedDate,
   } = useScheduleStore()
-  const params = useParams() as { id: string }
-  const router = useRouter()
 
   const scheduleId = parseInt(params.id)
 
@@ -180,7 +183,11 @@ export function AddEventPage() {
         </div>
       </div>
       <div className="sticky left-0 right-0 pb-[3rem] pt-[1.5rem] px-[1.5rem] ">
-        <BaseButton title="저장하기" className="bg-brown text-white" onClick={handleSaveButton} />
+        <BaseButton
+          title="저장하기"
+          className="bg-brown text-white"
+          onClick={requireAuth(handleSaveButton)}
+        />
       </div>
     </>
   )
