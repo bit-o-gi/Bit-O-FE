@@ -2,22 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 import { BOTTOM_NAV_MENU } from './constants'
+import { usePathname } from 'next/navigation'
 
 export const NavigationBar = () => {
-  const [menuId, setMenuId] = useState<number>()
-
-  const handleClickButton = (id: number) => {
-    setMenuId(id)
-    localStorage.setItem('menuId', id.toString())
-  }
-  useEffect(() => {
-    const savedId = localStorage.getItem('menuId')
-    if (savedId) {
-      setMenuId(parseInt(savedId))
-    }
-  }, [])
+  const curPathname = usePathname()
 
   return (
     <div className="fixed bottom-0 left-1/2 right-1/2 -translate-x-1/2 translate-y-0 w-full min-w-[280px] max-w-[33.75rem] h-[4rem]">
@@ -26,11 +15,11 @@ export const NavigationBar = () => {
           {BOTTOM_NAV_MENU.map((menu) => {
             return (
               <li key={menu.id} className="flex flex-1 justify-center items-center">
-                <Link href={menu.path} onClick={() => handleClickButton(menu.id)} replace>
+                <Link href={menu.path} replace>
                   <Image
                     alt={menu.name}
                     src={
-                      menuId === menu.id
+                      curPathname === menu.path
                         ? `/images/icon/${menu.image}.png`
                         : `/images/icon/${menu.image}_unactive.png`
                     }

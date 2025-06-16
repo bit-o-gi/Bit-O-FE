@@ -33,7 +33,7 @@ export const BaseHeader = ({ title, backIcon, nextIcon }: HeaderProps) => {
           onClick={handleBackIcon}
         />
       )}
-      <p className="text-[1rem] font-semibold text-center flex-grow">{title}</p>
+      <p className="text-xl font-semibold text-center flex-grow">{title}</p>
 
       {nextIcon && nextIcon}
     </div>

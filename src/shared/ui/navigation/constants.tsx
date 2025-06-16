@@ -16,7 +16,7 @@ export const BOTTOM_NAV_MENU = [
   {
     id: 3,
     name: '설정',
-    image: 'setting',
-    path: ROUTES.SETTING,
+    image: 'settings',
+    path: ROUTES.SETTINGS,
   },
 ]
