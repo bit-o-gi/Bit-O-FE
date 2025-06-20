@@ -9,6 +9,7 @@ interface IScheduleStore {
   title: string | null
   note: string | null
   date: { startDateTime: Date; endDateTime: Date } | null
+  location: string | null
   selectedDate: Date | null
   schedules: ScheduleResponse[]
   selectedDatePlans: ScheduleResponse[]
@@ -17,6 +18,7 @@ interface IScheduleStore {
   setCurrentDate: (today: Date) => void
   setTitle: (title: string | null) => void
   setNote: (note: string | null) => void
+  setLocation: (location: string | null) => void
   setSelectedDate: (date: Date) => void
   setSelectedDatePlans: (payload: ScheduleResponse[]) => void
   setSchedules: (payload: ScheduleResponse[]) => void
@@ -36,6 +38,7 @@ export const useScheduleStore = create<IScheduleStore>((set) => ({
   title: null,
   note: null,
   date: null,
+  location: null,
   selectedDate: null,
   schedules: [],
   selectedDatePlans: [],
@@ -44,6 +47,7 @@ export const useScheduleStore = create<IScheduleStore>((set) => ({
   setCurrentDate: (currentDate: Date) => set({ currentDate }),
   setTitle: (title: string | null) => set({ title }),
   setNote: (note: string | null) => set({ note }),
+  setLocation: (location: string | null) => set({ location }),
   setSelectedDate: (selectedDate: Date) =>
     set((state) => {
       //선택된 날짜의 plan filter

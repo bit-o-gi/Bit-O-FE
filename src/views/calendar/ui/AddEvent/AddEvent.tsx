@@ -38,10 +38,12 @@ export function AddEventPage() {
     note,
     date,
     color,
+    location,
     setColor,
     setTitle,
     setNote,
     setDate,
+    setLocation,
     updateScheduleList,
     setSelectedDate,
     deleteScheduleList,
@@ -105,6 +107,7 @@ export function AddEventPage() {
         endDateTime: new Date(scheduleDetailData.endDateTime),
       })
       setColor(scheduleDetailData.color)
+      setLocation(scheduleDetailData.location)
     }
     return () => {
       setTitle(null)
@@ -123,7 +126,7 @@ export function AddEventPage() {
       userId: 1, // <- 로그인 완성후 고칠부분
       title: title || 'No title',
       content: note || '',
-      location: '',
+      location: location || '',
       startDateTime: format(date?.startDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
       endDateTime: format(date?.endDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
       color: findKeyByValue(color) || 'LIGHT_PURPLE',
@@ -156,7 +159,7 @@ export function AddEventPage() {
   return (
     <>
       <BaseHeader
-        title={'이벤트 추가'}
+        title={scheduleId ? '이벤트 수정' : '이벤트 추가'}
         backIcon
         nextIcon={
           scheduleId ? (
@@ -173,7 +176,7 @@ export function AddEventPage() {
       />
       <div className="flex flex-col px-[1.5rem] overflow-hidden py-[1.5rem] h-[75vh]">
         <div className="flex flex-col flex-grow overflow-y-auto gap-[3rem] ">
-          <div className="relative flex justify-between items-center">
+          <div className="relative flex items-center gap-4">
             <AddEventTitle placeholder={'Title'} />
             <AddScheduleColor />
           </div>

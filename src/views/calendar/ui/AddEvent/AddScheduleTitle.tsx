@@ -12,12 +12,14 @@ const AddEventTitle = ({ placeholder }: AddEventTitleProps) => {
   }
 
   return (
-    <input
-      className="text-[1.5rem] font-bold outline-none border-l-4 border-black px-[0.5rem] "
-      placeholder={placeholder}
-      value={title ? title : ''}
-      onChange={handleInputChange}
-    ></input>
+    <div className="flex-1">
+      <input
+        className="w-full text-[1.5rem] font-bold outline-none border-l-4 border-black px-[0.5rem] "
+        placeholder={placeholder}
+        value={title ? title : ''}
+        onChange={handleInputChange}
+      ></input>
+    </div>
   )
 }
 
