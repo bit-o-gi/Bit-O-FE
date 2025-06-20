@@ -129,7 +129,7 @@ export function AddEventPage() {
       location: location || '',
       startDateTime: format(date?.startDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
       endDateTime: format(date?.endDateTime || new Date(baseDate), "yyyy-MM-dd'T'HH:mm:ss"),
-      color: findKeyByValue(color) || 'LIGHT_PURPLE',
+      color: color || 'LIGHT_PURPLE',
     }
 
     //시작시간이 끝나는 시간보다 클 경우
@@ -146,11 +146,6 @@ export function AddEventPage() {
    * */
   const handleDeleteButton = () => {
     deleteMutation.mutate()
-  }
-
-  // color 의 key 찾기
-  const findKeyByValue = (color: string) => {
-    return Object.keys(COLORS).find((key) => COLORS[key as keyof typeof COLORS] === color)
   }
 
   if (isLoading) return <LoadingSpinner />
