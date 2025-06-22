@@ -1,28 +1,24 @@
 'use client'
 
-import AddEventTitle from './AddScheduleTitle'
-import AddEventTime from './AddScheduleTime'
-import AddEventNote from './AddScheduleNote'
-import AddScheduleColor from './AddScheduleColor'
-import { useParams, useRouter } from 'next/navigation'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import {
-  deleteSchedule,
-  getScheduleDetail,
-  postSchedule,
-  putSchedule,
-} from '@/entities/calendar/api'
-import { Schedule, ScheduleResponse } from '@/entities/calendar/api/types'
-import { useEffect } from 'react'
 import { useScheduleStore } from '@/entities/calendar'
-import { AxiosError } from 'axios'
+import { getScheduleDetail } from '@/entities/calendar/api'
+import useUserInfoStore from '@/entities/userInfo/model/userInfoStore'
+import { useAddScheduleMutation } from '@/features/calendar/lib/useAddScheduleMutation'
+import { useRequireAuth } from '@/shared/lib'
+import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
+import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { compareDesc } from 'date-fns/fp'
 import Image from 'next/image'
-import { BaseButton, BaseHeader, LoadingSpinner } from '@/shared/ui'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import AddScheduleColor from './AddScheduleColor'
 import AddEventLocation from './AddScheduleLocation'
-import { COLORS } from '@/entities/calendar/consts/constants'
-import { useRequireAuth } from '@/shared/lib'
+import AddEventNote from './AddScheduleNote'
+import AddEventTime from './AddScheduleTime'
+import AddEventTitle from './AddScheduleTitle'
+import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { useDeleteScheduleMutation } from '@/features/calendar/lib/useDeleteScheduleMutation'
 
 /**
  * id 있다면 : 스케쥴 수정
@@ -32,6 +28,7 @@ export function AddEventPage() {
   const params = useParams() as { id: string }
   const router = useRouter()
   const requireAuth = useRequireAuth()
+  const { userInfo } = useUserInfoStore()
 
   const {
     title,
@@ -44,9 +41,6 @@ export function AddEventPage() {
     setNote,
     setDate,
     setLocation,
-    updateScheduleList,
-    setSelectedDate,
-    deleteScheduleList,
     selectedDate,
   } = useScheduleStore()
 
@@ -64,39 +58,12 @@ export function AddEventPage() {
     enabled: !!scheduleId,
   })
 
-  /**Schedule 저장 use-query */
-  const saveMutation = useMutation({
-    mutationFn: (scheduleData: Schedule) =>
-      scheduleId
-        ? putSchedule({ scheduleId: scheduleId, scheduleDetail: scheduleData })
-        : postSchedule(scheduleData),
-    onSuccess: (data) => {
-      updateScheduleList({ scheduleId, scheduleDetail: data })
-
-      if (selectedDate) {
-        setSelectedDate(selectedDate)
-      }
-      router.back()
-    },
-    onError: (error: AxiosError) => {
-      alert(error)
-    },
+  const { saveMutation } = useAddScheduleMutation({
+    scheduleId,
+    router,
   })
 
-  /**Schedule 삭제 use-query */
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteSchedule({ scheduleId }),
-    onSuccess: () => {
-      deleteScheduleList({ scheduleId })
-      if (selectedDate) {
-        setSelectedDate(selectedDate)
-      }
-      router.back()
-    },
-    onError: (error: AxiosError) => {
-      alert(error)
-    },
-  })
+  const { deleteMutation } = useDeleteScheduleMutation({ scheduleId, router })
 
   useEffect(() => {
     if (scheduleDetailData && scheduleId) {
@@ -113,7 +80,7 @@ export function AddEventPage() {
       setTitle(null)
       setNote(null)
       setDate(null)
-      setColor(COLORS.LIGHT_PURPLE)
+      setColor('LIGHT_PURPLE')
     }
   }, [scheduleDetailData, setColor, setTitle, setNote, setDate, scheduleId])
 
@@ -122,8 +89,9 @@ export function AddEventPage() {
    * */
   const handleSaveButton = () => {
     const baseDate = date?.startDateTime || selectedDate || new Date()
+
     const form = {
-      userId: 1, // <- 로그인 완성후 고칠부분
+      userId: userInfo?.id as number, // <- 로그인 완성후 고칠부분
       title: title || 'No title',
       content: note || '',
       location: location || '',
