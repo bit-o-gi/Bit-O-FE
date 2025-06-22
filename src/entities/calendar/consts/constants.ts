@@ -11,7 +11,7 @@ export const COLORS = {
   GREEN: '#51b749',
   ORANGE: '#ffb878',
   LIGHT_GRAY: '#e1e1e1',
-}
+} as const
 
 const rawExampleSchedules = [
   { title: '제주도 여행', startDay: 2, endDay: 5, color: 'ORANGE' },
@@ -36,10 +36,9 @@ function generateEcampleGuideSchedules() {
       content: title,
       startDateTime: startDate.toISOString(),
       endDateTime: endDate.toISOString(),
-      color
+      color,
     }
   })
 }
 
 export const EXAMPLE_GUIDE_SCHEDULES = generateEcampleGuideSchedules()
-

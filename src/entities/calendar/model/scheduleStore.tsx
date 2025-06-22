@@ -1,11 +1,10 @@
-import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { ColorKey, ScheduleResponse } from '@/entities/calendar/api/types'
 import { addDays, isWithinInterval } from 'date-fns'
 import { create } from 'zustand'
-import { COLORS } from '../consts/constants'
 
 interface IScheduleStore {
-  color: string
-  setColor: (color: string) => void
+  color: ColorKey
+  setColor: (color: ColorKey) => void
   title: string | null
   note: string | null
   date: { startDateTime: Date; endDateTime: Date } | null
@@ -33,8 +32,8 @@ interface IScheduleStore {
 }
 
 export const useScheduleStore = create<IScheduleStore>((set) => ({
-  color: COLORS.LIGHT_PURPLE,
-  setColor: (color: string) => set({ color }),
+  color: 'LIGHT_PURPLE',
+  setColor: (color: ColorKey) => set({ color }),
   title: null,
   note: null,
   date: null,
