@@ -25,7 +25,7 @@ const AddScheduleColor = () => {
     <>
       <div
         className="w-[1em] h-[1em] rounded-full cursor-pointer"
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: COLORS[color] }}
         onClick={handleColorPickerToggle}
       />
       {isColorPickerOpen && (
@@ -35,7 +35,7 @@ const AddScheduleColor = () => {
               key={`plan-color-${key}`}
               className="w-[1em] h-[1em] rounded-full cursor-pointer"
               style={{ backgroundColor: hex }}
-              onClick={() => onClickColor(color)}
+              onClick={() => onClickColor(key as ColorKey)}
             />
           ))}
         </div>
