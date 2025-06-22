@@ -2,17 +2,15 @@ import { useScheduleStore } from '@/entities/calendar'
 import { deleteSchedule } from '@/entities/calendar/api'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
-interface Props {
-  scheduleId: number
-  router: AppRouterInstance
-}
+import { useParams, useRouter } from 'next/navigation'
 
-export const useDeleteScheduleMutation = (props: Props) => {
-  const { scheduleId, router } = props
-
+export const useDeleteScheduleMutation = () => {
   const { selectedDate, setSelectedDate, deleteScheduleList } = useScheduleStore()
+
+  const router = useRouter()
+  const params = useParams() as { id: string }
+  const scheduleId = parseInt(params.id)
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteSchedule({ scheduleId }),

@@ -3,16 +3,14 @@ import { postSchedule, putSchedule } from '@/entities/calendar/api'
 import { Schedule } from '@/entities/calendar/api/types'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+import { useParams, useRouter } from 'next/navigation'
 
-interface Props {
-  scheduleId: number
-  router: AppRouterInstance
-}
-
-export const useAddScheduleMutation = (props: Props) => {
-  const { scheduleId, router } = props
+export const useAddScheduleMutation = () => {
   const { selectedDate, setSelectedDate, updateScheduleList } = useScheduleStore()
+
+  const router = useRouter()
+  const params = useParams() as { id: string }
+  const scheduleId = parseInt(params.id)
 
   const saveMutation = useMutation({
     mutationFn: (scheduleData: Schedule) =>
