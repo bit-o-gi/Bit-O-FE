@@ -65,7 +65,7 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
               className="cursor-pointer"
               onClick={requireAuth(() => handleEventClick(plan.id))}
             >
-              <div className="flex gap-2">
+              <div className="flex justify-between">
                 <div className="h-6 flex justify-center items-center">
                   <div
                     className="w-2 h-2 rounded-full"
@@ -75,8 +75,10 @@ const DetailModal = ({ isVisable, closeDetailModal, date }: Props) => {
                     }}
                   />
                 </div>
-                <div>
-                  <div className="text-2xl h-6 align-middle">{plan.title}</div>
+                <div className="w-calc16">
+                  <div className="text-2xl h-6 align-middle text-ellipsis whitespace-nowrap overflow-hidden">
+                    {plan.title}
+                  </div>
                   <div className="text-xl text-gray-300 ">
                     {isAllDay(plan.startDateTime, plan.endDateTime) && <span>하루종일</span>}
                     {!isAllDay(plan.startDateTime, plan.endDateTime) && (

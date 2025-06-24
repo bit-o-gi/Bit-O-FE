@@ -44,8 +44,10 @@ export function CalendarPage() {
 
   useEffect(() => {
     //달&월을 위한 일자 - 오늘 날짜
-    setCurrentDate(new Date())
-  }, [setCurrentDate])
+    if (!plandata) {
+      setCurrentDate(new Date())
+    }
+  }, [])
 
   useEffect(() => {
     if (isError) {

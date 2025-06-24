@@ -5,7 +5,6 @@ import {
   getSortedOneDaySchedule,
   isShortPlan,
   isStartDate,
-  trancateString,
 } from '@/features/calendar/lib/utils'
 import { getAdjustedIndex } from '@/features/calendar/lib/adjustIndex'
 import { useMemo } from 'react'
@@ -23,7 +22,7 @@ const ScheduleList = ({ date }: ScheduleList) => {
   const sortedOneDaySchedule = getSortedOneDaySchedule(oneDaySchedule)
 
   const checkIndex = (index: number): number => {
-    const allIndices = sortedOneDaySchedule.map(plan => plan.index)
+    const allIndices = sortedOneDaySchedule.map((plan) => plan.index)
     return getAdjustedIndex(index, allIndices)
   }
 
@@ -38,7 +37,7 @@ const ScheduleList = ({ date }: ScheduleList) => {
               top: (() => {
                 const idx = checkIndex(plan.index)
                 return `calc(${25 * idx}% + ${2 * idx + 2}px)`
-              })()
+              })(),
             }}
           >
             {/* 배경색을 위한 div - 하루짜리 일정이면 10%, 아니면 100% 너비 */}
@@ -46,16 +45,17 @@ const ScheduleList = ({ date }: ScheduleList) => {
               className="absolute h-full top-0 left-0"
               style={{
                 width: isShortPlan(plan.startDateTime, plan.endDateTime) ? '5%' : '100%',
-                backgroundColor: COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE']
+                backgroundColor:
+                  COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE'],
               }}
             />
-            <div className="relative z-10">
+            <div className="relative z-10 text-ellipsis whitespace-nowrap overflow-hidden">
               <span>
                 {/* 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다. */}
-                {isStartDate(plan.startDateTime, date) && trancateString(plan.title, 7)}
+                {isStartDate(plan.startDateTime, date) && plan.title}
 
-                {/* index가 재조정 되는 경우 재조정된 일자에만 title을 보여준다다 */}
-                {plan.index !== checkIndex(plan.index) && trancateString(plan.title, 7)}
+                {/* index가 재조정 되는 경우 재조정된 일자에만 title을 보여준다 */}
+                {plan.index !== checkIndex(plan.index) && plan.title}
               </span>
             </div>
           </li>
