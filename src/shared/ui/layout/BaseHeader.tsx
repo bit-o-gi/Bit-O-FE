@@ -46,6 +46,8 @@ export const BaseHeader = ({ title, hasBack, actions }: HeaderProps) => {
             className="cursor-pointer absolute right-[1rem]"
             alt={alt}
             src={src}
+            width={20}
+            height={20}
             onClick={action}
           />
         ))}
