@@ -14,6 +14,7 @@ module.exports = {
       colors: {
         pink: '#FFA4AA',
         brown: '#C5B697',
+        deepbrown: '#A3926F',
         black: '#252525',
         gray: {
           DEFAULT: '#61697F',

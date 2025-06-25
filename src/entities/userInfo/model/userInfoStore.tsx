@@ -1,5 +1,12 @@
 import { create } from 'zustand'
-import { UserInfo } from '../api/types'
+
+interface UserInfo {
+  id: number
+  nickName: string
+  email: string
+  oauthPlatformType: string
+  oauthProviderId: number
+}
 
 interface UserInfoStore {
   userInfo: UserInfo | null
@@ -7,8 +14,18 @@ interface UserInfoStore {
   resetUserInfo: () => void
 }
 
-export const useUserInfoStore = create<UserInfoStore>()((set) => ({
-  userInfo: null,
+const initState = {
+  id: 0,
+  nickName: '',
+  email: '',
+  oauthPlatformType: '',
+  oauthProviderId: 0,
+}
+
+const useUserInfoStore = create<UserInfoStore>()((set) => ({
+  userInfo: initState,
   setUserInfo: (userInfo: UserInfo | null) => set({ userInfo }),
-  resetUserInfo: () => set({ userInfo: null }),
+  resetUserInfo: () => set({ userInfo: initState }),
 }))
+
+export default useUserInfoStore

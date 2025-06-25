@@ -26,11 +26,11 @@ const AddEventTime = () => {
       [`${type}DateTime`]:
         mode === 'date'
           ? new Date(
-              `${value}T${format(date ? new Date(currentDate[`${type}DateTime`]) : new Date(), 'HH:mm')}`,
-            )
+            `${value}T${format(date ? new Date(currentDate[`${type}DateTime`]) : new Date(), 'HH:mm')}`,
+          )
           : new Date(
-              `${format(date ? new Date(currentDate[`${type}DateTime`]) : new Date(), 'yyyy-MM-dd')}T${value}`,
-            ),
+            `${format(date ? new Date(currentDate[`${type}DateTime`]) : new Date(), 'yyyy-MM-dd')}T${value}`,
+          ),
     }
 
     setDate(updatedDate)

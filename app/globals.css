@@ -16,11 +16,16 @@
   .h-calc64 {
     height: calc(100% - 64px);
   }
+
   .h-calc24 {
     height: calc(100% - 24px);
   }
+
   .h-calc4rem {
     height: calc(100% - 4rem);
+  }
+  .w-calc16 {
+    width: calc(100% - 16px);
   }
 }
 
@@ -29,12 +34,13 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/* 아직 다크 모드 지원 안해서 주석처리 */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   color: var(--foreground);

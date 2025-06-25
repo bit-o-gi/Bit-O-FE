@@ -1,9 +1,12 @@
 import { useScheduleStore } from '@/entities/calendar'
+import { COLORS } from '@/entities/calendar/consts/constants'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
-  trancateString,
+  isShortPlan,
+  isStartDate,
 } from '@/features/calendar/lib/utils'
+import { getAdjustedIndex } from '@/features/calendar/lib/adjustIndex'
 import { useMemo } from 'react'
 
 interface ScheduleList {
@@ -18,19 +21,41 @@ const ScheduleList = ({ date }: ScheduleList) => {
   // 일정이 긴 plan 순서대로 display
   const sortedOneDaySchedule = getSortedOneDaySchedule(oneDaySchedule)
 
+  const checkIndex = (index: number): number => {
+    const allIndices = sortedOneDaySchedule.map((plan) => plan.index)
+    return getAdjustedIndex(index, allIndices)
+  }
+
   return (
     <ul className="relative h-calc24">
       {sortedOneDaySchedule.slice(0, 3).map((plan) => {
         return (
           <li
             key={plan.id}
-            className={`absolute h-1/4 bg-pink text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] text-sm`}
-            style={{ top: `calc(${25 * plan.index}% + ${2 * plan.index + 2}px)` }}
+            className="absolute h-1/4 text-[0.5rem] text-ellipsis overflow-hidden w-full whitespace-nowrap px-[0.5rem] text-sm"
+            style={{
+              top: (() => {
+                const idx = checkIndex(plan.index)
+                return `calc(${25 * idx}% + ${2 * idx + 2}px)`
+              })(),
+            }}
           >
-            <div>
+            {/* 배경색을 위한 div - 하루짜리 일정이면 10%, 아니면 100% 너비 */}
+            <div
+              className="absolute h-full top-0 left-0"
+              style={{
+                width: isShortPlan(plan.startDateTime, plan.endDateTime) ? '5%' : '100%',
+                backgroundColor:
+                  COLORS[plan.color as keyof typeof COLORS] || COLORS['LIGHT_PURPLE'],
+              }}
+            />
+            <div className="relative z-10 text-ellipsis whitespace-nowrap overflow-hidden">
               <span>
-                {/* {isStartDate(plan.startDateTime, date) ? trancateString(plan.title, 7) : ''} */}
-                {trancateString(plan.title, 7)}
+                {/* 각 plan이 하루가 넘어가는 일정이면 시작하는 날짜에만 title을 보여준다. */}
+                {isStartDate(plan.startDateTime, date) && plan.title}
+
+                {/* index가 재조정 되는 경우 재조정된 일자에만 title을 보여준다 */}
+                {plan.index !== checkIndex(plan.index) && plan.title}
               </span>
             </div>
           </li>

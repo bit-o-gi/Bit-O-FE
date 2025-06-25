@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { baseURL } from '../config'
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, baseURL } from '@/shared/config'
+import { cookiesUtil, localStorageUtil } from '@/shared/lib'
 
 const instance = axios.create({
   baseURL: `${baseURL}/api/v1`,
@@ -11,15 +12,12 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 스토리지에서 access토큰 가져오는 로직
-    const accessToken = localStorage.getItem('access_token')
-    const isLoginPage = window.location.pathname === '/login'
+    const accessToken = localStorageUtil.get(ACCESS_TOKEN_KEY)
 
-    if (!accessToken && !isLoginPage) {
-      window.location.href = '/login'
-      return config
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`
     }
 
-    config.headers['Authorization'] = `Bearer ${accessToken}`
     return config
   },
   function (error) {
@@ -34,21 +32,16 @@ instance.interceptors.response.use(
   },
   async function (error) {
     // 2xx 외의 범위에 있는 상태 코드인 경우
-    // console.log(error)
-    const {
-      config,
-      response: { status, data },
-    } = error
+    const { config, response: { status, data } = {} } = error
 
-    if (status === 401 && data?.message === 'Access Token is Expired') {
-      const cookies = document.cookie
-      const refreshToken = cookies.split('refresh_token=')[1]
-      if (!refreshToken) {
-        console.error(`${data.error}`)
-        window.location.href = '/login'
-      }
-
+    console.error(data.error)
+    if (status === 401) {
       try {
+        const refreshToken = cookiesUtil.get(REFRESH_TOKEN_KEY)
+        if (!refreshToken) {
+          throw new Error('Refresh token not found')
+        }
+
         const tokenRefreshResult = await instance.post('auth/token', {
           refreshToken,
         })
@@ -57,21 +50,21 @@ instance.interceptors.response.use(
 
           // 새로 발급받은 토큰을 스토리지에 저장
           const { accessToken } = tokenRefreshResult.data
-          localStorage.setItem('access_token', accessToken)
+          localStorageUtil.set(ACCESS_TOKEN_KEY, accessToken)
 
           // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
           config.headers.Authorization = `Bearer ${accessToken}`
           return instance(config)
         } else {
-          // 백엔드 에러메세지 (	Error: response status is 500 )
-          // logoutAndHome() // 전체 프로세스 정해지면 추가
+          throw new Error('Token refresh failed')
         }
       } catch (err) {
+        // 리프레시 토큰으로도 재발급받지 못한다면 액세스 토큰 제거
+        localStorageUtil.remove(ACCESS_TOKEN_KEY)
         console.error(err)
-        // logoutAndHome() // 전체 프로세스 정해지면 추가
+        return Promise.reject(error)
       }
     }
-
     return Promise.reject(error)
   },
 )
