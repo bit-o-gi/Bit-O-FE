@@ -22,7 +22,7 @@ const rawExampleSchedules = [
   { title: '자격증 시험', startDay: 27, endDay: 27, color: 'BLUE', location: '국세청' },
 ]
 
-function generateEcampleGuideSchedules() {
+function generateExampleGuideSchedules() {
   const now = new Date()
 
   return rawExampleSchedules.map(({ title, startDay, endDay, color, location }, idx) => {
@@ -44,4 +44,4 @@ function generateEcampleGuideSchedules() {
   })
 }
 
-export const EXAMPLE_GUIDE_SCHEDULES = generateEcampleGuideSchedules()
+export const EXAMPLE_GUIDE_SCHEDULES = generateExampleGuideSchedules()
