@@ -1,12 +1,15 @@
+import { getDateDiff } from '@/shared/lib'
 import Image from 'next/image'
 
 interface IDdayThumbnail {
   title: string
   src: string
-  dday: number
+  baseDate: Date
 }
 
-export function DdayThumbnail({ title, src, dday }: IDdayThumbnail) {
+export function DdayThumbnail({ title, src, baseDate }: IDdayThumbnail) {
+  const dday = getDateDiff(new Date(), baseDate)
+
   return (
     <div className="relative w-full aspect-[16/9] bg-gray-100">
       <Image alt={`${title} 이미지`} src={src} fill style={{ objectFit: 'cover' }} />
