@@ -2,19 +2,20 @@
 
 import { useCoupleInfoStore, useRefetchCoupleInfo } from '@/entities/couple'
 import { useRefetchUserInfo } from '@/entities/userInfo/hooks/useRefetchUserInfo'
-import { useNavigater } from '@/shared/lib'
-import useUserInfoStore from '@/store/userInfoStore'
+import { ROUTES } from '@/shared/config'
+import useUserInfoStore from '@/entities/userInfo/model/userInfoStore'
 import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-const LOGGEDOUT_ROUTES = ['/login', '/onboarding']
-const LOGGEDIN_ROUTES = ['/onboarding']
-const COUPLE_ROUTES = ['/calendar', '/dday', '/setting']
-const SINGLE_ROUTES = ['/connect', '/connect/create-couple', '/connect/insert-code']
+const LOGGEDOUT_ROUTES = [ROUTES.LOGIN, ROUTES.ONBOARDING]
+const LOGGEDIN_ROUTES = [ROUTES.ONBOARDING]
+const COUPLE_ROUTES = [ROUTES.CALENDAR, ROUTES.DDAY, ROUTES.SETTINGS]
+const SINGLE_ROUTES = [ROUTES.CONNECT, ROUTES.CONNECT_CREATE_COUPLE, ROUTES.CONNECT_INSERT_CODE]
 
 export function UserStateRouter() {
+  const router = useRouter()
   const currentPathname = usePathname()
-  const { navigateLogin, navigateCalendar, navigateConnect } = useNavigater()
 
   const { refetch: refetchUser } = useRefetchUserInfo()
   const { refetch: refetchCouple } = useRefetchCoupleInfo()
@@ -28,21 +29,24 @@ export function UserStateRouter() {
     if (!isRefetched) return
 
     if (!userInfo && !LOGGEDOUT_ROUTES.some((route) => currentPathname.startsWith(route))) {
-      navigateLogin({ replace: true })
+      router.replace(ROUTES.LOGIN)
+      return
     }
     if (
       userInfo &&
       coupleInfo &&
       ![...LOGGEDIN_ROUTES, ...COUPLE_ROUTES].some((route) => currentPathname.startsWith(route))
     ) {
-      navigateCalendar({ replace: true })
+      router.replace(ROUTES.CALENDAR)
+      return
     }
     if (
       userInfo &&
       !coupleInfo &&
       ![...LOGGEDIN_ROUTES, ...SINGLE_ROUTES].some((route) => currentPathname.startsWith(route))
     ) {
-      navigateConnect({ replace: true })
+      router.replace(ROUTES.CONNECT)
+      return
     }
   }, [currentPathname, userInfo, coupleInfo, isRefetched])
 

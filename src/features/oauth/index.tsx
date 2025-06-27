@@ -1,19 +1,21 @@
-import { useNavigater } from '@/shared/lib'
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import UseLoginOauth from './lib/useLoginOauth'
 import LoginKakaoBtn from './ui/loginKakaoBtn'
+import { useRouter } from 'next/navigation'
+import { ACCESS_TOKEN_KEY, ROUTES } from '@/shared/config'
+import { localStorageUtil } from '@/shared/lib'
 
 const Oauth = () => {
+  const router = useRouter()
   const { loginController } = UseLoginOauth()
-  const { navigateOnboarding } = useNavigater()
   const searchParams = useSearchParams()
 
   useEffect(() => {
     const accessToken = searchParams.get('token')
     if (accessToken) {
-      localStorage.setItem('access_token', accessToken)
-      navigateOnboarding()
+      localStorageUtil.set(ACCESS_TOKEN_KEY, accessToken)
+      router.replace(ROUTES.ONBOARDING)
     }
   }, [])
 

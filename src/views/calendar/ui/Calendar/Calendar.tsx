@@ -2,45 +2,70 @@
 
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ScheduleResponse } from '@/entities/calendar/api/types'
 import { getCalendarList } from '@/entities/calendar/api'
 import { useScheduleStore } from '@/entities/calendar'
 import { LoadingSpinner } from '@/shared/ui'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
-import { useNavigater } from '@/shared/lib'
 import { useInjectIndex } from '@/entities/calendar/model/useInjectIndex'
+import { useRouter } from 'next/navigation'
+import { ACCESS_TOKEN_KEY, ROUTES } from '@/shared/config'
+import { EXAMPLE_GUIDE_SCHEDULES } from '@/entities/calendar/consts/constants'
+import { isAxiosError } from 'axios'
+import { localStorageUtil } from '@/shared/lib'
 
 export function CalendarPage() {
-  const { setCurrentDate, currentDate } = useScheduleStore()
-  const { navigateAddCalendar } = useNavigater()
+  const router = useRouter()
+  const { setCurrentDate, currentDate, setSchedules } = useScheduleStore()
 
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth() + 1
+
+  const accessToken = localStorageUtil.get(ACCESS_TOKEN_KEY)
 
   const {
     isLoading,
     isError,
     data: plandata,
     error,
-  } = useQuery<ScheduleResponse[]>({
+  } = useQuery({
     queryKey: ['calendarlist', currentYear, currentMonth],
     queryFn: () => getCalendarList(currentYear, currentMonth),
+    enabled: Boolean(accessToken),
+    retry: false,
   })
+
+  const setGuideSchedulesData = () => {
+    setSchedules(EXAMPLE_GUIDE_SCHEDULES)
+  }
 
   // index 주입 커스텀훅
   useInjectIndex(plandata)
 
   useEffect(() => {
     //달&월을 위한 일자 - 오늘 날짜
-    setCurrentDate(new Date())
-  }, [setCurrentDate])
+    if (!plandata) {
+      setCurrentDate(new Date())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isError) {
+      if (isAxiosError(error) && error.response?.status === 401) {
+        setGuideSchedulesData()
+      }
+      console.error('스케줄 조회 에러:', error)
+    }
+  }, [isError, error])
+
+  useEffect(() => {
+    if (!accessToken) setGuideSchedulesData()
+  }, [])
 
   const handleAddSchedule = () => {
-    navigateAddCalendar()
+    router.push(ROUTES.ADD_CALENDAR)
   }
 
-  if (isError) alert(error)
   return (
     currentDate && (
       <div className="h-calc64 relative flex flex-col bg-gray-50">

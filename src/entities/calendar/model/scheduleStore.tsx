@@ -1,14 +1,14 @@
-import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { ColorKey, ScheduleResponse } from '@/entities/calendar/api/types'
 import { addDays, isWithinInterval } from 'date-fns'
 import { create } from 'zustand'
-import { COLORS } from '../consts/constants'
 
 interface IScheduleStore {
-  color: string
-  setColor: (color: string) => void
+  color: ColorKey
+  setColor: (color: ColorKey) => void
   title: string | null
   note: string | null
   date: { startDateTime: Date; endDateTime: Date } | null
+  location: string | null
   selectedDate: Date | null
   schedules: ScheduleResponse[]
   selectedDatePlans: ScheduleResponse[]
@@ -17,6 +17,7 @@ interface IScheduleStore {
   setCurrentDate: (today: Date) => void
   setTitle: (title: string | null) => void
   setNote: (note: string | null) => void
+  setLocation: (location: string | null) => void
   setSelectedDate: (date: Date) => void
   setSelectedDatePlans: (payload: ScheduleResponse[]) => void
   setSchedules: (payload: ScheduleResponse[]) => void
@@ -31,11 +32,12 @@ interface IScheduleStore {
 }
 
 export const useScheduleStore = create<IScheduleStore>((set) => ({
-  color: COLORS.LIGHT_PURPLE,
-  setColor: (color: string) => set({ color }),
+  color: 'LIGHT_PURPLE',
+  setColor: (color: ColorKey) => set({ color }),
   title: null,
   note: null,
   date: null,
+  location: null,
   selectedDate: null,
   schedules: [],
   selectedDatePlans: [],
@@ -44,6 +46,7 @@ export const useScheduleStore = create<IScheduleStore>((set) => ({
   setCurrentDate: (currentDate: Date) => set({ currentDate }),
   setTitle: (title: string | null) => set({ title }),
   setNote: (note: string | null) => set({ note }),
+  setLocation: (location: string | null) => set({ location }),
   setSelectedDate: (selectedDate: Date) =>
     set((state) => {
       //선택된 날짜의 plan filter
