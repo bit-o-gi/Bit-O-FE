@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  confirmCoupleCode,
-  createCoupleCode,
-  getCoupleCode,
-  useRefetchCoupleInfo,
-} from '@/entities/couple'
+import { coupleApi, useRefetchCoupleInfo } from '@/entities/couple'
 import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
@@ -61,12 +56,12 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   const createCodeMutation = useMutation({
     mutationFn: ({ startDate, coupleTitle }: { startDate: Date; coupleTitle: string }) =>
-      createCoupleCode({ startDate, coupleTitle }),
+      coupleApi.createCoupleCode({ startDate, coupleTitle }),
     onSuccess: (data) => setCode(data),
     onError: async (error: AxiosError) => {
       if (error.response?.status === 409) {
         try {
-          const code = await getCoupleCode()
+          const code = await coupleApi.getCoupleCode()
           if (code) setCode(code)
         } catch {
           toast.shortError('커플 코드 조회 실패')
@@ -78,7 +73,7 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
   })
 
   const confirmCodeMutation = useMutation({
-    mutationFn: (code: string) => confirmCoupleCode(code),
+    mutationFn: (code: string) => coupleApi.confirmCoupleCode(code),
     onError: async (error: AxiosError) => {
       if (error.response?.status === 400) {
         toast.shortError('잘못된 커플 코드입니다.')
@@ -155,7 +150,8 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
 
   useEffect(() => {
     if (type === 'create') {
-      getCoupleCode()
+      coupleApi
+        .getCoupleCode()
         .then((code) => {
           setCurrentPage(steps.length - 1)
           setCode(code)
