@@ -1,8 +1,6 @@
 'use client'
 
-import { useScheduleStore } from '@/entities/calendar'
-import { getScheduleDetail } from '@/entities/calendar/api'
-import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { calendarApi, useScheduleStore, ScheduleResponse } from '@/entities/calendar'
 import { useDeleteScheduleMutation } from '@/features/calendar/lib/useDeleteScheduleMutation'
 import { BaseHeader, LoadingSpinner } from '@/shared/ui'
 import { useQuery } from '@tanstack/react-query'
@@ -34,7 +32,7 @@ export function AddEventPage() {
     error,
   } = useQuery<ScheduleResponse>({
     queryKey: ['scheduleDetail', scheduleId],
-    queryFn: () => getScheduleDetail(scheduleId),
+    queryFn: () => calendarApi.getScheduleDetail(scheduleId),
     enabled: !!scheduleId,
   })
 

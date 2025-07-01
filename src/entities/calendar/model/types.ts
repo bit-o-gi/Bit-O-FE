@@ -1,4 +1,4 @@
-import { COLORS } from '@/entities/calendar/consts/constants'
+import { COLORS } from '../config/constants'
 
 export type ColorKey = keyof typeof COLORS
 export interface ScheduleResponse extends Schedule {

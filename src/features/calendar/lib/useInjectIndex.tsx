@@ -1,8 +1,6 @@
-import { useScheduleStore } from '@/entities/calendar'
-import { getPlanFixedIndex } from '@/entities/calendar/lib/injectIndex'
+import { useScheduleStore, getPlanFixedIndex, ScheduleResponse } from '@/entities/calendar'
 import { useEffect } from 'react'
-import { getOneDaySchedule, getSortedOneDaySchedule } from '../../../features/calendar/lib/utils'
-import { ScheduleResponse } from '../api/types'
+import { getOneDaySchedule, getSortedOneDaySchedule } from './utils'
 
 type Props = ScheduleResponse[] | undefined
 

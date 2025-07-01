@@ -1,4 +1,4 @@
-import { ScheduleResponse } from '@/entities/calendar/api/types'
+import { ScheduleResponse } from '@/entities/calendar'
 import {
   addDays,
   differenceInMinutes,
@@ -9,9 +9,9 @@ import {
   isToday,
   isWithinInterval,
   startOfDay,
-  startOfMonth
+  startOfMonth,
 } from 'date-fns'
-import { DAY_OF_THE_WEEK } from '../../../entities/calendar/consts/constants'
+import { DAY_OF_THE_WEEK } from '../../../entities/calendar/config/constants'
 
 interface GenerateDateProps {
   month: number

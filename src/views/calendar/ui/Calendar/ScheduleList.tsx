@@ -1,5 +1,4 @@
-import { useScheduleStore } from '@/entities/calendar'
-import { COLORS } from '@/entities/calendar/consts/constants'
+import { useScheduleStore, COLORS } from '@/entities/calendar'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,

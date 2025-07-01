@@ -1,19 +1,18 @@
-import { ColorKey } from '../api/types'
+import { differenceInMinutes } from 'date-fns'
+import { ColorKey, ScheduleResponse } from '../model/types'
 
-export const DAY_OF_THE_WEEK = ['일', '월', '화', '수', '목', '금', '토']
-
-export const COLORS = {
-  LAVENDER: '#9a9cff',
-  RED: '#dc2227',
-  LIGHT_PURPLE: '#daadfe',
-  LIGHT_BLUE: '#a4bdfd',
-  BLUE: '#5485ee',
-  TEAL: '#47d6dc',
-  MINT: '#7ae7be',
-  GREEN: '#51b749',
-  ORANGE: '#ffb878',
-  LIGHT_GRAY: '#e1e1e1',
-} as const
+export function getPlanFixedIndex(oneDaySchedule: ScheduleResponse[], plan: ScheduleResponse) {
+  const overlapedPlan = oneDaySchedule.find(
+    (_plan) => _plan.id !== plan.id && _plan.index === plan.index,
+  )
+  if (overlapedPlan && differenceInMinutes(overlapedPlan.startDateTime, plan.startDateTime) < 0) {
+    // 둘중에 시작날짜가 느린쪽을 index를 -1 (재귀적으로 실행)
+    const newPlan = { ...plan, index: plan.index - 1 }
+    return getPlanFixedIndex(oneDaySchedule, newPlan)
+  } else {
+    return plan
+  }
+}
 
 const rawExampleSchedules = [
   { title: '제주도 여행', startDay: 2, endDay: 5, color: 'ORANGE', location: '제주도' },
@@ -22,7 +21,7 @@ const rawExampleSchedules = [
   { title: '자격증 시험', startDay: 27, endDay: 27, color: 'BLUE', location: '국세청' },
 ]
 
-function generateEcampleGuideSchedules() {
+export function generateExampleGuideSchedules() {
   const now = new Date()
 
   return rawExampleSchedules.map(({ title, startDay, endDay, color, location }, idx) => {
@@ -43,5 +42,3 @@ function generateEcampleGuideSchedules() {
     }
   })
 }
-
-export const EXAMPLE_GUIDE_SCHEDULES = generateEcampleGuideSchedules()

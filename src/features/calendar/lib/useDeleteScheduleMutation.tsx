@@ -1,5 +1,4 @@
-import { useScheduleStore } from '@/entities/calendar'
-import { deleteSchedule } from '@/entities/calendar/api'
+import { calendarApi, useScheduleStore } from '@/entities/calendar'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
@@ -13,7 +12,7 @@ export const useDeleteScheduleMutation = () => {
   const scheduleId = parseInt(params.id)
 
   const deleteMutation = useMutation({
-    mutationFn: () => deleteSchedule({ scheduleId }),
+    mutationFn: () => calendarApi.deleteSchedule({ scheduleId }),
     onSuccess: () => {
       deleteScheduleList({ scheduleId })
       if (selectedDate) {

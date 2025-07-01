@@ -1,1 +1,5 @@
+export { calendarApi } from './api/calendarApi'
 export { useScheduleStore } from './model/scheduleStore'
+export { getPlanFixedIndex } from './lib/helpers'
+export { DAY_OF_THE_WEEK, COLORS, EXAMPLE_GUIDE_SCHEDULES } from './config/constants'
+export type { ColorKey, ScheduleResponse, Schedule } from './model/types'

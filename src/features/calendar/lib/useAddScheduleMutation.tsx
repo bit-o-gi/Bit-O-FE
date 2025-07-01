@@ -1,6 +1,4 @@
-import { useScheduleStore } from '@/entities/calendar'
-import { postSchedule, putSchedule } from '@/entities/calendar/api'
-import { Schedule } from '@/entities/calendar/api/types'
+import { calendarApi, useScheduleStore, Schedule } from '@/entities/calendar'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'
@@ -15,8 +13,8 @@ export const useAddScheduleMutation = () => {
   const saveMutation = useMutation({
     mutationFn: (scheduleData: Schedule) =>
       scheduleId
-        ? putSchedule({ scheduleId: scheduleId, scheduleDetail: scheduleData })
-        : postSchedule(scheduleData),
+        ? calendarApi.putSchedule({ scheduleId: scheduleId, scheduleDetail: scheduleData })
+        : calendarApi.postSchedule(scheduleData),
     onSuccess: (data) => {
       updateScheduleList({ scheduleId, scheduleDetail: data })
 
