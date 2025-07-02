@@ -1,4 +1,4 @@
-import { UserInfo } from '@/entities/userInfo'
+import { UserInfo } from '@/entities/user'
 
 enum CoupleStatus {
   APPROVED = 'APPROVED',

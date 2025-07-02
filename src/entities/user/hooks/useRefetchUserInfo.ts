@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { getUserInfo } from '../api/userApi'
-import useUserInfoStore from '@/entities/userInfo/model/userInfoStore'
+import useUserInfoStore from '@/entities/user/model/userInfoStore'
 
 export const useRefetchUserInfo = () => {
   const { setUserInfo } = useUserInfoStore()
