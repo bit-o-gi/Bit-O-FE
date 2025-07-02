@@ -1,13 +1,15 @@
 import { instance } from '@/shared/api'
-import { UserInfo } from './types'
+import { User } from '../model/types'
 
-export const getUserInfo = async () => {
-  try {
-    const result = await instance.get('/user')
-    const userData = result?.data as UserInfo
-    return userData
-  } catch (err) {
-    console.error(err)
-    return null
-  }
+export const userApi = {
+  getUserInfo: async () => {
+    try {
+      const result = await instance.get('/user')
+      const userData = result?.data as User
+      return userData
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  },
 }

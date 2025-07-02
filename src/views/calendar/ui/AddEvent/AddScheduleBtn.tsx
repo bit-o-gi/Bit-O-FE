@@ -1,5 +1,5 @@
 import { useScheduleStore } from '@/entities/calendar'
-import useUserInfoStore from '@/entities/user/model/userInfoStore'
+import { useUserInfoStore } from '@/entities/user'
 import { useAddScheduleMutation } from '@/features/calendar/lib/useAddScheduleMutation'
 import { useRequireAuth } from '@/shared/lib'
 import { BaseButton } from '@/shared/ui'

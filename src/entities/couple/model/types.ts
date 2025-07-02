@@ -1,4 +1,4 @@
-import { UserInfo } from '@/entities/user'
+import { User } from '@/entities/user'
 
 enum CoupleStatus {
   APPROVED = 'APPROVED',
@@ -6,7 +6,7 @@ enum CoupleStatus {
 
 export type Couple = {
   id?: number
-  initiatorUser: UserInfo
-  partnerUser: UserInfo
+  initiatorUser: User
+  partnerUser: User
   status: CoupleStatus
 }

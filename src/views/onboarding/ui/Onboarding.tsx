@@ -1,13 +1,12 @@
 'use client'
 import { BaseButton } from '@/shared/ui'
-import useUserInfoStore from '@/entities/user/model/userInfoStore'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { sessionStorageUtil } from '@/shared/lib'
 import { LOGIN_SUCCESS } from '@/shared/config'
 import { useRefetchCoupleInfo } from '@/entities/couple'
-import { useRefetchUserInfo } from '@/entities/user'
+import { useRefetchUserInfo, useUserInfoStore } from '@/entities/user'
 
 export function OnboardingPage() {
   const router = useRouter()
