@@ -1,13 +1,7 @@
 import { useScheduleStore, COLORS } from '@/entities/calendar'
-import {
-  getFormattedDate,
-  getFormattedDay,
-  getFormattedTime,
-  getOneDaySchedule,
-  getSortedOneDaySchedule,
-} from '@/features/calendar/lib/utils'
 import { ROUTES } from '@/shared/config'
-import { useRequireAuth } from '@/shared/lib'
+import { useRequireAuth, getFormattedDate, getFormattedDay, getFormattedTime } from '@/shared/lib'
+import { getOneDaySchedule, getSortedOneDaySchedule } from '@/features/calendar'
 import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 

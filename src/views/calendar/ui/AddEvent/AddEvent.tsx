@@ -1,7 +1,7 @@
 'use client'
 
 import { calendarApi, useScheduleStore, ScheduleResponse } from '@/entities/calendar'
-import { useDeleteScheduleMutation } from '@/features/calendar/lib/useDeleteScheduleMutation'
+import { useMutationScheduleDelete } from '@/features/calendar'
 import { BaseHeader, LoadingSpinner } from '@/shared/ui'
 import { useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
@@ -36,7 +36,7 @@ export function AddEventPage() {
     enabled: !!scheduleId,
   })
 
-  const { deleteMutation } = useDeleteScheduleMutation()
+  const { deleteMutation } = useMutationScheduleDelete()
 
   useEffect(() => {
     if (scheduleDetailData && scheduleId) {

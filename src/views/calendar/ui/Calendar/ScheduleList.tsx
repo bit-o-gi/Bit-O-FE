@@ -4,8 +4,8 @@ import {
   getSortedOneDaySchedule,
   isShortPlan,
   isStartDate,
-} from '@/features/calendar/lib/utils'
-import { getAdjustedIndex } from '@/features/calendar/lib/adjustIndex'
+} from '@/features/calendar'
+import { getAdjustedIndex } from '@/features/calendar/lib/helpers'
 import { useMemo } from 'react'
 
 interface ScheduleList {

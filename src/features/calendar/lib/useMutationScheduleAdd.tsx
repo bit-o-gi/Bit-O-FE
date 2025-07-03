@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'
 
-export const useAddScheduleMutation = () => {
+export const useMutationScheduleAdd = () => {
   const { selectedDate, setSelectedDate, updateScheduleList } = useScheduleStore()
 
   const router = useRouter()

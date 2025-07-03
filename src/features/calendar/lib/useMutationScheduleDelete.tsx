@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 
 import { useParams, useRouter } from 'next/navigation'
 
-export const useDeleteScheduleMutation = () => {
+export const useMutationScheduleDelete = () => {
   const { selectedDate, setSelectedDate, deleteScheduleList } = useScheduleStore()
 
   const router = useRouter()

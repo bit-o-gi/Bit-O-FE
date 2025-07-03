@@ -6,7 +6,7 @@ import { calendarApi, useScheduleStore, EXAMPLE_GUIDE_SCHEDULES } from '@/entiti
 import { LoadingSpinner } from '@/shared/ui'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
-import { useInjectIndex } from '@/features/calendar/lib/useInjectIndex'
+import { useInjectIndex } from '@/features/calendar'
 import { useRouter } from 'next/navigation'
 import { ACCESS_TOKEN_KEY, ROUTES } from '@/shared/config'
 import { isAxiosError } from 'axios'
