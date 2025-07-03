@@ -1,4 +1,4 @@
-import { ColorKey, ScheduleResponse } from '../model/types'
+import { ColorKey, ScheduleResponse } from './types'
 import { addDays, isWithinInterval } from 'date-fns'
 import { create } from 'zustand'
 
