@@ -1,6 +1,6 @@
 'use client'
 
-import LoginButton from '@/features/oauth/ui/LoginBtn'
+import { LoginButton } from '@/features/auth'
 import { ACCESS_TOKEN_KEY } from '@/shared/config'
 import { localStorageUtil } from '@/shared/lib'
 import { BaseHeader } from '@/shared/ui'

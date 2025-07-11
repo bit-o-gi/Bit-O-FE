@@ -4,11 +4,11 @@ import { REFRESH_TOKEN_KEY, ROUTES } from '@/shared/config'
 import { cookiesUtil, useNavigater } from '@/shared/lib'
 import { useRouter } from 'next/navigation'
 
-const UseLoginOauth = () => {
+export const useOauthLogin = () => {
   const router = useRouter()
   const { navigateToKakaoAuth } = useNavigater()
 
-  const loginController = () => {
+  const handleKakaoLogin = () => {
     const refreshToken = cookiesUtil.get(REFRESH_TOKEN_KEY)
     if (refreshToken) {
       router.replace(ROUTES.ONBOARDING)
@@ -16,7 +16,5 @@ const UseLoginOauth = () => {
       navigateToKakaoAuth()
     }
   }
-  return { loginController }
+  return { handleKakaoLogin }
 }
-
-export default UseLoginOauth

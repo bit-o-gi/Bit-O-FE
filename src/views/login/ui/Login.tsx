@@ -1,10 +1,12 @@
 'use client'
 
-import Oauth from '@/features/oauth'
+import { useOauthLoginCallback, LoginMethods } from '@/features/auth'
 import Image from 'next/image'
 import { Suspense } from 'react'
 
 export function LoginPage() {
+  useOauthLoginCallback()
+
   return (
     <div className="h-full">
       <div className="h-full flex flex-col justify-center items-center gap-10 ">
@@ -16,7 +18,7 @@ export function LoginPage() {
           <div>다양한 서비스를 이용해보세요.</div>
         </div>
         <Suspense>
-          <Oauth />
+          <LoginMethods />
         </Suspense>
       </div>
     </div>

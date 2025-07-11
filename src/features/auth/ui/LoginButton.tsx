@@ -4,7 +4,7 @@ import { ROUTES } from '@/shared/config'
 import { TextButton } from '@/shared/ui'
 import { useRouter } from 'next/navigation'
 
-export default function LoginButton() {
+export const LoginButton = () => {
   const router = useRouter()
   return (
     <TextButton
