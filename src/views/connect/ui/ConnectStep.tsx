@@ -5,23 +5,17 @@ import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { useUserInfoStore } from '@/entities/user'
-import { AxiosError, isAxiosError } from 'axios'
-import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useMutationCoupleCodeCreate, useMutationCoupleConfirm } from '@/features/couple'
+import { useEffect } from 'react'
+
+import { useConnectStepFlow } from '../lib/useConnectStepFlow'
 
 type ConnectStepType = 'create' | 'code'
 type ConnectStep = 'date' | 'nickname' | 'create-code' | 'insert-code' | 'complete'
 
 interface ConnectStepProps {
   type: ConnectStepType
-}
-
-const CONNECT_STEP: Record<ConnectStepType, ConnectStep[]> = {
-  create: ['date', 'nickname', 'create-code'],
-  code: ['insert-code', 'complete'],
 }
 
 const CONNECT_STEP_IMAGE: Record<ConnectStep, string> = {
@@ -42,91 +36,26 @@ const CONNECT_STEP_INSTRUCTION: Record<ConnectStep, string> = {
 
 export function ConnectStepPage({ type }: ConnectStepProps) {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const toast = useToast()
+  const router = useRouter()
+
   const { userInfo } = useUserInfoStore()
   const { refetch: refetchCouple } = useRefetchCoupleInfo()
 
-  const [currentPage, setCurrentPage] = useState<number>(0)
-  const [isForward, setIsForward] = useState<boolean>(true)
-  const [code, setCode] = useState<string>('')
-  const [inputData, setInputData] = useState<Record<ConnectStep, string>>(
-    {} as Record<ConnectStep, string>,
-  )
-
-  const { mutateAsync: mutateAsyncCoupleCodeCreate } = useMutationCoupleCodeCreate()
-  const { mutate: mutateCoupleConfirm } = useMutationCoupleConfirm()
-
-  const createCode = async (startDate: Date, coupleTitle: string) => {
-    await mutateAsyncCoupleCodeCreate(
-      { startDate, coupleTitle },
-      {
-        onSuccess: (data) => setCode(data),
-        onError: async (error) => {
-          if (error.response?.status === 409) {
-            try {
-              const code = await coupleApi.getCoupleCode()
-              if (code) setCode(code)
-            } catch {
-              toast.shortError('커플 코드 조회 실패')
-            }
-          } else {
-            toast.shortError('커플 코드 생성 실패')
-          }
-        },
-      },
-    )
-  }
-
-  const confirmCode = (code: string) => {
-    mutateCoupleConfirm(code, {
-      onError: (error: AxiosError) => {
-        if (error.response?.status === 400) {
-          toast.shortError('잘못된 커플 코드입니다.')
-        } else {
-          toast.shortError('커플 연결에 실패하였습니다.')
-        }
-      },
-    })
-  }
-
-  const goToNextStep = async () => {
-    if (currentPage >= steps.length - 1) return
-    if (!inputData[currentStep]) {
-      toast.shortWarning('값을 입력해주세요')
-      return
-    }
-
-    const nextStep = steps[currentPage + 1]
-    try {
-      if (nextStep === 'create-code')
-        await createCode(new Date(inputData['date']), inputData['nickname'])
-      if (nextStep === 'complete') confirmCode(inputData['insert-code'])
-    } catch (error) {
-      console.error(error)
-      if (!(isAxiosError(error) && error.response?.status === 409)) return
-    }
-
-    setIsForward(true)
-    setCurrentPage((prev) => prev + 1)
-  }
-
-  const goToPrevStep = () => {
-    if (currentPage === 0) {
-      router.back()
-      return
-    }
-    setIsForward(false)
-    setCurrentPage((prev) => prev - 1)
-  }
-
-  const handleDateChange = (date: Date | null) => {
-    setInputData((prev) => ({ ...prev, date: date ? format(date, 'yyyy/MM/dd') : '' }))
-  }
-
-  const handleInputChange = (input: string, step: ConnectStep) => {
-    setInputData((prev) => ({ ...prev, [step]: input }))
-  }
+  const {
+    code,
+    steps,
+    currentStep,
+    currentPage,
+    inputData,
+    isForward,
+    setCurrentPage,
+    setCode,
+    goToNextStep,
+    goToPrevStep,
+    handleDateChange,
+    handleInputChange,
+  } = useConnectStepFlow(type)
 
   const copyCode = () => {
     window.navigator.clipboard.writeText(code).then(() => toast.shortSuccess('복사되었습니다'))
@@ -144,13 +73,6 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     await refetchCouple()
     router.replace('/')
   }
-
-  const steps = CONNECT_STEP[type]
-  const currentStep = steps[currentPage]
-
-  useEffect(() => {
-    toast.clear()
-  }, [currentStep])
 
   useEffect(() => {
     if (type === 'create') {
