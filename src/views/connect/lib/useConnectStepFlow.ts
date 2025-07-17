@@ -7,14 +7,12 @@ import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { coupleApi } from '@/entities/couple'
 import { isAxiosError } from 'axios'
+import { ConnectStep, ConnectStepType } from '../model/types'
 
 const CONNECT_STEP: Record<ConnectStepType, ConnectStep[]> = {
   create: ['date', 'nickname', 'create-code'],
   code: ['insert-code', 'complete'],
 }
-
-type ConnectStepType = 'create' | 'code'
-type ConnectStep = 'date' | 'nickname' | 'create-code' | 'insert-code' | 'complete'
 
 export const useConnectStepFlow = (type: ConnectStepType) => {
   const toast = useToast()
@@ -60,6 +58,7 @@ export const useConnectStepFlow = (type: ConnectStepType) => {
       onError: (error) => {
         if (error.response?.status === 400) {
           toast.shortError('잘못된 커플 코드입니다.')
+          throw Error()
         } else {
           toast.shortError('커플 연결에 실패하였습니다.')
         }
@@ -82,10 +81,10 @@ export const useConnectStepFlow = (type: ConnectStepType) => {
     } catch (error) {
       console.error(error)
       if (!(isAxiosError(error) && error.response?.status === 409)) return
-    }
 
-    setIsForward(true)
-    setCurrentPage((prev) => prev + 1)
+      setIsForward(true)
+      setCurrentPage((prev) => prev + 1)
+    }
   }
 
   const goToPrevStep = () => {
