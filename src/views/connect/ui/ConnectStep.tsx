@@ -5,12 +5,12 @@ import { shareWithKakao } from '@/features/share'
 import { useToast } from '@/shared/lib'
 import { BaseButton, DateButton, ProgressBar, TextButton } from '@/shared/ui'
 import { useUserInfoStore } from '@/entities/user'
-import { useMutation } from '@tanstack/react-query'
 import { AxiosError, isAxiosError } from 'axios'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useMutationCoupleCodeCreate, useMutationCoupleConfirm } from '@/features/couple'
 
 type ConnectStepType = 'create' | 'code'
 type ConnectStep = 'date' | 'nickname' | 'create-code' | 'insert-code' | 'complete'
@@ -54,34 +54,41 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     {} as Record<ConnectStep, string>,
   )
 
-  const createCodeMutation = useMutation({
-    mutationFn: ({ startDate, coupleTitle }: { startDate: Date; coupleTitle: string }) =>
-      coupleApi.createCoupleCode({ startDate, coupleTitle }),
-    onSuccess: (data) => setCode(data),
-    onError: async (error: AxiosError) => {
-      if (error.response?.status === 409) {
-        try {
-          const code = await coupleApi.getCoupleCode()
-          if (code) setCode(code)
-        } catch {
-          toast.shortError('커플 코드 조회 실패')
-        }
-      } else {
-        toast.shortError('커플 코드 생성 실패')
-      }
-    },
-  })
+  const { mutateAsync: mutateAsyncCoupleCodeCreate } = useMutationCoupleCodeCreate()
+  const { mutate: mutateCoupleConfirm } = useMutationCoupleConfirm()
 
-  const confirmCodeMutation = useMutation({
-    mutationFn: (code: string) => coupleApi.confirmCoupleCode(code),
-    onError: async (error: AxiosError) => {
-      if (error.response?.status === 400) {
-        toast.shortError('잘못된 커플 코드입니다.')
-      } else {
-        toast.shortError('커플 연결에 실패하였습니다.')
-      }
-    },
-  })
+  const createCode = async (startDate: Date, coupleTitle: string) => {
+    await mutateAsyncCoupleCodeCreate(
+      { startDate, coupleTitle },
+      {
+        onSuccess: (data) => setCode(data),
+        onError: async (error) => {
+          if (error.response?.status === 409) {
+            try {
+              const code = await coupleApi.getCoupleCode()
+              if (code) setCode(code)
+            } catch {
+              toast.shortError('커플 코드 조회 실패')
+            }
+          } else {
+            toast.shortError('커플 코드 생성 실패')
+          }
+        },
+      },
+    )
+  }
+
+  const confirmCode = (code: string) => {
+    mutateCoupleConfirm(code, {
+      onError: (error: AxiosError) => {
+        if (error.response?.status === 400) {
+          toast.shortError('잘못된 커플 코드입니다.')
+        } else {
+          toast.shortError('커플 연결에 실패하였습니다.')
+        }
+      },
+    })
+  }
 
   const goToNextStep = async () => {
     if (currentPage >= steps.length - 1) return
@@ -93,11 +100,8 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
     const nextStep = steps[currentPage + 1]
     try {
       if (nextStep === 'create-code')
-        await createCodeMutation.mutateAsync({
-          startDate: new Date(inputData['date']),
-          coupleTitle: inputData['nickname'],
-        })
-      if (nextStep === 'complete') await confirmCodeMutation.mutateAsync(inputData['insert-code'])
+        await createCode(new Date(inputData['date']), inputData['nickname'])
+      if (nextStep === 'complete') confirmCode(inputData['insert-code'])
     } catch (error) {
       console.error(error)
       if (!(isAxiosError(error) && error.response?.status === 409)) return
