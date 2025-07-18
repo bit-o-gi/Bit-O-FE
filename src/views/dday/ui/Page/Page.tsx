@@ -2,7 +2,7 @@ import { BaseHeader } from '@/shared/ui'
 import { DdayThumbnail } from '@/entities/dday'
 import { AnniversaryList } from '@/widgets/AnniversaryList'
 import { useAnniversaryList } from '@/entities/anniversary'
-import useUserInfoStore from '@/entities/userInfo/model/userInfoStore'
+import { useUserInfoStore } from '@/entities/user'
 
 export function DdayPage() {
   const { userInfo } = useUserInfoStore()

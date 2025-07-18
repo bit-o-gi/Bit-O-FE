@@ -2,15 +2,13 @@
 
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getCalendarList } from '@/entities/calendar/api'
-import { useScheduleStore } from '@/entities/calendar'
+import { calendarApi, useScheduleStore, EXAMPLE_GUIDE_SCHEDULES } from '@/entities/calendar'
 import { LoadingSpinner } from '@/shared/ui'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
-import { useInjectIndex } from '@/entities/calendar/model/useInjectIndex'
+import { useInjectIndex } from '@/features/calendar'
 import { useRouter } from 'next/navigation'
 import { ACCESS_TOKEN_KEY, ROUTES } from '@/shared/config'
-import { EXAMPLE_GUIDE_SCHEDULES } from '@/entities/calendar/consts/constants'
 import { isAxiosError } from 'axios'
 import { localStorageUtil } from '@/shared/lib'
 
@@ -30,7 +28,7 @@ export function CalendarPage() {
     error,
   } = useQuery({
     queryKey: ['calendarlist', currentYear, currentMonth],
-    queryFn: () => getCalendarList(currentYear, currentMonth),
+    queryFn: () => calendarApi.getCalendarList(currentYear, currentMonth),
     enabled: Boolean(accessToken),
     retry: false,
   })

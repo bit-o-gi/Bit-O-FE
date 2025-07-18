@@ -1,6 +1,4 @@
-import { useScheduleStore } from '@/entities/calendar'
-import { ColorKey } from '@/entities/calendar/api/types'
-import { COLORS } from '@/entities/calendar/consts/constants'
+import { useScheduleStore, ColorKey, COLORS } from '@/entities/calendar'
 import { useState } from 'react'
 
 const AddScheduleColor = () => {
