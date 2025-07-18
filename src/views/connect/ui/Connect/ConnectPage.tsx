@@ -1,5 +1,6 @@
 'use client'
 
+import { ROUTES } from '@/shared/config'
 import { BaseButton } from '@/shared/ui'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -7,11 +8,11 @@ import { useRouter } from 'next/navigation'
 export function ConnectPage() {
   const router = useRouter()
 
-  const handleCreateCoupleButtonClick = () => {
-    router.push('/connect/create-couple')
+  const goToCreateCouple = () => {
+    router.push(ROUTES.CONNECT_CREATE_COUPLE)
   }
-  const handleInsertCodeButtonClick = () => {
-    router.push('/connect/insert-code')
+  const goToInsertCode = () => {
+    router.push(ROUTES.CONNECT_INSERT_CODE)
   }
   return (
     <div className="flex flex-col justify-center items-center h-screen">
@@ -21,14 +22,14 @@ export function ConnectPage() {
         <BaseButton
           title="커플 생성하기"
           className="bg-brown text-white"
-          onClick={handleCreateCoupleButtonClick}
+          onClick={goToCreateCouple}
         />
       </div>
       <div className="mt-2 px-12 w-full">
         <BaseButton
           title="코드 입력하기"
           className="border border-brown"
-          onClick={handleInsertCodeButtonClick}
+          onClick={goToInsertCode}
         />
       </div>
     </div>

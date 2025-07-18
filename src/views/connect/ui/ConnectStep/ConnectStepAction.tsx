@@ -15,7 +15,7 @@ export const ConnectStepAction = () => {
   const { userInfo } = useUserInfoStore()
   const { refetch: refetchCouple } = useRefetchCoupleInfo()
 
-  const onClickShareButton = () => {
+  const handleShareCode = () => {
     shareWithKakao(
       `${userInfo?.nickName} 님과 커플 연결하고 다양한 서비스를 이용해보세요.`,
       `${process.env.NEXT_PUBLIC_APP_URL}/connect/insert-code?code=${code}`,
@@ -23,7 +23,7 @@ export const ConnectStepAction = () => {
     )
   }
 
-  const onClickStartButton = async () => {
+  const handleStart = async () => {
     await refetchCouple()
     router.replace('/')
   }
@@ -36,10 +36,10 @@ export const ConnectStepAction = () => {
         </div>
       )}
       {currentStep === 'create-code' && (
-        <BaseButton title="공유하기" className="bg-brown text-white" onClick={onClickShareButton} />
+        <BaseButton title="공유하기" className="bg-brown text-white" onClick={handleShareCode} />
       )}
       {currentStep === 'complete' && (
-        <BaseButton title="시작하기" className="bg-brown text-white" onClick={onClickStartButton} />
+        <BaseButton title="시작하기" className="bg-brown text-white" onClick={handleStart} />
       )}
     </div>
   )

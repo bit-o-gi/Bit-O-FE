@@ -23,6 +23,11 @@ export function OnboardingPage() {
     fetchUserData()
   }, [])
 
+  const handleStart = () => {
+    sessionStorageUtil.set(LOGIN_SUCCESS, 'true')
+    router.back()
+  }
+
   return (
     <div className="h-full flex flex-col justify-center items-center gap-24 text-center">
       <div className="flex flex-col gap-5">
@@ -39,10 +44,7 @@ export function OnboardingPage() {
       </div>
       <div>
         <BaseButton
-          onClick={() => {
-            sessionStorageUtil.set(LOGIN_SUCCESS, 'true')
-            router.back()
-          }}
+          onClick={handleStart}
           title="시작하기"
           className="bg-brown text-white"
           style={{
