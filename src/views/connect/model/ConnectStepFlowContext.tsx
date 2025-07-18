@@ -51,43 +51,46 @@ export const ConnectStepFlowProvider = ({
   const [code, setCode] = useState<string>('')
 
   const { mutateAsync: mutateAsyncCoupleCodeCreate } = useMutationCoupleCodeCreate()
-  const { mutate: mutateCoupleConfirm } = useMutationCoupleConfirm()
+  const { mutateAsync: mutateAsyncCoupleConfirm } = useMutationCoupleConfirm()
 
   const steps = CONNECT_STEP[type]
   const currentStep = steps[currentPage]
 
   const createCode = async (startDate: Date, coupleTitle: string) => {
-    const data = await mutateAsyncCoupleCodeCreate(
-      { startDate, coupleTitle },
-      {
-        onError: async (error) => {
-          if (error.response?.status === 409) {
-            try {
-              const code = await coupleApi.getCoupleCode()
-              if (code) setCode(code)
-            } catch {
-              toast.shortError('커플 코드 조회 실패')
-            }
-          } else {
-            toast.shortError('커플 코드 생성 실패')
+    try {
+      const code = await mutateAsyncCoupleCodeCreate({ startDate, coupleTitle })
+      setCode(code)
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          try {
+            const code = await coupleApi.getCoupleCode()
+            if (code) setCode(code)
+          } catch {
+            throw new Error('커플 코드 조회 실패')
           }
-        },
-      },
-    )
-    setCode(data)
+        } else {
+          throw new Error('커플 코드 생성 실패')
+        }
+      }
+      throw new Error('알 수 없는 에러')
+    }
   }
 
-  const confirmCode = (code: string) => {
-    mutateCoupleConfirm(code, {
-      onError: (error) => {
+  const confirmCode = async (code: string) => {
+    try {
+      await mutateAsyncCoupleConfirm(code)
+    } catch (error) {
+      if (isAxiosError(error)) {
         if (error.response?.status === 400) {
-          toast.shortError('잘못된 커플 코드입니다.')
-          throw Error()
+          throw new Error('잘못된 커플 코드입니다.')
         } else {
-          toast.shortError('커플 연결에 실패하였습니다.')
+          throw new Error('커플 연결에 실패하였습니다.')
         }
-      },
-    })
+      } else {
+        throw new Error('알 수 없는 에러')
+      }
+    }
   }
 
   const goToNextStep = async () => {
@@ -101,10 +104,12 @@ export const ConnectStepFlowProvider = ({
     try {
       if (nextStep === 'create-code')
         await createCode(new Date(inputData['date']), inputData['nickname'])
-      if (nextStep === 'complete') confirmCode(inputData['insert-code'])
+      if (nextStep === 'complete') await confirmCode(inputData['insert-code'])
     } catch (error) {
-      console.error(error)
-      if (!(isAxiosError(error) && error.response?.status === 409)) return
+      if (error instanceof Error) {
+        toast.shortError(error.message)
+      }
+      return
     }
 
     setIsForward(true)
