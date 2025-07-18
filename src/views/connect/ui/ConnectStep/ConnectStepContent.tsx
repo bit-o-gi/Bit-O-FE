@@ -1,26 +1,14 @@
 'use client'
 
 import { DateButton } from '@/shared/ui'
-import { ConnectStep } from '../../model/types'
 import Image from 'next/image'
 import { useToast } from '@/shared/lib'
+import { useConnectStepFlow } from '../../model/ConnectStepFlowContext'
 
-interface ConnectStepContentProps {
-  code: string
-  currentStep: ConnectStep
-  inputData: Record<ConnectStep, string>
-  handleDateChange: (date: Date | null) => void
-  handleInputChange: (input: string, step: ConnectStep) => void
-}
-
-export const ConnectStepContent = ({
-  code,
-  currentStep,
-  inputData,
-  handleDateChange,
-  handleInputChange,
-}: ConnectStepContentProps) => {
+export const ConnectStepContent = () => {
   const toast = useToast()
+
+  const { code, currentStep, inputData, handleDateChange, handleInputChange } = useConnectStepFlow()
 
   const copyCode = () => {
     window.navigator.clipboard.writeText(code).then(() => toast.shortSuccess('복사되었습니다'))

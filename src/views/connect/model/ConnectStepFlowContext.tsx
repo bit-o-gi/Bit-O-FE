@@ -1,20 +1,44 @@
 'use client'
 
-import { useToast } from '@/shared/lib'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import { ConnectStep, ConnectStepType } from './types'
+import { format } from 'date-fns'
+import { isAxiosError } from 'axios'
 import { useMutationCoupleCodeCreate, useMutationCoupleConfirm } from '@/features/couple'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { format } from 'date-fns'
+import { useToast } from '@/shared/lib'
 import { coupleApi } from '@/entities/couple'
-import { isAxiosError } from 'axios'
-import { ConnectStep, ConnectStepType } from '../model/types'
 
 const CONNECT_STEP: Record<ConnectStepType, ConnectStep[]> = {
   create: ['date', 'nickname', 'create-code'],
   code: ['insert-code', 'complete'],
 }
 
-export const useConnectStepFlow = (type: ConnectStepType) => {
+interface ConnectStepFlowContextValue {
+  type: ConnectStepType
+  code: string
+  steps: ConnectStep[]
+  currentStep: ConnectStep
+  currentPage: number
+  inputData: Record<ConnectStep, string>
+  isForward: boolean
+  setCurrentPage: (page: number) => void
+  setCode: (code: string) => void
+  goToNextStep: () => Promise<void>
+  goToPrevStep: () => void
+  handleDateChange: (date: Date | null) => void
+  handleInputChange: (input: string, step: ConnectStep) => void
+}
+
+const ConnectStepFlowContext = createContext<ConnectStepFlowContextValue | null>(null)
+
+export const ConnectStepFlowProvider = ({
+  type,
+  children,
+}: {
+  type: ConnectStepType
+  children: ReactNode
+}) => {
   const toast = useToast()
   const router = useRouter()
 
@@ -81,10 +105,10 @@ export const useConnectStepFlow = (type: ConnectStepType) => {
     } catch (error) {
       console.error(error)
       if (!(isAxiosError(error) && error.response?.status === 409)) return
-
-      setIsForward(true)
-      setCurrentPage((prev) => prev + 1)
     }
+
+    setIsForward(true)
+    setCurrentPage((prev) => prev + 1)
   }
 
   const goToPrevStep = () => {
@@ -108,18 +132,33 @@ export const useConnectStepFlow = (type: ConnectStepType) => {
     toast.clear()
   }, [currentStep])
 
-  return {
-    code,
-    steps,
-    currentStep,
-    currentPage,
-    inputData,
-    isForward,
-    setCurrentPage,
-    setCode,
-    goToNextStep,
-    goToPrevStep,
-    handleDateChange,
-    handleInputChange,
+  return (
+    <ConnectStepFlowContext.Provider
+      value={{
+        type,
+        code,
+        steps,
+        currentStep,
+        currentPage,
+        inputData,
+        isForward,
+        setCurrentPage,
+        setCode,
+        goToNextStep,
+        goToPrevStep,
+        handleDateChange,
+        handleInputChange,
+      }}
+    >
+      {children}
+    </ConnectStepFlowContext.Provider>
+  )
+}
+
+export const useConnectStepFlow = () => {
+  const context = useContext(ConnectStepFlowContext)
+  if (!context) {
+    throw new Error('useConnectStep must be used within a ConnectStepProvider')
   }
+  return context
 }

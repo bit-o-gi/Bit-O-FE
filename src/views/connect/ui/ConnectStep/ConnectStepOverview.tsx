@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { ConnectStep } from '../../model/types'
 import { ProgressBar } from '@/shared/ui'
+import { useConnectStepFlow } from '../../model/ConnectStepFlowContext'
 
 const CONNECT_STEP_IMAGE: Record<ConnectStep, string> = {
   date: '/images/illustration/love1.png',
@@ -20,19 +21,8 @@ const CONNECT_STEP_INSTRUCTION: Record<ConnectStep, string> = {
   complete: '커플 연결이 완료되었어요.\n이제 bitO를 사용해보세요.',
 }
 
-interface ConnectStepOverviewProps {
-  steps: ConnectStep[]
-  currentStep: ConnectStep
-  currentPage: number
-  isForward: boolean
-}
-
-export const ConnectStepOverview = ({
-  steps,
-  currentStep,
-  currentPage,
-  isForward,
-}: ConnectStepOverviewProps) => {
+export const ConnectStepOverview = () => {
+  const { steps, currentStep, currentPage, isForward } = useConnectStepFlow()
   return (
     <>
       <div className="h-16">

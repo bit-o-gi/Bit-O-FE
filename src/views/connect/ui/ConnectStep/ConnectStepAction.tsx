@@ -1,20 +1,17 @@
 'use client'
 
-import { ConnectStep } from '../../model/types'
 import { BaseButton, TextButton } from '@/shared/ui'
 import { useUserInfoStore } from '@/entities/user'
 import { useRefetchCoupleInfo } from '@/entities/couple'
 import { shareWithKakao } from '@/features/share'
 import { useRouter } from 'next/navigation'
+import { useConnectStepFlow } from '../../model/ConnectStepFlowContext'
 
-interface ConnectStepActionProps {
-  code: string
-  currentStep: ConnectStep
-  goToNextStep: () => Promise<void>
-}
-
-export const ConnectStepAction = ({ code, currentStep, goToNextStep }: ConnectStepActionProps) => {
+export const ConnectStepAction = () => {
   const router = useRouter()
+
+  const { code, currentStep, goToNextStep } = useConnectStepFlow()
+
   const { userInfo } = useUserInfoStore()
   const { refetch: refetchCouple } = useRefetchCoupleInfo()
 

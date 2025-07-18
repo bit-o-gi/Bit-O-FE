@@ -4,33 +4,29 @@ import { coupleApi } from '@/entities/couple'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
-import { useConnectStepFlow } from '../../lib/useConnectStepFlow'
 import { ConnectStepType } from '../../model/types'
 import { ConnectStepOverview } from './ConnectStepOverview'
 import { ConnectStepContent } from './ConnectStepContent'
 import { ConnectStepAction } from './ConnectStepAction'
+import { ConnectStepFlowProvider, useConnectStepFlow } from '../../model/ConnectStepFlowContext'
 
 interface ConnectStepProps {
   type: ConnectStepType
 }
 
-export function ConnectStepPage({ type }: ConnectStepProps) {
+export const ConnectStepPage = ({ type }: ConnectStepProps) => {
+  return (
+    <ConnectStepFlowProvider type={type}>
+      <ConnectStepPageContainer />
+    </ConnectStepFlowProvider>
+  )
+}
+
+const ConnectStepPageContainer = () => {
   const searchParams = useSearchParams()
 
-  const {
-    code,
-    steps,
-    currentStep,
-    currentPage,
-    inputData,
-    isForward,
-    setCurrentPage,
-    setCode,
-    goToNextStep,
-    goToPrevStep,
-    handleDateChange,
-    handleInputChange,
-  } = useConnectStepFlow(type)
+  const { type, steps, currentStep, setCurrentPage, setCode, goToPrevStep, handleInputChange } =
+    useConnectStepFlow()
 
   useEffect(() => {
     if (type === 'create') {
@@ -61,20 +57,9 @@ export function ConnectStepPage({ type }: ConnectStepProps) {
         onClick={() => goToPrevStep()}
       />
       <div className="flex flex-col flex-1 items-center pt-32">
-        <ConnectStepOverview
-          steps={steps}
-          currentStep={currentStep}
-          currentPage={currentPage}
-          isForward={isForward}
-        />
-        <ConnectStepContent
-          code={code}
-          currentStep={currentStep}
-          inputData={inputData}
-          handleDateChange={handleDateChange}
-          handleInputChange={handleInputChange}
-        />
-        <ConnectStepAction code={code} currentStep={currentStep} goToNextStep={goToNextStep} />
+        <ConnectStepOverview />
+        <ConnectStepContent />
+        <ConnectStepAction />
       </div>
     </div>
   )
