@@ -1,13 +1,13 @@
 import { useScheduleStore } from '@/entities/calendar'
-import useUserInfoStore from '@/entities/userInfo/model/userInfoStore'
-import { useAddScheduleMutation } from '@/features/calendar/lib/useAddScheduleMutation'
+import { useUserInfoStore } from '@/entities/user'
+import { useMutationScheduleAdd } from '@/features/calendar'
 import { useRequireAuth } from '@/shared/lib'
 import { BaseButton } from '@/shared/ui'
 import { format } from 'date-fns'
 import { compareDesc } from 'date-fns/fp'
 
 export const AddScheduleBtn = () => {
-  const { saveMutation } = useAddScheduleMutation()
+  const { saveMutation } = useMutationScheduleAdd()
 
   const requireAuth = useRequireAuth()
   const { userInfo } = useUserInfoStore()

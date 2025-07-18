@@ -1,2 +1,2 @@
-export { ConnectPage } from './ui/Connect'
-export { ConnectStepPage } from './ui/ConnectStep'
+export { ConnectPage } from './ui/Connect/ConnectPage'
+export { ConnectStepPage } from './ui/ConnectStep/ConnectStepPage'

@@ -1,11 +1,12 @@
 'use client'
 
 import { useScheduleStore } from '@/entities/calendar'
-import { DAY_OF_THE_WEEK, generateDate } from '@/features/calendar'
+import { generateDate } from '@/features/calendar'
 import { isEqual } from 'date-fns'
 import ScheduleList from './ScheduleList'
 import { useState } from 'react'
 import DetailModal from './DetailModal'
+import { DAY_OF_THE_WEEK } from '@/shared/config'
 
 const CalendarBody = () => {
   const { selectedDate, setSelectedDate, currentDate } = useScheduleStore()

@@ -1,12 +1,11 @@
-import { useScheduleStore } from '@/entities/calendar'
-import { COLORS } from '@/entities/calendar/consts/constants'
+import { useScheduleStore, COLORS } from '@/entities/calendar'
 import {
   getOneDaySchedule,
   getSortedOneDaySchedule,
   isShortPlan,
   isStartDate,
-} from '@/features/calendar/lib/utils'
-import { getAdjustedIndex } from '@/features/calendar/lib/adjustIndex'
+} from '@/features/calendar'
+import { getAdjustedIndex } from '@/features/calendar/lib/helpers'
 import { useMemo } from 'react'
 
 interface ScheduleList {

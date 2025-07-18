@@ -1,3 +1,4 @@
+import { HomeRouter } from '@/app/route-guards'
 import { HomeLayout } from '@/views/home'
 
 export default function Layout({
@@ -5,5 +6,10 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <HomeLayout>{children}</HomeLayout>
+  return (
+    <>
+      <HomeRouter />
+      <HomeLayout>{children}</HomeLayout>
+    </>
+  )
 }

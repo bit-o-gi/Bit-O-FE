@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getCoupleInfo } from '../api/coupleApi'
+import { coupleApi } from '../api/coupleApi'
 import { useCoupleInfoStore } from '../model/coupleInfoStore'
 
 export const useRefetchCoupleInfo = () => {
@@ -8,7 +8,7 @@ export const useRefetchCoupleInfo = () => {
 
   const refetch = async () => {
     setIsLoading(true)
-    const couple = await getCoupleInfo()
+    const couple = await coupleApi.getCoupleInfo()
     setCoupleInfo(couple)
     setIsLoading(false)
   }
