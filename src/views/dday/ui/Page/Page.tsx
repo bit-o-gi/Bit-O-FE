@@ -1,13 +1,10 @@
 import { BaseHeader } from '@/shared/ui'
 import { DdayThumbnail } from '@/entities/dday'
 import { AnniversaryList } from '@/widgets/AnniversaryList'
-import { useAnniversaryList } from '@/entities/anniversary'
-import { useUserInfoStore } from '@/entities/user'
+import { useAnniversariesInRange } from '@/entities/anniversary'
 
 export function DdayPage() {
-  const { userInfo } = useUserInfoStore()
-
-  const { data: anniversaryList } = useAnniversaryList(userInfo?.id)
+  const { data: anniversaryList } = useAnniversariesInRange(1, 10)
 
   return (
     <>
