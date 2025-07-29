@@ -1,4 +1,5 @@
-import { Anniversary, AnniversaryItem } from '@/entities/anniversary'
+import { Anniversary } from '../../model/types'
+import { AnniversaryItem } from '../AnniversaryItem/AnniversaryItem'
 
 interface IAnniversaryListProps {
   list: Anniversary[]

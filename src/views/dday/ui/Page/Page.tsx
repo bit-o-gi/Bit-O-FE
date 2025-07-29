@@ -1,6 +1,6 @@
 import { BaseHeader } from '@/shared/ui'
 import { DdayThumbnail } from '@/entities/dday'
-import { AnniversaryList } from '@/widgets/AnniversaryList'
+import { AnniversaryList } from '@/entities/anniversary'
 import { useAnniversariesInRange } from '@/entities/anniversary'
 
 export function DdayPage() {
