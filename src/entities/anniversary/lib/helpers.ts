@@ -66,12 +66,12 @@ const rawExampleAnniversaries = [
   },
 ]
 
-function generateExampleGuideAnniversaries(): Anniversary[] {
+export function generateExampleGuideAnniversaries(): Anniversary[] {
   const now = new Date()
 
   return rawExampleAnniversaries.map(({ title, content, month, day, curYear }, idx) => {
     const year = curYear ? now.getFullYear() : now.getFullYear() + 1
-    const anniversaryDate = new Date(year, month + 1, day)
+    const anniversaryDate = new Date(year, month + 1, day).toISOString()
 
     return {
       id: idx + 1,
@@ -85,5 +85,3 @@ function generateExampleGuideAnniversaries(): Anniversary[] {
     }
   })
 }
-
-export const EXAMPLE_GUIDE_ANNIVERSARIES = generateExampleGuideAnniversaries()

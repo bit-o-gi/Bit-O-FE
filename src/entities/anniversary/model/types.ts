@@ -2,7 +2,7 @@ export type Anniversary = {
   id: number
   title: string
   content: string
-  anniversaryDate: Date
+  anniversaryDate: string
   updateTime: string
   writeTime: string
   withPeopleId: number
