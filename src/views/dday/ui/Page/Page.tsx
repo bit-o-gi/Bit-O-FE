@@ -4,7 +4,7 @@ import { AnniversaryList } from '@/entities/anniversary'
 import { useAnniversariesInRange } from '@/entities/anniversary'
 
 export function DdayPage() {
-  const { data: anniversaryList } = useAnniversariesInRange(1, 10)
+  const { data: anniversaryList } = useAnniversariesInRange(0, 10)
 
   return (
     <>
