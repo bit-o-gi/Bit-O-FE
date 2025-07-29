@@ -1,8 +1,8 @@
-import { Anniversary } from '../../model/types'
+import { AnniversaryPreview } from '../../model/types'
 import { AnniversaryItem } from '../AnniversaryItem/AnniversaryItem'
 
 interface IAnniversaryListProps {
-  list: Anniversary[]
+  list: AnniversaryPreview[]
 }
 
 export function AnniversaryList({ list }: IAnniversaryListProps) {

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { GET_ANNIVERSARIES_IN_RANGE } from '../api/getAnniversariesInRange'
-import { Anniversary } from '../model/types'
+import { AnniversaryPreview } from '../model/types'
 
 export const useAnniversariesInRange = (
   page: number,
@@ -8,7 +8,7 @@ export const useAnniversariesInRange = (
   startDate?: string,
   endDate?: string,
 ) =>
-  useQuery<Anniversary[]>(GET_ANNIVERSARIES_IN_RANGE, {
+  useQuery<{ getAnniversariesInRange: AnniversaryPreview[] }>(GET_ANNIVERSARIES_IN_RANGE, {
     variables: {
       ...(startDate ? { startDate } : {}),
       ...(endDate ? { endDate } : {}),

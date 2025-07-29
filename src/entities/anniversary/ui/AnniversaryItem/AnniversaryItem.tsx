@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { Anniversary } from '../../model/types'
-import { formatDate } from '@/shared/lib/utils/date'
+import { AnniversaryPreview } from '../../model/types'
+import { formatDate } from '@/shared/lib'
 
 interface IAnniversaryItemProps {
-  anniversary: Anniversary
+  anniversary: AnniversaryPreview
 }
 
 export function AnniversaryItem({ anniversary }: IAnniversaryItemProps) {

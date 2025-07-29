@@ -8,3 +8,9 @@ export type Anniversary = {
   withPeopleId: number
   writerId: number
 }
+
+export type AnniversaryPreview = {
+  id: number
+  title: string
+  anniversaryDate: string
+}
