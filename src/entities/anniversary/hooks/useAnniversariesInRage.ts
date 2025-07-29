@@ -10,9 +10,10 @@ export const useAnniversariesInRange = (
 ) =>
   useQuery<Anniversary[]>(GET_ANNIVERSARIES_IN_RANGE, {
     variables: {
-      startDate: startDate ?? null,
-      endDate: endDate ?? null,
+      ...(startDate ? { startDate } : {}),
+      ...(endDate ? { endDate } : {}),
       page,
       size,
     },
+    fetchPolicy: 'cache-and-network',
   })
