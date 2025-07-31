@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { AnniversaryPreview } from '../../model/types'
-import { formatDate, getDayDiffFromToday, getDdayLabel } from '@/shared/lib'
+import { formatDate, getDdayLabel } from '@/shared/lib'
 
 interface IAnniversaryItemProps {
   anniversary: AnniversaryPreview
