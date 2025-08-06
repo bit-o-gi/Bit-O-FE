@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { calendarApi, useScheduleStore, EXAMPLE_GUIDE_SCHEDULES } from '@/entities/calendar'
-import { LoadingSpinner } from '@/shared/ui'
+import { LoadingSpinner, RoundButton } from '@/shared/ui'
 import CalendarBody from './CalendarBody'
 import CalendarHeader from './CalendarHeader'
 import { useInjectIndex } from '@/features/calendar'
@@ -73,13 +73,8 @@ export function CalendarPage() {
         {!isLoading && <CalendarBody />}
 
         {/* 스케쥴 추가 버튼 */}
-        <div
-          className="absolute bottom-[2rem] right-[1.5rem] cursor-pointer"
-          onClick={handleAddSchedule}
-        >
-          <div className="w-[2rem] h-[2rem] flex items-center justify-center rounded-full bg-pink  ">
-            <div className="translate-y-[2px] text-white text-xl">+</div>
-          </div>
+        <div className="absolute right-6 bottom-4 w-16 h-16">
+          <RoundButton title="스케쥴 추가" mode="add" onClick={handleAddSchedule} />
         </div>
       </div>
     )
