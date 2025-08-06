@@ -1,1 +1,1 @@
-export { DdayPage } from './ui/Page/Page'
+export { DdayPage } from './ui/Dday/Page'
