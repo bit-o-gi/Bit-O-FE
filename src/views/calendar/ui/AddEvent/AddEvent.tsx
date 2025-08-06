@@ -4,7 +4,6 @@ import { calendarApi, useScheduleStore, ScheduleResponse } from '@/entities/cale
 import { useMutationScheduleDelete } from '@/features/calendar'
 import { BaseHeader, LoadingSpinner } from '@/shared/ui'
 import { useQuery } from '@tanstack/react-query'
-import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { AddScheduleBtn } from './AddScheduleBtn'
@@ -13,6 +12,7 @@ import AddEventLocation from './AddScheduleLocation'
 import AddEventNote from './AddScheduleNote'
 import AddEventTime from './AddScheduleTime'
 import AddEventTitle from './AddScheduleTitle'
+import { Trash2Icon } from 'lucide-react'
 
 /**
  * id 있다면 : 스케쥴 수정
@@ -76,8 +76,8 @@ export function AddEventPage() {
           scheduleId
             ? [
                 {
-                  src: '/images/icon/delete.png',
-                  alt: 'delete button',
+                  icon: <Trash2Icon />,
+                  title: '이벤트 삭제',
                   action: handleDeleteButton,
                 },
               ]
