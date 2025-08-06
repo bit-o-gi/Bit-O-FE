@@ -74,7 +74,7 @@ export function CalendarPage() {
 
         {/* 스케쥴 추가 버튼 */}
         <div className="absolute right-6 bottom-4 w-16 h-16">
-          <RoundButton title="스케쥴 추가" mode="add" onClick={handleAddSchedule} />
+          <RoundButton title="이벤트 추가" mode="add" onClick={handleAddSchedule} />
         </div>
       </div>
     )
