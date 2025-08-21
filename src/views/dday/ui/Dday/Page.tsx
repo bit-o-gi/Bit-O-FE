@@ -6,11 +6,15 @@ import { GoToAnniversaryAddButton } from '@/features/anniversary'
 import { PencilIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/shared/config'
+import { useQueryDayUser } from '@/entities/dday'
+import { useToast } from '@/shared/lib'
 
 export function DdayPage() {
   const router = useRouter()
+  const toast = useToast()
 
   const { data } = useAnniversariesInRange(0, 10)
+  const { data: ddayData } = useQueryDayUser(true)
 
   const anniversaryList = data?.getAnniversariesInRange
 
@@ -18,7 +22,10 @@ export function DdayPage() {
     {
       icon: <PencilIcon />,
       title: '내 디데이 편집',
-      action: () => router.push(ROUTES.EDIT_DDAY),
+      action: () => {
+        if (!ddayData) toast.shortError('커플 디데이 정보가 없습니다.')
+        else router.push(ROUTES.EDIT_DDAY)
+      },
     },
   ]
 

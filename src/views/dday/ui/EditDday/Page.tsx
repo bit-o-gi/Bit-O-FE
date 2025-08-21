@@ -1,7 +1,6 @@
-import { useQueryDayUser } from '@/entities/dday/model/useQueryDayUser'
+import { useQueryDayUser } from '@/entities/dday'
 import { DdayThumbnailSelector } from '@/features/dday'
-import { useToast } from '@/shared/lib'
-import { BaseHeader, BaseInput } from '@/shared/ui'
+import { BaseButton, BaseHeader, BaseInput } from '@/shared/ui'
 import { useState } from 'react'
 
 interface DdayForm {
@@ -10,8 +9,6 @@ interface DdayForm {
 }
 
 export function EditDdayPage() {
-  const toast = useToast()
-
   // TODO: isCouple 매개변수로 넘긴 인자 조건문으로 수정
   const { data } = useQueryDayUser(true)
 
@@ -19,11 +16,6 @@ export function EditDdayPage() {
     title: data?.title,
     thumbnailUrl: data?.thumbnailUrl,
   })
-
-  if (!data) {
-    toast.shortError('디데이 정보가 없습니다.')
-    return null
-  }
 
   const handleFormUpdate = <K extends keyof DdayForm>(key: K, value: DdayForm[K]) => {
     setForm((prev) => ({
@@ -33,9 +25,9 @@ export function EditDdayPage() {
   }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full flex flex-col">
       <BaseHeader hasBack title="내 디데이 편집" />
-      <div className="px-4 flex flex-col gap-y-5">
+      <div className="p-4 flex flex-col gap-y-5 flex-1">
         <DdayThumbnailSelector
           url={form.thumbnailUrl ?? ''}
           onSelect={(url: string) => handleFormUpdate('thumbnailUrl', url)}
@@ -47,6 +39,8 @@ export function EditDdayPage() {
             onBlur={(event) => handleFormUpdate('title', event.target.value)}
           />
         </div>
+
+        <BaseButton title="저장하기" className="mt-auto bg-brown text-white" />
       </div>
     </div>
   )
