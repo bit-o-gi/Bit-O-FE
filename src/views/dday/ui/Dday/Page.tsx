@@ -1,5 +1,5 @@
-import { BaseHeader } from '@/shared/ui'
-import { DdayThumbnail } from '@/entities/dday'
+import { BaseHeader, BaseThumbnail } from '@/shared/ui'
+import { getDdayLabel } from '@/shared/lib'
 import { AnniversaryList } from '@/entities/anniversary'
 import { useAnniversariesInRange } from '@/entities/anniversary'
 import { GoToAnniversaryAddButton } from '@/features/anniversary'
@@ -14,6 +14,8 @@ export function DdayPage() {
   const toast = useToast()
 
   const { data } = useAnniversariesInRange(0, 10)
+
+  // TODO: isCouple 매개변수로 넘긴 인자 조건문으로 수정
   const { data: ddayData } = useQueryDayUser(true)
 
   const anniversaryList = data?.getAnniversariesInRange
@@ -33,7 +35,12 @@ export function DdayPage() {
     <div className="relative w-full h-full">
       <BaseHeader title="내 디데이" actions={ddayHeaderActions} />
       <div className="px-4 flex flex-col gap-y-5">
-        <DdayThumbnail />
+        {ddayData && (
+          <BaseThumbnail title={ddayData.title}>
+            <span className="text-2xl">{ddayData.title}</span>
+            <span className="text-6xl">{getDdayLabel(ddayData.startDate)}</span>
+          </BaseThumbnail>
+        )}
         {anniversaryList && anniversaryList.length > 0 ? (
           <AnniversaryList list={anniversaryList} />
         ) : (
