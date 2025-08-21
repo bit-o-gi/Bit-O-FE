@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useQueryDayUser } from '../../model/useQueryDayUser'
 
 export function DdayThumbnail() {
+  // TODO: isCouple 매개변수로 넘긴 인자 조건문으로 수정
   const { data } = useQueryDayUser(true)
 
   if (!data) return null
@@ -11,7 +12,7 @@ export function DdayThumbnail() {
   const ddayLabel = getDdayLabel(startDate)
 
   return (
-    <div className="relative w-full aspect-[16/9] bg-gray-100">
+    <div className="relative w-full aspect-[16/9] bg-gray-50">
       <Image
         alt={`${title} 이미지`}
         src={thumbnailUrl || 'noimage'}
