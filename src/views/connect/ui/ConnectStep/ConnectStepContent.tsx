@@ -1,6 +1,6 @@
 'use client'
 
-import { DateButton } from '@/shared/ui'
+import { BaseInput, DateButton } from '@/shared/ui'
 import Image from 'next/image'
 import { useToast } from '@/shared/lib'
 import { useConnectStepFlow } from '../../model/ConnectStepFlowContext'
@@ -24,12 +24,13 @@ export const ConnectStepContent = () => {
         />
       )}
       {(currentStep === 'nickname' || currentStep === 'insert-code') && (
-        <input
-          type="text"
-          className="bg-gray-50 p-2 rounded-md focus:ring-2 focus:ring-brown w-72 caret-brown focus:outline-none"
-          value={inputData[currentStep] || ''}
-          onChange={(e) => handleInputChange(e.target.value, currentStep)}
-        />
+        <div className="w-72">
+          <BaseInput
+            type="text"
+            value={inputData[currentStep] || ''}
+            onChange={(e) => handleInputChange(e.target.value, currentStep)}
+          />
+        </div>
       )}
       {currentStep === 'create-code' && (
         <div className="flex flex-col items-center gap-y-4">
