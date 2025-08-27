@@ -6,6 +6,7 @@ import { useState } from 'react'
 interface DdayForm {
   title?: string
   thumbnailUrl?: string
+  selectedFile?: File | null
 }
 
 export function EditDdayPage() {
@@ -30,7 +31,8 @@ export function EditDdayPage() {
       <div className="p-4 flex flex-col gap-y-5 flex-1">
         <DdayThumbnailSelector
           url={form.thumbnailUrl ?? ''}
-          onSelect={(url: string) => handleFormUpdate('thumbnailUrl', url)}
+          selectedFile={form.selectedFile}
+          onSelect={(file: File | null) => handleFormUpdate('selectedFile', file)}
         />
         <div className="flex flex-col gap-y-2">
           <span>디데이 이름</span>
