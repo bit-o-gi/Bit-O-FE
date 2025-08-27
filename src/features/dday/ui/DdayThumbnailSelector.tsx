@@ -10,12 +10,13 @@ interface DdayThumbnailSelectorProps {
 export function DdayThumbnailSelector({ url, selectedFile, onSelect }: DdayThumbnailSelectorProps) {
   const [isImgError, setIsImgError] = useState(false)
 
+  const hasImage = !!url || !!selectedFile
   const showImage = (selectedFile !== undefined ? selectedFile : url) && !isImgError
 
   return (
     <label
-      htmlFor="imageInput"
-      className="relative w-full aspect-[16/9] bg-gray-50 hover:cursor-pointer"
+      htmlFor={!hasImage ? 'imageInput' : ''}
+      className={`relative w-full aspect-[16/9] bg-gray-50 ${!hasImage ? 'hover:cursor-pointer' : ''}`}
     >
       {showImage && (
         <Image
@@ -26,9 +27,23 @@ export function DdayThumbnailSelector({ url, selectedFile, onSelect }: DdayThumb
           onError={() => setIsImgError(true)}
         />
       )}
-      <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
-        <span className="text-brown">배경 이미지 선택</span>
-      </div>
+
+      {!hasImage && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-brown">
+          배경 이미지 선택
+        </div>
+      )}
+      {hasImage && (
+        <button
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600 border px-3 py-0.5 rounded-lg border-red-600 bg-opacity-60 bg-white hover:bg-opacity-70"
+          onClick={(event) => {
+            event.preventDefault()
+            onSelect(null)
+          }}
+        >
+          삭제하기
+        </button>
+      )}
       <input
         className="hidden"
         id="imageInput"
