@@ -36,7 +36,7 @@ export function DdayPage() {
       <BaseHeader title="내 디데이" actions={ddayHeaderActions} />
       <div className="px-4 flex flex-col gap-y-5">
         {ddayData && (
-          <BaseThumbnail title={ddayData.title}>
+          <BaseThumbnail title={ddayData.title} src={ddayData.thumbnailUrl}>
             <span className="text-2xl">{ddayData.title}</span>
             <span className="text-6xl">{getDdayLabel(ddayData.startDate)}</span>
           </BaseThumbnail>
