@@ -1,5 +1,6 @@
 import { useQueryDayUser } from '@/entities/dday'
-import { DdayThumbnailSelector } from '@/features/dday'
+import { DdayThumbnailSelector, useMutationDdayEdit } from '@/features/dday'
+import { useToast } from '@/shared/lib'
 import { BaseButton, BaseHeader, BaseInput } from '@/shared/ui'
 import { useState } from 'react'
 
@@ -10,8 +11,11 @@ interface DdayForm {
 }
 
 export function EditDdayPage() {
+  const toast = useToast()
+
   // TODO: isCouple 매개변수로 넘긴 인자 조건문으로 수정
   const { data } = useQueryDayUser(true)
+  const { mutateAsync: mutateAsyncDdayEdit } = useMutationDdayEdit()
 
   const [form, setForm] = useState<DdayForm>({
     title: data?.title,
@@ -23,6 +27,22 @@ export function EditDdayPage() {
       ...prev,
       [key]: value,
     }))
+  }
+
+  const handleSaveDday = async () => {
+    if (!form.title) return
+    if (!data) return
+    try {
+      await mutateAsyncDdayEdit({
+        dayId: data.id,
+        title: form.title,
+        file: form.selectedFile,
+        startDate: data.startDate,
+      })
+      toast.shortSuccess('저장이 완료되었습니다.')
+    } catch {
+      toast.shortSuccess('저장 실패')
+    }
   }
 
   return (
@@ -42,7 +62,11 @@ export function EditDdayPage() {
           />
         </div>
 
-        <BaseButton title="저장하기" className="mt-auto bg-brown text-white" />
+        <BaseButton
+          title="저장하기"
+          className="mt-auto bg-brown text-white"
+          onClick={handleSaveDday}
+        />
       </div>
     </div>
   )

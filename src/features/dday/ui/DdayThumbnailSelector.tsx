@@ -12,8 +12,8 @@ const IMAGE_INPUT_ID = 'imageInput'
 export function DdayThumbnailSelector({ url, selectedFile, onSelect }: DdayThumbnailSelectorProps) {
   const [isImgError, setIsImgError] = useState(false)
 
-  const hasImage = !!url || !!selectedFile
-  const showImage = (selectedFile !== undefined ? selectedFile : url) && !isImgError
+  const hasImage = selectedFile === undefined ? !!url : !!selectedFile
+  const showImage = (selectedFile === undefined ? url : selectedFile) && !isImgError
 
   return (
     <label
