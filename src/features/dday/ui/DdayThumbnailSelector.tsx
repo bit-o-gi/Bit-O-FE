@@ -7,6 +7,8 @@ interface DdayThumbnailSelectorProps {
   onSelect: (file: File | null) => void
 }
 
+const IMAGE_INPUT_ID = 'imageInput'
+
 export function DdayThumbnailSelector({ url, selectedFile, onSelect }: DdayThumbnailSelectorProps) {
   const [isImgError, setIsImgError] = useState(false)
 
@@ -39,6 +41,8 @@ export function DdayThumbnailSelector({ url, selectedFile, onSelect }: DdayThumb
           onClick={(event) => {
             event.preventDefault()
             onSelect(null)
+            const input = document.getElementById(IMAGE_INPUT_ID) as HTMLInputElement
+            if (input) input.value = ''
           }}
         >
           삭제하기
@@ -46,7 +50,7 @@ export function DdayThumbnailSelector({ url, selectedFile, onSelect }: DdayThumb
       )}
       <input
         className="hidden"
-        id="imageInput"
+        id={IMAGE_INPUT_ID}
         type="file"
         accept="image/*"
         onChange={(event) => {
