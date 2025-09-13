@@ -4,7 +4,6 @@ import './globals.css'
 import Providers from '../src/app/providers'
 import { Layout } from '@/shared/ui'
 import Script from 'next/script'
-import { UserStateRouter } from '@/features/routing'
 
 export const viewport: Viewport = {
   width: 'device-width',
