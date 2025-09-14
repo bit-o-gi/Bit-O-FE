@@ -1,6 +1,7 @@
 export { BaseButton } from './button/BaseButton'
 export { TextButton } from './button/TextButton'
 export { DateButton } from './button/DateButton'
+export { LogoutButton } from './button/LogoutButton'
 export { DateTimeInput } from './input/DateTimeInput'
 export { BaseHeader } from './layout/BaseHeader'
 export { Layout } from './layout/Layout'

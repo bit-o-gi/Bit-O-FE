@@ -1,3 +1,5 @@
 export { getUserInfo } from './api/userApi'
+export { logoutApi } from './api/logoutApi'
 export { type UserInfo } from './api/types'
 export { useRefetchUserInfo } from './hooks/useRefetchUserInfo'
+export { useLogout } from './hooks/useLogout'
