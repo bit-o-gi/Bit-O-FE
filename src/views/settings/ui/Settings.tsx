@@ -9,9 +9,11 @@ import { useEffect, useState } from 'react'
 
 export function SettingsPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const { logout } = useLogout()
 
   useEffect(() => {
+    setIsClient(true)
     const accessToken = localStorageUtil.get(ACCESS_TOKEN_KEY)
     setIsLoggedIn(Boolean(accessToken))
   }, [])
@@ -20,11 +22,13 @@ export function SettingsPage() {
     <>
       <BaseHeader title="설정" />
       <div className="px-4 flex flex-col items-start">
-        {!isLoggedIn && (
+        {!isClient ? (
+          <div>로딩 중...</div>
+        ) : !isLoggedIn ? (
           <div>
             <LoginButton />
           </div>
-        )} {
+        ) : (
           <div className="flex flex-col gap-4">
             <div className="text-lg">유저 프로필</div>
             <button 
@@ -34,7 +38,7 @@ export function SettingsPage() {
               로그아웃
             </button>
           </div>
-        }
+        )}
       </div>
     </>
   )
