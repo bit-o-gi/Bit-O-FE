@@ -1,27 +1,14 @@
 'use client'
 import { BaseButton } from '@/shared/ui'
 import Image from 'next/image'
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { sessionStorageUtil } from '@/shared/lib'
 import { LOGIN_SUCCESS } from '@/shared/config'
-import { useRefetchCoupleInfo } from '@/entities/couple'
-import { useRefetchUserInfo, useUserInfoStore } from '@/entities/user'
+import { useQueryUserInfo } from '@/entities/user'
 
 export function OnboardingPage() {
   const router = useRouter()
-  const { refetch: refetchUser } = useRefetchUserInfo()
-  const { refetch: refetchCouple } = useRefetchCoupleInfo()
-
-  const { userInfo } = useUserInfoStore()
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      await refetchUser()
-      await refetchCouple()
-    }
-    fetchUserData()
-  }, [])
+  const { data: userInfo } = useQueryUserInfo()
 
   const handleStart = () => {
     sessionStorageUtil.set(LOGIN_SUCCESS, 'true')

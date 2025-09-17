@@ -1,1 +1,2 @@
-export { instance, baseURL } from './baseAxiosInstance'
+export { instance } from './baseAxiosInstance'
+export { apolloClient } from './baseApolloClient'

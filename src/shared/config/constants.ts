@@ -1,3 +1,4 @@
+export const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 export const ACCESS_TOKEN_KEY = 'access_token'
 export const REFRESH_TOKEN_KEY = 'refresh_token'
 

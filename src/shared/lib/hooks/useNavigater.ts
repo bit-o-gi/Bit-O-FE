@@ -1,4 +1,5 @@
-import { baseURL } from '@/shared/api'
+import { baseURL } from '@/shared/config'
+
 export function useNavigater() {
   return {
     navigateToKakaoAuth: () => {
