@@ -1,5 +1,6 @@
 'use client'
 
+import { useRefetchCoupleInfo } from '@/entities/couple'
 import { useRefetchUserInfo } from '@/entities/user'
 import { LOGIN_SUCCESS, ROUTES } from '@/shared/config'
 import { sessionStorageUtil } from '@/shared/lib'
@@ -10,6 +11,7 @@ export function HomeRouter() {
   const router = useRouter()
   const pathname = usePathname()
   const { refetch } = useRefetchUserInfo()
+  const { refetch: refetchCouple } = useRefetchCoupleInfo()
 
   useEffect(() => {
     // 로그인 성공하고 되돌아올 때 캘린더 화면으로 이동
@@ -23,6 +25,7 @@ export function HomeRouter() {
 
   useEffect(() => {
     refetch()
+    refetchCouple()
   }, [])
 
   return null
