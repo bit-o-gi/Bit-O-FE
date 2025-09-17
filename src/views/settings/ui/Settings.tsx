@@ -1,6 +1,6 @@
 'use client'
 
-import { useCoupleInfoStore } from '@/entities/couple'
+import { useQueryCoupleInfo } from '@/entities/couple'
 import { LoginButton } from '@/features/auth'
 import { ConnectButton } from '@/features/couple'
 import { ACCESS_TOKEN_KEY } from '@/shared/config'
@@ -10,13 +10,9 @@ import { useEffect, useState } from 'react'
 
 export function SettingsPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const { coupleInfo } = useCoupleInfoStore()
+  const { data: coupleInfo } = useQueryCoupleInfo()
 
   const isCouple = coupleInfo !== null
-
-  useEffect(() => {
-    console.log(coupleInfo)
-  }, [coupleInfo])
 
   useEffect(() => {
     const accessToken = localStorageUtil.get(ACCESS_TOKEN_KEY)

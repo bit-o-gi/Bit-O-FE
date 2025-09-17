@@ -1,5 +1,5 @@
 import { useScheduleStore } from '@/entities/calendar'
-import { useUserInfoStore } from '@/entities/user'
+import { useQueryUserInfo } from '@/entities/user'
 import { useMutationScheduleAdd } from '@/features/calendar'
 import { useRequireAuth } from '@/shared/lib'
 import { BaseButton } from '@/shared/ui'
@@ -10,7 +10,7 @@ export const AddScheduleBtn = () => {
   const { saveMutation } = useMutationScheduleAdd()
 
   const requireAuth = useRequireAuth()
-  const { userInfo } = useUserInfoStore()
+  const { data: userInfo } = useQueryUserInfo()
   const { title, note, date, color, location, selectedDate } = useScheduleStore()
 
   const handleSaveButton = () => {

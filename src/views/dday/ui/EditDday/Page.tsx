@@ -1,3 +1,4 @@
+import { useQueryCoupleInfo } from '@/entities/couple'
 import { useQueryDayUser } from '@/entities/dday'
 import { DdayThumbnailSelector, useMutationDdayEdit } from '@/features/dday'
 import { useToast } from '@/shared/lib'
@@ -13,9 +14,11 @@ interface DdayForm {
 export function EditDdayPage() {
   const toast = useToast()
 
-  // TODO: isCouple 매개변수로 넘긴 인자 조건문으로 수정
-  const { data } = useQueryDayUser(true)
   const { mutateAsync: mutateAsyncDdayEdit } = useMutationDdayEdit()
+  const { data: coupleInfo } = useQueryCoupleInfo()
+  const isCouple = !!coupleInfo
+
+  const { data } = useQueryDayUser(isCouple)
 
   const [form, setForm] = useState<DdayForm>({
     title: data?.title,

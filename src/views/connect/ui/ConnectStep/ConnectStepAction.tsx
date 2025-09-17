@@ -1,19 +1,19 @@
 'use client'
 
 import { BaseButton, TextButton } from '@/shared/ui'
-import { useUserInfoStore } from '@/entities/user'
-import { useRefetchCoupleInfo } from '@/entities/couple'
+import { useQueryUserInfo } from '@/entities/user'
 import { shareWithKakao } from '@/features/share'
 import { useRouter } from 'next/navigation'
 import { useConnectStepFlow } from '../../model/ConnectStepFlowContext'
+import { useQueryCoupleInfo } from '@/entities/couple'
 
 export const ConnectStepAction = () => {
   const router = useRouter()
 
   const { code, currentStep, goToNextStep } = useConnectStepFlow()
 
-  const { userInfo } = useUserInfoStore()
-  const { refetch: refetchCouple } = useRefetchCoupleInfo()
+  const { data: userInfo } = useQueryUserInfo()
+  const { invalidate: invalidateCouple } = useQueryCoupleInfo()
 
   const handleShareCode = () => {
     shareWithKakao(
@@ -24,7 +24,7 @@ export const ConnectStepAction = () => {
   }
 
   const handleStart = async () => {
-    await refetchCouple()
+    invalidateCouple()
     router.replace('/')
   }
 

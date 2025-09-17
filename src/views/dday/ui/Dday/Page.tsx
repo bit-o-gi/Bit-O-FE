@@ -8,15 +8,17 @@ import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/shared/config'
 import { useQueryDayUser } from '@/entities/dday'
 import { useToast } from '@/shared/lib'
+import { useQueryCoupleInfo } from '@/entities/couple'
 
 export function DdayPage() {
   const router = useRouter()
   const toast = useToast()
 
   const { data } = useAnniversariesInRange(0, 10)
+  const { data: coupleInfo } = useQueryCoupleInfo()
 
-  // TODO: isCouple 매개변수로 넘긴 인자 조건문으로 수정
-  const { data: ddayData } = useQueryDayUser(true)
+  const isCouple = !!coupleInfo
+  const { data: ddayData } = useQueryDayUser(isCouple)
 
   const anniversaryList = data?.getAnniversariesInRange
 

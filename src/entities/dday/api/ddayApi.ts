@@ -1,11 +1,19 @@
 import { instance } from '@/shared/api'
 import { Dday } from '../model/types'
 import { compressImage } from '@/shared/lib'
+import axios from 'axios'
 
 export const ddayApi = {
   getDdayByUser: async () => {
-    const result = await instance.get<Dday>('/day/user')
-    return result.data
+    try {
+      const result = await instance.get<Dday>('/day/user')
+      return result.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null
+      }
+      throw error
+    }
   },
   setDdayThumbnail: async ({ dayId, file }: { dayId: number; file: File | null }) => {
     const formData = new FormData()
