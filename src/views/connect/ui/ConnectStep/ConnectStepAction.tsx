@@ -18,7 +18,7 @@ export const ConnectStepAction = () => {
   const handleShareCode = () => {
     shareWithKakao(
       `${userInfo?.nickName} 님과 커플 연결하고 다양한 서비스를 이용해보세요.`,
-      `${process.env.NEXT_PUBLIC_APP_URL}/connect/insert-code?code=${code}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/connect/insert-code?code=${code}`,
       '연결하러 가기',
     )
   }
